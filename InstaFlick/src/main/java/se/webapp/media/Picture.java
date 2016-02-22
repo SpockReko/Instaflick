@@ -9,6 +9,7 @@ package se.webapp.media;
  *
  * @author Pontus
  */
-public class Picture {
-    
+public class Picture extends AbstractMedia implements IPicture {
+
+    //Image picture;
 }
