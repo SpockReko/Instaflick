@@ -21,6 +21,12 @@ public class Likes implements ILikes {
     public int nrOfLikes() {
         return userList.size();
     }
+    
+    
+    @Override
+    public boolean addLike(IUser user) {
+        return userList.add(user);
+    }
 
     @Override
     public boolean removeLike(IUser user) {
