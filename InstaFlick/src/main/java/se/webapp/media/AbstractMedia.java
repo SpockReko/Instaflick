@@ -25,9 +25,10 @@ public class AbstractMedia {
     }
     
     public boolean likeIt(IUser user) {
-        
-        
-        return true;
+        return likes.addLike(user);
     }
     
+    public boolean UnlikeIt(IUser user) {
+        return likes.removeLike(user);
+    }
 }
