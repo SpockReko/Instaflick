@@ -9,7 +9,7 @@ import se.webapp.instaflick.IUser;
 
 /**
  *
- * @author Pontus
+ * @author Stefan
  */
 public class Comment implements IComment {
 

@@ -27,12 +27,12 @@ public class AbstractMedia {
     }
     
     public boolean removeComment(IUser user, IComment comment) {
-    /*
-        if (comment.getUser() == user) {
+    
+        if (comment.getUser(user) == user) {
             comments.remove(comment);
+            return true;
         }
-    */
-        return true;
+        return false;
     }
     
     public boolean likeIt(IUser user) {
