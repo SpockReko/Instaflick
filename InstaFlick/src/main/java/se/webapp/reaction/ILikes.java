@@ -5,7 +5,7 @@
  */
 package se.webapp.reaction;
 
-import se.webapp.instaflick.User;
+import se.webapp.instaflick.IUser;
 
 /**
  *
@@ -13,5 +13,5 @@ import se.webapp.instaflick.User;
  */
 public interface ILikes {
     public int nrOfLikes();
-    public boolean removeLike(User user);
+    public boolean removeLike(IUser user);
 }

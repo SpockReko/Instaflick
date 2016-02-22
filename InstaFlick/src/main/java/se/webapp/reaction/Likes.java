@@ -7,7 +7,7 @@ package se.webapp.reaction;
 
 import java.util.ArrayList;
 import java.util.List;
-import se.webapp.instaflick.User;
+import se.webapp.instaflick.IUser;
 
 /**
  *
@@ -15,7 +15,7 @@ import se.webapp.instaflick.User;
  */
 public class Likes implements ILikes {
 
-    public List<User> userList = new ArrayList<>();
+    public List<IUser> userList = new ArrayList<>();
     
     @Override
     public int nrOfLikes() {
@@ -23,7 +23,7 @@ public class Likes implements ILikes {
     }
 
     @Override
-    public boolean removeLike(User user) {
+    public boolean removeLike(IUser user) {
         return userList.remove(user);
     }
     
