@@ -11,4 +11,6 @@ package se.webapp.reaction;
  */
 public interface IComment {
     
+        public boolean removeComment();
+
 }
