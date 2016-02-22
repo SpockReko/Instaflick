@@ -13,9 +13,9 @@ import se.webapp.instaflick.IUser;
  */
 public class Comment implements IComment {
 
-    IUser user;
+    private IUser user;
     String comment;
-    ILikes like;
+    private ILikes like;
     
     Comment(IUser user, String comment, ILikes like){
         this.user = user;
@@ -24,7 +24,12 @@ public class Comment implements IComment {
     }
     
     @Override
-    public boolean removeComment() {
+    public void editComment(String comment) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public IUser getUser(IUser user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

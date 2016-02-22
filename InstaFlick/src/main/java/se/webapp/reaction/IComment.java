@@ -5,12 +5,15 @@
  */
 package se.webapp.reaction;
 
+import se.webapp.instaflick.IUser;
+
 /**
  *
  * @author Pontus
  */
 public interface IComment {
     
-        public boolean removeComment();
+        public void editComment(String comment);
+        public IUser getUser(IUser user);
 
 }
