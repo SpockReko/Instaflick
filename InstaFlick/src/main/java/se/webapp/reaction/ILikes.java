@@ -5,10 +5,13 @@
  */
 package se.webapp.reaction;
 
+import se.webapp.instaflick.IUser;
+
 /**
  *
  * @author Pontus
  */
 public interface ILikes {
-    
+    public int nrOfLikes();
+    public boolean removeLike(IUser user);
 }
