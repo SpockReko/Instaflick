@@ -39,7 +39,7 @@ public class AbstractMedia {
         return likes.addLike(user);
     }
     
-    public boolean UnlikeIt(IUser user) {
+    public boolean unLikeIt(IUser user) {
         return likes.removeLike(user);
     }
 }
