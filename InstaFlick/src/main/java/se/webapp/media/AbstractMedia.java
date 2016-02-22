@@ -16,7 +16,7 @@ import se.webapp.reaction.ILikes;
  */
 public class AbstractMedia {
     
-    ILikes like;
+    ILikes likes;
     List<IComment> comments;
     
     public boolean postComment(IUser user, String comment) {
