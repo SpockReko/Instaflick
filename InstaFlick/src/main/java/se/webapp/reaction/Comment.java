@@ -17,10 +17,10 @@ public class Comment implements IComment {
     String comment;
     private ILikes like;
     
-    Comment(IUser user, String comment, ILikes like){
+    public Comment(IUser user, String comment){
         this.user = user;
         this.comment = comment;
-        this.like = like;
+        this.like = new Likes();
     }
     
     @Override
