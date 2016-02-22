@@ -25,12 +25,12 @@ public class Comment implements IComment {
     
     @Override
     public void editComment(String comment) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.comment = comment;
     }
 
     @Override
     public IUser getUser(IUser user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.user;
     }
     
 }
