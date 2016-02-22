@@ -17,5 +17,5 @@ public interface IPicture {
     
     public boolean likeIt(IUser user);
     
-    public boolean UnlikeIt(IUser user);
+    public boolean unLikeIt(IUser user);
 }

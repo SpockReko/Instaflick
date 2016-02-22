@@ -5,6 +5,7 @@
  */
 package se.webapp.media;
 
+import se.webapp.instaflick.IUser;
 import se.webapp.reaction.Likes;
 
 /**
@@ -16,4 +17,5 @@ public class Picture extends AbstractMedia implements IPicture {
     public Picture() {
         likes = new Likes();
     }
+
 }
