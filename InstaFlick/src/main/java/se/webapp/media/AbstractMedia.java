@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package instaflick;
+package se.webapp.media;
 
 /**
  *
- * @author TH
+ * @author Pontus
  */
-public class InstaFlick {
+public class AbstractMedia {
     
 }
