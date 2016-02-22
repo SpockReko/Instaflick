@@ -5,10 +5,6 @@
  */
 package se.webapp.instaflick;
 
-/**
- *
- * @author Pontus
- */
 public interface IUser {
     boolean removeUser();
 }
