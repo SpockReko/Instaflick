@@ -16,6 +16,4 @@ public class Picture extends AbstractMedia implements IPicture {
     public Picture() {
         likes = new Likes();
     }
-
-    //Image picture;
 }
