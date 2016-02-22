@@ -16,7 +16,7 @@ import se.webapp.reaction.ILikes;
  */
 public class AbstractMedia {
     
-    ILikes like;
+    ILikes likes;
     List<IComment> comments;
     
     public boolean postComment(IUser user, String comment) {
@@ -25,9 +25,10 @@ public class AbstractMedia {
     }
     
     public boolean likeIt(IUser user) {
-        
-        
-        return true;
+        return likes.addLike(user);
     }
     
+    public boolean UnlikeIt(IUser user) {
+        return likes.removeLike(user);
+    }
 }

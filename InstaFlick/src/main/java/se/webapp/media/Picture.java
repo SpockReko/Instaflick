@@ -5,11 +5,15 @@
  */
 package se.webapp.media;
 
+import se.webapp.reaction.Likes;
+
 /**
  *
  * @author Pontus
  */
 public class Picture extends AbstractMedia implements IPicture {
 
-    //Image picture;
+    public Picture() {
+        likes = new Likes();
+    }
 }

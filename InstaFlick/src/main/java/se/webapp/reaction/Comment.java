@@ -17,6 +17,11 @@ public class Comment implements IComment {
     String comment;
     ILikes like;
     
+    Comment(IUser user, String comment, ILikes like){
+        this.user = user;
+        this.comment = comment;
+        this.like = like;
+    }
     
     @Override
     public boolean removeComment() {
