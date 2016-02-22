@@ -13,9 +13,9 @@ import se.webapp.instaflick.IUser;
  */
 public class Comment implements IComment {
 
-    private IUser user;
+    final private IUser user;
     String comment;
-    private ILikes like;
+    final private ILikes like;
     
     public Comment(IUser user, String comment){
         this.user = user;
