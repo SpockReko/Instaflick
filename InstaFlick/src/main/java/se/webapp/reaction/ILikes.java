@@ -13,5 +13,6 @@ import se.webapp.instaflick.IUser;
  */
 public interface ILikes {
     public int nrOfLikes();
+    public boolean addLike(IUser user);
     public boolean removeLike(IUser user);
 }
