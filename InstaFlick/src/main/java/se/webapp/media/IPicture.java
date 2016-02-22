@@ -5,10 +5,16 @@
  */
 package se.webapp.media;
 
+import se.webapp.instaflick.IUser;
+
 /**
  *
  * @author Pontus
  */
 public interface IPicture {
+    
+    public boolean postComment(IUser user, String comment);
+    
+    public boolean likeIt(IUser user);
     
 }
