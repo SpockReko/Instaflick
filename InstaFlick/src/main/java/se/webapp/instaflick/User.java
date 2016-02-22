@@ -30,7 +30,7 @@ public class User implements IUser, Serializable {
     private String description;
 
     public User() {
-        this.id = (++staticId).toString();
+        this.id = "User " + (++staticId).toString();
     }
     
     public User(String username){
