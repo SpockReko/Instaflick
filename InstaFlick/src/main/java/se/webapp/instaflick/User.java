@@ -1,5 +1,10 @@
+package se.webapp.instaflick;
 
-import se.webapp.instaflick.IUser;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 import se.webapp.media.IPicture;
 import se.webapp.media.Picture;
 
@@ -10,15 +15,23 @@ import se.webapp.media.Picture;
  * and open the template in the editor.
  */
 
-/**
- *
- * @author Pontus
- */
-public class User implements IUser {
-
+@Entity
+public class User implements IUser, Serializable {
+    
+    static Long staticId = 0L;
+    
+    @Id
     private final String id;
+    @Getter
+    @Setter
     private IPicture picture;
+    @Getter
+    @Setter
     private String description;
+
+    public User() {
+        this.id = "User " + (++staticId).toString();
+    }
     
     public User(String username){
         this.id = username;
@@ -37,5 +50,5 @@ public class User implements IUser {
         TODO: Implement database connection to remove user.
         */
     }
-    
+
 }
