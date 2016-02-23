@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.webapp.reaction;
+package se.webapp.instaflickr.model.reaction;
 
-import se.webapp.instaflick.IUser;
+import se.webapp.instaflickr.model.user.IUser;
 
 /**
  *

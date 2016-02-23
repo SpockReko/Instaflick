@@ -1,12 +1,12 @@
-package se.webapp.instaflick;
+package se.webapp.instaflickr.model.user;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.media.IPicture;
-import se.webapp.media.Picture;
+import se.webapp.instaflickr.model.media.IPicture;
+import se.webapp.instaflickr.model.media.Picture;
 
 
 /*

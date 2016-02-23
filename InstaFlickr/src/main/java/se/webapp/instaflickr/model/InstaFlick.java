@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.webapp.reaction;
-
-import se.webapp.instaflick.IUser;
+package se.webapp.instaflickr.model;
 
 /**
  *
- * @author Pontus
+ * @author TH
  */
-public interface IComment {
+public class InstaFlick {
     
-        public void editComment(String comment);
-        public IUser getUser(IUser user);
-
 }

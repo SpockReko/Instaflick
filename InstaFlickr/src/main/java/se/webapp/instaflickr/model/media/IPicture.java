@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.webapp.media;
+package se.webapp.instaflickr.model.media;
 
-import se.webapp.instaflick.IUser;
+import se.webapp.instaflickr.model.user.IUser;
+
 
 /**
  *
