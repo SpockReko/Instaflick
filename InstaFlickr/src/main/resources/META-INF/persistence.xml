@@ -3,6 +3,7 @@
   <persistence-unit name="InstaBase_PU" transaction-type="JTA">
     <jta-data-source>java:app/InstaBase_DS</jta-data-source>
     <class>se.webapp.instaflickr.model.user.InstaFlickUser</class>
+    <class>se.webapp.instaflickr.model.media.Picture</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
