@@ -5,6 +5,6 @@
  */
 package se.webapp.instaflickr.model.user;
 
-public interface IUser {
+public interface IUser  {
     boolean removeUser();
 }

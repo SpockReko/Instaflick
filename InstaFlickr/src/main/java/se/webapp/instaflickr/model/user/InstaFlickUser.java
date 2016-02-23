@@ -16,7 +16,7 @@ import se.webapp.instaflickr.model.media.Picture;
  */
 
 @Entity
-public class User implements IUser, Serializable {
+public class InstaFlickUser implements IUser, Serializable {
     
     static Long staticId = 0L;
     
@@ -29,16 +29,16 @@ public class User implements IUser, Serializable {
     @Setter
     private String description;
 
-    public User() {
+    public InstaFlickUser() {
         this.id = "User " + (++staticId).toString();
     }
     
-    public User(String username){
+    public InstaFlickUser(String username){
         this.id = username;
         this.picture = new Picture();
     }
     
-    public User(String username, IPicture picture){
+    public InstaFlickUser(String username, IPicture picture){
         this.id = username;
         this.picture = picture;
     }
