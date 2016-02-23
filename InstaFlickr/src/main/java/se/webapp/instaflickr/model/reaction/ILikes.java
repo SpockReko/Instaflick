@@ -5,6 +5,7 @@
  */
 package se.webapp.instaflickr.model.reaction;
 
+import javax.ejb.Local;
 import se.webapp.instaflickr.model.user.IUser;
 
 /**

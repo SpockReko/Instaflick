@@ -5,17 +5,31 @@
  */
 package se.webapp.instaflickr.model.reaction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 import se.webapp.instaflickr.model.user.IUser;
 
 /**
  *
  * @author Pontus
  */
-public class Likes implements ILikes {
+@Entity
+public class Likes implements ILikes, Serializable {
 
+    static Long staticId = 4L;
+    
+    @Id
+    private String id;
+    @Setter
+    @Getter
     public List<IUser> userList = new ArrayList<>();
+
+    public Likes(){}
     
     /**
      * Returns the number of likes, which is the same as the number of users
@@ -52,6 +66,14 @@ public class Likes implements ILikes {
     @Override
     public boolean removeLike(IUser user) {
         return userList.remove(user);
+    }
+
+    public List<IUser> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<IUser> userList) {
+        this.userList = userList;
     }
     
 }
