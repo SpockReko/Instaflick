@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import se.webapp.instaflickr.model.reaction.Likes;
+import se.webapp.instaflickr.model.user.IUser;
 
 
 
@@ -33,6 +34,11 @@ public class Picture extends AbstractMedia implements IPicture, Serializable {
 
     @Override
     protected EntityManager getEntityManager() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean postComment(IUser user, String comment) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

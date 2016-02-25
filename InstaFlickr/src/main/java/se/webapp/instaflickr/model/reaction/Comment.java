@@ -6,13 +6,17 @@
 package se.webapp.instaflickr.model.reaction;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.user.IUser;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
@@ -27,10 +31,14 @@ public class Comment implements IComment, Serializable {
     private Long id;
     @Setter
     @Getter
-    private String userName;
+    @ManyToOne(fetch=FetchType.LAZY)
+    private InstaFlickUser user;
     @Getter
     @Setter
-    String text;
+    String commentText;
+    @Setter
+    @Getter
+    Date created;
     @Setter
     @Getter
     private ILikes like;
@@ -38,15 +46,15 @@ public class Comment implements IComment, Serializable {
     public Comment(){
     }
     
-    public Comment(String userName, String text){
-        this.userName = userName;
-        this.text = text;
+    public Comment(InstaFlickUser user, String commentText){
+        this.user = user;
+        this.commentText = commentText;
         this.like = new Likes();
     }
     
     @Override
-    public void editComment(String comment) {
-        this.text = comment;
+    public void editComment(String commentText) {
+        this.commentText = commentText;
     }
 
     @Override

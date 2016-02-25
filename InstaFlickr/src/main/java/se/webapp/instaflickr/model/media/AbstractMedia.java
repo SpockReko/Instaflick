@@ -11,6 +11,7 @@ import se.webapp.instaflickr.model.user.IUser;
 import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.reaction.IComment;
 import se.webapp.instaflickr.model.reaction.ILikes;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
@@ -23,8 +24,8 @@ public abstract class AbstractMedia {
 
     protected abstract EntityManager getEntityManager();
     
-    public boolean postComment(IUser user, String mgs) {
-        IComment comment = new Comment("UserName", mgs);
+    public boolean postComment(InstaFlickUser user, String mgs) {
+        IComment comment = new Comment(user, mgs);
         comments.add(comment);
         getEntityManager().persist(comment);
         return true;

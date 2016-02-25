@@ -7,4 +7,6 @@ package se.webapp.instaflickr.model.user;
 
 public interface IUser  {
     boolean removeUser();
+    
+    String getUserName();
 }

@@ -21,7 +21,9 @@ public class InstaFlickUser implements IUser, Serializable {
     static Long staticId = 0L;
     
     @Id
-    private final String id;
+    @Getter
+    @Setter
+    private String userName;
     @Getter
     @Setter
     private IPicture picture;
@@ -30,16 +32,16 @@ public class InstaFlickUser implements IUser, Serializable {
     private String description;
 
     public InstaFlickUser() {
-        this.id = "User " + (++staticId).toString();
+        this.userName = "User " + (++staticId).toString();
     }
     
     public InstaFlickUser(String username){
-        this.id = username;
+        this.userName = username;
         this.picture = new Picture();
     }
     
     public InstaFlickUser(String username, IPicture picture){
-        this.id = username;
+        this.userName = username;
         this.picture = picture;
     }
     
@@ -49,6 +51,11 @@ public class InstaFlickUser implements IUser, Serializable {
         /*
         TODO: Implement database connection to remove user.
         */
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
     }
 
 }
