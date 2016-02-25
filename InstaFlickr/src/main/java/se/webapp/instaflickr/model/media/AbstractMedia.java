@@ -24,7 +24,7 @@ public abstract class AbstractMedia {
     protected abstract EntityManager getEntityManager();
     
     public boolean postComment(IUser user, String mgs) {
-        IComment comment = new Comment(user, mgs);
+        IComment comment = new Comment("UserName", mgs);
         comments.add(comment);
         getEntityManager().persist(comment);
         return true;
