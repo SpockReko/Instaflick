@@ -1,18 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="InstaFlickr">
     <head>
         <title>Instaflickr</title>
         <meta charset="utf-8"/>
         <script src="../../resources/angular-1.5.0/angular.min.js"></script>
-        <!--<script src="../../resources/angular-1.5.0/angular-route.min.js"></script>
-        <script src="js/app.js"></script>-->
+        <script src="../../resources/angular-1.5.0/angular-route.min.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+        <link rel="stylesheet" href="../../resources/bootstrap-3.3.6/css/bootstrap.css">
 
     </head>
-    <body>
-        <p>Index in instaflickr/app</p>
-        Write some text in textbox:
-        <input type="text" ng-model="sometext" />
-
-        <h1>Hello {{ sometext }}</h1>
+    <body class="container">
+        
+        <header>
+            <hgroup>
+                <h1>InstaFlickr</h1>
+                <h2>We look better</h2>
+            </hgroup>
+        </header>
+        
+        <nav class="navbar navbar-default" role="navigation">
+            <a class="navbar-brand" href="#">Home</a>
+            <a class="navbar-brand" href="#/feed">Feed</a>
+            <a class="navbar-brand" href="#/profile">Profile</a>
+        </nav>
+        
+        <div class="view-container">
+            <!-- Include the view template for the current route -->
+            <div ng-view ></div>
+        </div>
+        
+        <div style="background-color: #AAAAAA">
+            <p>This is below the container</p>
+        </div>
     </body>
 </html>
