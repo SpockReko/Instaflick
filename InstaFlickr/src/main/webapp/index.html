@@ -4,11 +4,19 @@
         <title>Start page</title>
         <meta charset="utf-8"/>
         <script src="resources/angular-1.5.0/angular.min.js"></script>
-        <!--<script src="resources/angular-1.5.0/angular-route.min.js"></script>
-        <script src="js/app.js"></script>-->
+        <script src="resources/angular-1.5.0/angular-route.min.js"></script>
+        <script src="js/app.js"></script>
     </head>
     <body>
-        <p>Index in web pages</p>
-        <a href="instaflickr/app/index.html">Link to instaflickr</a>
+        <p>Index in web pages
+            <a href="instaflickr/app/index.html">Link to instaflickr</a>
+        </p>
+
+        Write some text in textbox:
+        <input type="text" ng-model="sometext" />
+
+        <h1>Hello {{ sometext }}</h1>
+
+        <p>If sometext is visible, angular is not loaded</p>
     </body>
 </html>

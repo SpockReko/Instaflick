@@ -5,10 +5,16 @@ var instaflickr = angular.module('InstaFlickr', [
 ]);
 
 instaflickr.config(['$routeProvider',
-    function routeProvider($routeProvider) {
-        $routeProvider().when('profile', {
-            templateUrl: 'partials/profile.html',
-            controller: 'ProfileCtrl'
-        });
+    function ($routeProvider) {
+        $routeProvider.
+                when('/profile', {
+                    templateUrl: 'partials/profile.html'
+                }).
+                when('/feed', {
+                    templateUrl: 'partials/feed.html'
+                }).
+                otherwise({
+                    redirectTo: 'idiot.html'
+                });
     }
 ]);
