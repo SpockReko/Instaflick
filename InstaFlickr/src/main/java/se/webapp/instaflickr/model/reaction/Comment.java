@@ -27,34 +27,31 @@ public class Comment implements IComment, Serializable {
     private Long id;
     @Setter
     @Getter
-    private IUser user;
+    private String userName;
     @Getter
     @Setter
-    String comment;
+    String text;
     @Setter
     @Getter
     private ILikes like;
     
-    public Comment(){}
+    public Comment(){
+    }
     
-    public Comment(IUser user, String comment){
-        this.user = user;
-        this.comment = comment;
+    public Comment(String userName, String text){
+        this.userName = userName;
+        this.text = text;
         this.like = new Likes();
     }
     
     @Override
     public void editComment(String comment) {
-        this.comment = comment;
+        this.text = comment;
     }
 
     @Override
     public IUser getUser(IUser user) {
-        return this.user;
-    }
-
-    public IUser getUser() {
-        return user;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
