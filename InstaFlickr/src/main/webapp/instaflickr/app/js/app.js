@@ -12,9 +12,6 @@ instaflickr.config(['$routeProvider',
                 }).
                 when('/feed', {
                     templateUrl: 'partials/feed.html'
-                }).
-                otherwise({
-                    redirectTo: 'idiot.html'
                 });
     }
 ]);
