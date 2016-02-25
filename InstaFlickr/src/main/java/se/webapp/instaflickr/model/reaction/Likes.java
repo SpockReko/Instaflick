@@ -27,7 +27,7 @@ public class Likes implements Serializable {
     private String id;
     @Setter
     @Getter
-    public List<InstaFlickUser> userList = new ArrayList<>();
+    public List<InstaFlickUser> userList;
 
     public Likes(){}
     

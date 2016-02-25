@@ -6,6 +6,7 @@
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -33,10 +34,20 @@ public class Picture extends AbstractMedia implements Serializable {
     private Long id;
     @Getter
     @Setter
+    private String imagePath;
+    @Getter
+    @Setter
     private List<Comment> comments;
     @Getter
     @Setter
+    private Date uploaded;
+    @Getter
+    @Setter
+    private InstaFlickUser uploader;
+    @Getter
+    @Setter
     private Likes likes;
+
     
     public Picture() {
         likes = new Likes();

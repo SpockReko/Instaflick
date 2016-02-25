@@ -30,7 +30,6 @@ public class Comment implements Serializable {
     private Long id;
     @Setter
     @Getter
-    @ManyToOne(fetch=FetchType.LAZY)
     private InstaFlickUser user;
     @Getter
     @Setter
