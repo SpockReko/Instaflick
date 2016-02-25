@@ -7,10 +7,8 @@ package se.webapp.instaflickr.model.media;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import se.webapp.instaflickr.model.user.IUser;
 import se.webapp.instaflickr.model.reaction.Comment;
-import se.webapp.instaflickr.model.reaction.IComment;
-import se.webapp.instaflickr.model.reaction.ILikes;
+import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -19,19 +17,19 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  */
 public abstract class AbstractMedia {
     
-    ILikes likes;
-    List<IComment> comments;
+    Likes likes;
+    List<Comment> comments;
 
     protected abstract EntityManager getEntityManager();
     
     public boolean postComment(InstaFlickUser user, String mgs) {
-        IComment comment = new Comment(user, mgs);
+        Comment comment = new Comment(user, mgs);
         comments.add(comment);
         getEntityManager().persist(comment);
         return true;
     }
     
-    public boolean removeComment(IUser user, IComment comment) {
+    public boolean removeComment(InstaFlickUser user, Comment comment) {
     
         if (comment.getUser(user) == user) {
             comments.remove(comment);
@@ -41,13 +39,13 @@ public abstract class AbstractMedia {
         return false;
     }
     
-    public boolean likeIt(IUser user) {
+    public boolean likeIt(InstaFlickUser user) {
         likes.addLike(user);
         getEntityManager().merge(likes);
         return true;
     }
     
-    public boolean unLikeIt(IUser user) {
+    public boolean unLikeIt(InstaFlickUser user) {
         likes.removeLike(user);
         getEntityManager().merge(likes);
         return true;

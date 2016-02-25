@@ -1,11 +1,11 @@
 package se.webapp.instaflickr.model.user;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.media.IPicture;
 import se.webapp.instaflickr.model.media.Picture;
 
 
@@ -16,7 +16,7 @@ import se.webapp.instaflickr.model.media.Picture;
  */
 
 @Entity
-public class InstaFlickUser implements IUser, Serializable {
+public class InstaFlickUser implements Serializable {
     
     static Long staticId = 0L;
     
@@ -26,26 +26,29 @@ public class InstaFlickUser implements IUser, Serializable {
     private String userName;
     @Getter
     @Setter
-    private IPicture picture;
+    private Picture profilePicture;
     @Getter
     @Setter
     private String description;
-
+    @Getter
+    @Setter
+    private List<Picture> pictures;
+    
+    
     public InstaFlickUser() {
         this.userName = "User " + (++staticId).toString();
     }
     
     public InstaFlickUser(String username){
         this.userName = username;
-        this.picture = new Picture();
+        this.profilePicture = new Picture();
     }
     
-    public InstaFlickUser(String username, IPicture picture){
+    public InstaFlickUser(String username, Picture picture){
         this.userName = username;
-        this.picture = picture;
+        this.profilePicture = picture;
     }
     
-    @Override
     public boolean removeUser() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         /*
@@ -53,7 +56,6 @@ public class InstaFlickUser implements IUser, Serializable {
         */
     }
 
-    @Override
     public String getUserName() {
         return userName;
     }

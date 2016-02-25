@@ -6,13 +6,17 @@
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.reaction.Likes;
-import se.webapp.instaflickr.model.user.IUser;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 
 
@@ -21,12 +25,18 @@ import se.webapp.instaflickr.model.user.IUser;
  * @author Pontus
  */
 @Entity
-public class Picture extends AbstractMedia implements IPicture, Serializable {
+public class Picture extends AbstractMedia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Getter
+    @Setter
+    private List<Comment> comments;
+    @Getter
+    @Setter
+    private Likes likes;
     
     public Picture() {
         likes = new Likes();
@@ -37,8 +47,7 @@ public class Picture extends AbstractMedia implements IPicture, Serializable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public boolean postComment(IUser user, String comment) {
+    public boolean postComment(InstaFlickUser user, String comment) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

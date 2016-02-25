@@ -12,14 +12,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.user.IUser;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
  * @author Pontus
  */
 @Entity
-public class Likes implements ILikes, Serializable {
+public class Likes implements Serializable {
 
     static Long staticId = 4L;
     
@@ -27,7 +27,7 @@ public class Likes implements ILikes, Serializable {
     private String id;
     @Setter
     @Getter
-    public List<IUser> userList = new ArrayList<>();
+    public List<InstaFlickUser> userList = new ArrayList<>();
 
     public Likes(){}
     
@@ -37,7 +37,6 @@ public class Likes implements ILikes, Serializable {
      * 
      * @return number of likes
      */
-    @Override
     public int nrOfLikes() {
         return userList.size();
     }
@@ -49,8 +48,7 @@ public class Likes implements ILikes, Serializable {
      * @param user the user to be added to the list
      * @return true if user is added to list, false if not
      */
-    @Override
-    public boolean addLike(IUser user) {
+    public boolean addLike(InstaFlickUser user) {
         if (userList.contains(user)) {
             return true;
         }
@@ -63,16 +61,15 @@ public class Likes implements ILikes, Serializable {
      * @param user the user to be removed
      * @return true if user was removed, false if user was not in the list
      */
-    @Override
-    public boolean removeLike(IUser user) {
+    public boolean removeLike(InstaFlickUser user) {
         return userList.remove(user);
     }
 
-    public List<IUser> getUserList() {
+    public List<InstaFlickUser> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<IUser> userList) {
+    public void setUserList(List<InstaFlickUser> userList) {
         this.userList = userList;
     }
     
