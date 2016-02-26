@@ -2,17 +2,7 @@ body {
     padding-top: 70px; 
 }
 
-@media (min-width: 1200px) {
-    .container {
-        width: 940px; // changed from 1170px
-    }
-}
-
 #profile-box {
-    padding-bottom: 16px;
-}
-
-.image-row {
     padding-bottom: 16px;
 }
 
