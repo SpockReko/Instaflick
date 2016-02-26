@@ -10,7 +10,10 @@ instaflickr.config(['$routeProvider',
                 when('/profile', {
                     templateUrl: 'partials/profile.html'
                 }).
-                when('/feed', {
+                when('/settings', {
+                    templateUrl: 'partials/settings.html'
+                }).
+                otherwise({
                     templateUrl: 'partials/feed.html'
                 });
     }
