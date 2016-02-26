@@ -8,30 +8,32 @@
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
         <link rel="stylesheet" href="../../resources/bootstrap-3.3.6/css/bootstrap.css">
-
+        <script src="../../resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="css/style.css">
     </head>
-    <body class="container">
-        
-        <header>
-            <hgroup>
-                <h1>InstaFlickr</h1>
-                <h2>We look better</h2>
-            </hgroup>
-        </header>
-        
-        <nav class="navbar navbar-default" role="navigation">
-            <a class="navbar-brand" href="#">Home</a>
-            <a class="navbar-brand" href="#/feed">Feed</a>
-            <a class="navbar-brand" href="#/profile">Profile</a>
+    <body>
+        <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">InstaFlickr</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#/profile">Profile</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                </ul>
+            </div>
         </nav>
-        
-        <div class="view-container">
+
+
+        <div class="container">
             <!-- Include the view template for the current route -->
             <div ng-view ></div>
         </div>
-        
-        <div style="background-color: #AAAAAA">
-            <p>This is below the container</p>
-        </div>
+
+
     </body>
 </html>
