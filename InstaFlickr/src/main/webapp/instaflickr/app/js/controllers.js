@@ -2,11 +2,17 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
-// Navigation controller
-instaFlickControllers.controller('NavigationCtrl', ['$scope', '$location',
-    function ($scope, $location) {
-        $scope.navigate = function (url) {
-            $location.path(url);
-        };
+// Profile controller
+instaFlickControllers.controller('ProfileCtrl', ['$scope',
+    function ($scope) {
+
+        $scope.name = "Henry Ottervad";
+        $scope.description = "I like long walks on the beach..."
+
+        var imageData = ['http://placehold.it/400x400', 'http://placehold.it/400x400',
+            'http://placehold.it/400x400', 'http://placehold.it/400x400', 'http://placehold.it/400x400',
+            'http://placehold.it/400x400', 'http://placehold.it/400x400', 'http://placehold.it/400x400'];
+        
+        $scope.images = imageData;
 
     }]);

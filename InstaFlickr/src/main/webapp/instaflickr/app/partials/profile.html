@@ -1,18 +1,30 @@
 <div class="row" id="profile-box">
+
     <div class="col-lg-3 col-md-4 col-xs-6" id="profile-picture">
         <img class="img-circle center-block img-responsive" src="http://lorempixel.com/400/400/people/">
     </div>
+
     <div class="col-lg-9 col-md-8 col-xs-6" id="info-box">
-        <div id="user-name">
-            <h3>Henry Ottervad</h3>
+
+        <div>
+            <h3>{{ name}}</h3>
         </div>
-        <div id="user-description">
-            <p>I like long walks on the beach</p>
+
+        <div ng-model="description">
+            <p>{{ description}}</p>
         </div>
-        <small><span class="glyphicon glyphicon-edit"></span> <em>Edit description</em></small>
     </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-3 col-md-4 col-xs-6" ng-repeat="image in images track by $index">
+        <a class="thumbnail" href="#">
+            <img class="img-responsive" src="{{image}}">
+        </a>
+    </div>
+</div>
+
+<!--
 <div class="row">
     <div class="col-lg-3 col-md-4 col-xs-6">
         <a class="thumbnail" href="#">
@@ -70,3 +82,4 @@
         </a>
     </div>
 </div>
+-->
