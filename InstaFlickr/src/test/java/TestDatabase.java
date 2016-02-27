@@ -51,12 +51,12 @@ public class TestDatabase {
 
     @Inject
     UserTransaction utx;
-/*
+
     @Before
     public void preparePersistenceTest() throws Exception {
-
+        clearAll();
     }
-*/
+
     @Test
     public void truE() {
         assertTrue(true);
@@ -66,7 +66,14 @@ public class TestDatabase {
     private void clearAll() throws Exception {  
         utx.begin();  
         em.joinTransaction();
-        em.createQuery("delete from Users").executeUpdate();
+        em.createQuery("delete from Likes").executeUpdate();
+        em.createQuery("delete from Comment").executeUpdate();
+        em.createQuery("delete from Picture").executeUpdate();
+        em.createQuery("delete from InstaFlickUser").executeUpdate();
+        /*
+        em.createQuery("delete from InstaFlickUser_Picture").executeUpdate();
+        em.createQuery("delete from LIKES_INSTAFLICKUSER").executeUpdate();
+        em.createQuery("delete from PICTURE_COMMENT").executeUpdate(); */
         utx.commit();
     }
 }
