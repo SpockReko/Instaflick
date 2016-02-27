@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.media.Picture;
@@ -21,7 +23,6 @@ public class InstaFlickUser implements Serializable {
     static Long staticId = 0L;
     
     @Id
-    @Getter
     @Setter
     private String userName;
     @Getter
@@ -32,9 +33,11 @@ public class InstaFlickUser implements Serializable {
     private String password;
     @Getter
     @Setter
+    @OneToOne
     private Picture profilePicture;
     @Getter
     @Setter
+    @OneToMany
     private List<Picture> pictures;
     
     
