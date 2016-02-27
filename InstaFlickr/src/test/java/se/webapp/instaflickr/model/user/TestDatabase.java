@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package se.webapp.instaflickr.model.user;
 
-import java.util.List;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -17,27 +17,28 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.webapp.instaflickr.model.InstaFlick;
 
 /**
  * Testing the persistence layer
  *
- * NOTE NOTE NOTE: JavaDB (Derby) must be running (not using an embedded
- * database) GlassFish not needed using Arquillian
- *
- * @author hajo
+ * @author Pontus
  */
 @RunWith(Arquillian.class)
 public class TestDatabase {
 
+//    @Inject
+//    InstaFlick instaFlick;
+    
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
-                .addPackage("se.webapp.instaflickr.model.media")
+                .addPackage("se.webapp.instaflickr.model")
+                .addPackage("se.webapp.instaflickr.model.user")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -51,7 +52,7 @@ public class TestDatabase {
 
     @Inject
     UserTransaction utx;
-
+    
     @Before
     public void preparePersistenceTest() throws Exception {
         clearAll();
