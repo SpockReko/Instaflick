@@ -44,22 +44,29 @@ public class TestDatabase {
 
     // Need a standalone em to remove testdata between tests
     // No em accessible from interfaces
-    @PersistenceContext(unitName = "InstaBase_PU")
+    @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
     EntityManager em;
 
     @Inject
     UserTransaction utx;
-
+/*
     @Before
     public void preparePersistenceTest() throws Exception {
 
     }
-
+*/
     @Test
     public void truE() {
-
+        assertTrue(true);
     }
-
+    
+    // Order matters
+    private void clearAll() throws Exception {  
+        utx.begin();  
+        em.joinTransaction();
+        em.createQuery("delete from Users").executeUpdate();
+        utx.commit();
+    }
 }
