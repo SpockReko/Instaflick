@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.InstaFlickUserRegistry;
 
 /**
  * Testing the persistence layer
@@ -60,6 +60,23 @@ public class TestDatabase {
 
     @Test
     public void truE() {
+        assertTrue(true);
+    }
+  
+    @Inject
+    InstaFlickUser user;
+    
+    @Inject
+    InstaFlickUserRegistry registry;
+    
+    @Test
+    public void createUser(){
+        user = new InstaFlickUser("stefan");
+        user.setEmail("email@domain.com");
+        user.setPassword("password");
+
+        registry = new InstaFlickUserRegistry();
+        em.persist(user);
         assertTrue(true);
     }
     

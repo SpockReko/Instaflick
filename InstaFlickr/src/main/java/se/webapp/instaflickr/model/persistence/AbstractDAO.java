@@ -31,6 +31,7 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
 
     @Override
     public void create(T t) {
+        System.out.println("******************hi**********************: " + t);
        getEntityManager().persist(t);
     }
 
