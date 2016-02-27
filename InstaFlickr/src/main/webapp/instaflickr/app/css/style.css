@@ -15,3 +15,7 @@ body {
 .album-preview td {
     padding: 4px;
 }
+
+.album-preview {
+    height: 100%;
+}
