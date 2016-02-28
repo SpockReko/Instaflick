@@ -5,10 +5,34 @@
  */
 package se.webapp.instaflickr.model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.enterprise.context.ApplicationScoped;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
+
 /**
  *
- * @author TH
+ * @author Pontus
  */
-public class InstaFlick {
+@ApplicationScoped
+public class InstaFlick{
+
+    public InstaFlick() {
+        Logger.getAnonymousLogger().log(Level.INFO, "InstaFlick is alive");
+    }
+ /*   
+    public static void main(String[] arg){
+        InstaFlickUser user = new InstaFlickUser();
+        UserRegistry reg = new UserRegistry();
+        reg.create(user);
+    }
+*/ 
+    @EJB
+    private UserRegistry userRegistry;
     
+    public UserRegistry getUserRegistry() {
+        return userRegistry;
+    }
+
 }

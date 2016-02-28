@@ -6,7 +6,6 @@
 package se.webapp.instaflickr.model.reaction;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -63,10 +62,6 @@ public class Likes implements Serializable {
      */
     public boolean removeLike(InstaFlickUser user) {
         return userList.remove(user);
-    }
-
-    public List<InstaFlickUser> getUserList() {
-        return userList;
     }
 
     public void setUserList(List<InstaFlickUser> userList) {
