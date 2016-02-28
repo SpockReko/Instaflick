@@ -63,12 +63,12 @@ public class TestDatabase {
         assertTrue(true);
     }
   
-    @Inject
-    InstaFlickUser user;
+//    @Inject
+//    InstaFlickUser user;
     
     @Inject
     InstaFlickUserRegistry registry;
-    
+/*    
     @Test
     public void createUser(){
         user = new InstaFlickUser("stefan");
@@ -79,7 +79,7 @@ public class TestDatabase {
         em.persist(user);
         assertTrue(true);
     }
-    
+*/    
     // Order matters
     private void clearAll() throws Exception {  
         utx.begin();  
