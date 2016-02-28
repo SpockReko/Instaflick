@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -20,15 +21,16 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @Entity
 public class Likes implements Serializable {
 
-    static Long staticId = 4L;
+    static Long staticId = 0L;
     
     @Id
     private String id;
-    @Setter
-    @Getter
+    @Setter @Getter @OneToMany
     public List<InstaFlickUser> userList;
 
-    public Likes(){}
+    public Likes(){
+        this.id = "Like_id: " + (++staticId).toString();
+    }
     
     /**
      * Returns the number of likes, which is the same as the number of users

@@ -19,7 +19,7 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 public class UserRegistry extends AbstractDAO<InstaFlickUser, String> {
 
     @PersistenceContext  // Container managed EM
-    private EntityManager em;
+     EntityManager em;
 
     public UserRegistry() {
         super(InstaFlickUser.class);
