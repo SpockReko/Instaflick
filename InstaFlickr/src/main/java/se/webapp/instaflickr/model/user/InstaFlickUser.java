@@ -47,12 +47,12 @@ public class InstaFlickUser implements Serializable {
     
     public InstaFlickUser(String username){
         this.userName = username;
-        this.profilePicture = new Picture();
+//        this.profilePicture = new Picture();
     }
     
     public InstaFlickUser(String username, Picture picture){
         this.userName = username;
-        this.profilePicture = picture;
+//        this.profilePicture = picture;
     }
     
     public boolean removeUser() {

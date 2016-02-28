@@ -5,6 +5,7 @@
  */
 package se.webapp.instaflickr.model.user;
 
+import java.util.List;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -21,7 +22,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlickUserRegistry;
+import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.UserRegistry;
 
 /**
  * Testing the persistence layer
@@ -31,8 +33,8 @@ import se.webapp.instaflickr.model.InstaFlickUserRegistry;
 @RunWith(Arquillian.class)
 public class TestDatabase {
 
-//    @Inject
-//    InstaFlick instaFlick;
+    @Inject
+    InstaFlick instaFlick;
     
     @Deployment
     public static Archive<?> createDeployment() {
@@ -63,11 +65,7 @@ public class TestDatabase {
         assertTrue(true);
     }
   
-//    @Inject
-//    InstaFlickUser user;
-    
-    @Inject
-    InstaFlickUserRegistry registry;
+
 /*    
     @Test
     public void createUser(){
@@ -75,11 +73,20 @@ public class TestDatabase {
         user.setEmail("email@domain.com");
         user.setPassword("password");
 
-        registry = new InstaFlickUserRegistry();
+        registry = new UserRegistry();
         em.persist(user);
         assertTrue(true);
     }
-*/    
+*/
+    @Test
+    public void testPersistAUser() throws Exception {
+        InstaFlickUser u = new InstaFlickUser("James");
+        instaFlick.getUserRegistry().create(u);
+        List<InstaFlickUser> users = instaFlick.getUserRegistry().findAll();
+        assertTrue(users.size() > 0);
+        //assertTrue(users.get(0).getName().equals(u.getName()));
+    }
+    
     // Order matters
     private void clearAll() throws Exception {  
         utx.begin();  

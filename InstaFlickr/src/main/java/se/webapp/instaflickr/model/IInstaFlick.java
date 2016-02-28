@@ -12,6 +12,6 @@ package se.webapp.instaflickr.model;
  */
 interface IInstaFlick {
     
-    public IInstaFlickUserRegistry getUserRegistry();
+    public IUserRegistry getUserRegistry();
     
 }

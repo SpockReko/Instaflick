@@ -14,7 +14,7 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  *
  * @author Pontus
  */
-//@Local
-interface IInstaFlickUserRegistry extends IDAO<InstaFlickUser, String> {
+@Local
+interface IUserRegistry extends IDAO<InstaFlickUser, String> {
     
 }
