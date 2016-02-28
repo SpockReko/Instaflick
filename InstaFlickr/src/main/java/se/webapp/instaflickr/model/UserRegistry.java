@@ -15,13 +15,13 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  *
  * @author Pontus
  */
-//@Stateless
-public class InstaFlickUserRegistry extends AbstractDAO<InstaFlickUser, String> implements IInstaFlickUserRegistry {
+@Stateless
+public class UserRegistry extends AbstractDAO<InstaFlickUser, String> {
 
     @PersistenceContext  // Container managed EM
     private EntityManager em;
 
-    public InstaFlickUserRegistry() {
+    public UserRegistry() {
         super(InstaFlickUser.class);
     }
 

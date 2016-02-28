@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -22,17 +21,17 @@ public class InstaFlick{
     public InstaFlick() {
         Logger.getAnonymousLogger().log(Level.INFO, "InstaFlick is alive");
     }
- 
+ /*   
     public static void main(String[] arg){
         InstaFlickUser user = new InstaFlickUser();
-        InstaFlickUserRegistry reg = new InstaFlickUserRegistry();
+        UserRegistry reg = new UserRegistry();
         reg.create(user);
-        
     }
+*/ 
     @EJB
-    private IInstaFlickUserRegistry userRegistry;
+    private UserRegistry userRegistry;
     
-    public IInstaFlickUserRegistry getUserRegistry() {
+    public UserRegistry getUserRegistry() {
         return userRegistry;
     }
 
