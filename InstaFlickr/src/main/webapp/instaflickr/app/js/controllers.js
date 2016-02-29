@@ -9,12 +9,6 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope',
         $scope.name = "Henry Ottervad";
         $scope.description = "I like long walks on the beach..."
 
-        var imageData = ['http://placehold.it/400x400', 'http://placehold.it/400x400',
-            'http://placehold.it/400x400', 'http://placehold.it/400x400', 'http://placehold.it/400x400',
-            'http://placehold.it/400x400', 'http://placehold.it/400x400', 'http://placehold.it/400x400'];
-
-        // $scope.images = imageData;
-
         var testData = [
             {
                 "_id": 1,
