@@ -23,6 +23,7 @@ public class InstaFlickUser implements Serializable {
     static Long staticId = 0L;
     
     @Id
+    @Getter
     @Setter
     private String userName;
     @Getter
@@ -60,10 +61,6 @@ public class InstaFlickUser implements Serializable {
         /*
         TODO: Implement database connection to remove user.
         */
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
 }

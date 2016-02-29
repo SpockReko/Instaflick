@@ -8,7 +8,10 @@ package se.webapp.instaflickr.model.reaction;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -20,15 +23,15 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @Entity
 public class Likes implements Serializable {
 
-    static Long staticId = 4L;
-    
+    private static final long serialVersionUID = 1L;
     @Id
-    private String id;
-    @Setter
-    @Getter
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Setter @Getter @OneToMany
     public List<InstaFlickUser> userList;
 
-    public Likes(){}
+    public Likes(){
+    }
     
     /**
      * Returns the number of likes, which is the same as the number of users

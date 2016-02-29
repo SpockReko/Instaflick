@@ -18,12 +18,14 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.UserRegistry;
+import se.webapp.instaflickr.model.media.Picture;
 
 /**
  * Testing the persistence layer
@@ -41,6 +43,7 @@ public class TestDatabase {
         return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addPackage("se.webapp.instaflickr.model")
                 .addPackage("se.webapp.instaflickr.model.user")
+                .addPackage("se.webapp.instaflickr.model.media")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -60,32 +63,108 @@ public class TestDatabase {
         clearAll();
     }
 
+    //Test for to see if the test application works
     @Test
-    public void truE() {
+    public void alwaysTrue() {
         assertTrue(true);
     }
   
-
-/*    
-    @Test
-    public void createUser(){
-        user = new InstaFlickUser("stefan");
-        user.setEmail("email@domain.com");
-        user.setPassword("password");
-
-        registry = new UserRegistry();
-        em.persist(user);
-        assertTrue(true);
-    }
-*/
+    // ######## AbstractADO method tests InstaFlickUser #################################
+    
     @Test
     public void testPersistAUser() throws Exception {
-        InstaFlickUser u = new InstaFlickUser("James");
+        InstaFlickUser u = createUser("James");
         instaFlick.getUserRegistry().create(u);
         List<InstaFlickUser> users = instaFlick.getUserRegistry().findAll();
         assertTrue(users.size() > 0);
+    }
+
+    @Test
+    public void testPersistAPicture() throws Exception {
+        Picture pic = new Picture();
+        instaFlick.getPictureCatalogue().create(pic);
+        List<Picture> users = instaFlick.getPictureCatalogue().findAll();
+        assertTrue(users.size() > 0);
         //assertTrue(users.get(0).getName().equals(u.getName()));
     }
+    
+    @Test
+    public void testPresistAUserTwice() throws Exception {
+        InstaFlickUser newUser = createUser("James");
+        instaFlick.getUserRegistry().create(newUser);
+        Exception saveException = null;
+        try{
+        instaFlick.getUserRegistry().create(newUser);
+        }catch(Exception e){
+            saveException = e;
+        }
+        assertFalse(saveException == null);
+    }
+        
+    @Test
+    public void testDeleteUser() throws Exception {
+        InstaFlickUser newUser = createUser("James");
+        instaFlick.getUserRegistry().create(newUser);
+        instaFlick.getUserRegistry().delete("James");
+        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
+        assertTrue(givenUser == null);
+    }
+    
+    @Test
+    public void testUpdateUser() throws Exception {}
+    
+    @Test
+    public void testFindRangeOfUsers() throws Exception {}
+    
+    
+    @Test
+    public void testCountUsers() throws Exception {}
+    
+    // ######## InstaFlickUser tests #################################
+    
+    @Test
+    public void testSetAndGetUsername() throws Exception {
+        InstaFlickUser newUser = createUser("Jane");
+        newUser.setUserName("James");
+        instaFlick.getUserRegistry().create(newUser);
+        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
+        assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
+    }
+    
+    @Test
+    public void testSetAndGetEmail() throws Exception {
+        InstaFlickUser newUser = createUser("James");
+        newUser.setEmail("james.email@domain.se");
+        instaFlick.getUserRegistry().create(newUser);
+        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
+        assertTrue(givenUser.getEmail().equals(newUser.getEmail()));
+    }
+
+    @Test
+    public void testSetAndGetPassword() throws Exception {
+        InstaFlickUser newUser = createUser("James");
+        newUser.setPassword("StrongPassword");
+        instaFlick.getUserRegistry().create(newUser);
+        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
+        assertTrue(givenUser.getPassword().equals(newUser.getPassword()));
+    }
+
+    @Test
+    public void testSetAndGetProfilePicture() throws Exception {
+        // TODO: We must add picture fuction first
+    }
+    
+    @Test
+    public void testSetAndGetPicture() throws Exception {}
+        
+    // ######## Comment tests ################################# 
+    
+    
+    
+    
+    // ######## Like tests #################################
+    
+    // ######## Pictures tests #################################
     
     // Order matters
     private void clearAll() throws Exception {  
@@ -95,10 +174,10 @@ public class TestDatabase {
         em.createQuery("delete from Comment").executeUpdate();
         em.createQuery("delete from Picture").executeUpdate();
         em.createQuery("delete from InstaFlickUser").executeUpdate();
-        /*
-        em.createQuery("delete from InstaFlickUser_Picture").executeUpdate();
-        em.createQuery("delete from LIKES_INSTAFLICKUSER").executeUpdate();
-        em.createQuery("delete from PICTURE_COMMENT").executeUpdate(); */
         utx.commit();
+    }
+    
+    private InstaFlickUser createUser(String name){
+        return new InstaFlickUser(name);
     }
 }

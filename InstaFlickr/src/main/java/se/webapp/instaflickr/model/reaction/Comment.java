@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -24,38 +25,36 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @Entity
 public class Comment implements Serializable {
     
-    private static final long serialVersionUID = 2L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Setter
-    @Getter
+    
+    @Setter @Getter @OneToOne
     private InstaFlickUser user;
-    @Getter
-    @Setter
+    
+    @Getter @Setter
     String commentText;
-    @Setter
-    @Getter
+    
+    @Setter @Getter
     Date created;
-    @Setter
-    @Getter
+    
+    @Setter @Getter @OneToOne
     private Likes like;
     
     public Comment(){
+        
     }
-    
     public Comment(InstaFlickUser user, String commentText){
+        
         this.user = user;
         this.commentText = commentText;
         this.like = new Likes();
+    
     }
     
     public void editComment(String commentText) {
+        
         this.commentText = commentText;
-    }
-
-    public InstaFlickUser getUser(InstaFlickUser user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
     }
     
 }

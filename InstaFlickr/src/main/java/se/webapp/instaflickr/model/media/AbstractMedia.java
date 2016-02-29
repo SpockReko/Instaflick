@@ -31,7 +31,7 @@ public abstract class AbstractMedia {
     
     public boolean removeComment(InstaFlickUser user, Comment comment) {
     
-        if (comment.getUser(user) == user) {
+        if (comment.getUser().getUserName() == user.getUserName()) {
             comments.remove(comment);
             getEntityManager().remove(comment);
             return true;
