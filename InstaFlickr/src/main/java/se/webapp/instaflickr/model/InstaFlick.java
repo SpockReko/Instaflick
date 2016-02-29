@@ -21,13 +21,6 @@ public class InstaFlick{
     public InstaFlick() {
         Logger.getAnonymousLogger().log(Level.INFO, "InstaFlick is alive");
     }
- /*   
-    public static void main(String[] arg){
-        InstaFlickUser user = new InstaFlickUser();
-        UserRegistry reg = new UserRegistry();
-        reg.create(user);
-    }
-*/ 
     @EJB
     private UserRegistry userRegistry;
     
@@ -35,9 +28,5 @@ public class InstaFlick{
         return userRegistry;
     }
 
-    public static void main(String[] arg){
-        InstaFlickUser user1 = new InstaFlickUser("Stefan");
-        user1.setEmail("stefan.fritzon@gmail.com");
-        
-}
+
 }
