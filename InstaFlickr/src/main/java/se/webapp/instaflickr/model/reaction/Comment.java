@@ -41,7 +41,7 @@ public class Comment implements Serializable {
     private Likes like;
     
     public Comment(){
-    
+
     }
     
     public Comment(InstaFlickUser user, String commentText){
