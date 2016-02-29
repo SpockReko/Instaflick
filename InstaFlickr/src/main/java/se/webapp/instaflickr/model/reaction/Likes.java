@@ -65,9 +65,9 @@ public class Likes implements Serializable {
     public boolean removeLike(InstaFlickUser user) {
         return userList.remove(user);
     }
-
+    
     public void setUserList(List<InstaFlickUser> userList) {
         this.userList = userList;
-    }
+}
     
 }

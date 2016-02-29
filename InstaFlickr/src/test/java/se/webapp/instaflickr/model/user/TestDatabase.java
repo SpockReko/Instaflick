@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package se.webapp.instaflickr.model.user;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,12 +33,13 @@ import se.webapp.instaflickr.model.UserRegistry;
  *
  * @author Pontus
  */
+
 @RunWith(Arquillian.class)
 public class TestDatabase {
 
     @Inject
     InstaFlick instaFlick;
-    
+   
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
@@ -45,7 +48,7 @@ public class TestDatabase {
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
-
+ 
     // Need a standalone em to remove testdata between tests
     // No em accessible from interfaces
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
@@ -68,17 +71,17 @@ public class TestDatabase {
     }
   
     // ######## AbstractADO method tests InstaFlickUser #################################
-    
+
     @Test
-    public void testPersistAUser() throws Exception {
+    public void test_Persist_A_User() throws Exception {
         InstaFlickUser u = createUser("James");
         instaFlick.getUserRegistry().create(u);
         List<InstaFlickUser> users = instaFlick.getUserRegistry().findAll();
         assertTrue(users.size() > 0);
     }
-    
+
     @Test
-    public void testPresistAUserTwice() throws Exception {
+    public void test_Presist_A_User_Twice() throws Exception {
         InstaFlickUser newUser = createUser("James");
         instaFlick.getUserRegistry().create(newUser);
         Exception saveException = null;
@@ -89,7 +92,7 @@ public class TestDatabase {
         }
         assertFalse(saveException == null);
     }
-        
+    
     @Test
     public void testDeleteUser() throws Exception {
         InstaFlickUser newUser = createUser("James");
@@ -98,63 +101,138 @@ public class TestDatabase {
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser == null);
     }
-    
+
     @Test
-    public void testUpdateUser() throws Exception {}
-    
+    public void testUpdate_User() throws Exception {
+        InstaFlickUser newUser = createUser("James");
+        instaFlick.getUserRegistry().create(newUser);
+        assertNull(newUser.getPassword());
+        newUser.setPassword("weak_password");
+        instaFlick.getUserRegistry().delete("James");
+        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
+        assertTrue(givenUser == null);
+    }
+
+    /*
     @Test
-    public void testFindRangeOfUsers() throws Exception {}
+    public void test_Find_Range_Of_Users() throws Exception {
+        
+    }
     
-    
+    /*
     @Test
-    public void testCountUsers() throws Exception {}
+    public void test_Count_Users() throws Exception {}
     
     // ######## InstaFlickUser tests #################################
-    
+  */
     @Test
-    public void testSetAndGetUsername() throws Exception {
+    public void test_SetAndGet_Username() throws Exception {
         InstaFlickUser newUser = createUser("Jane");
         newUser.setUserName("James");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
     }
-    
+  /*  
     @Test
-    public void testSetAndGetEmail() throws Exception {
+    public void test_SetAndGet_Email() throws Exception {
         InstaFlickUser newUser = createUser("James");
         newUser.setEmail("james.email@domain.se");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getEmail().equals(newUser.getEmail()));
     }
-
+/*
     @Test
-    public void testSetAndGetPassword() throws Exception {
+    public void test_SetAndGet_Password() throws Exception {
         InstaFlickUser newUser = createUser("James");
         newUser.setPassword("StrongPassword");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getPassword().equals(newUser.getPassword()));
     }
-
+/*
     @Test
-    public void testSetAndGetProfilePicture() throws Exception {
+    public void test_SetAndGet_ProfilePicture() throws Exception {
         // TODO: We must add picture fuction first
     }
-    
+    /*
     @Test
-    public void testSetAndGetPicture() throws Exception {}
+    public void test_SetAndGet_Picture() throws Exception {
+        // TODO: We must add picture functions first
+    }
         
     // ######## Comment tests ################################# 
     
-    
-    
+    // Create comment instans
+    /*
+    public void test_SetandGet_User_InComment() throws Exception{
+        // 
+    }
+    /*
+    public void test_SetandGet_Text_Comment() throws Exception{
+        
+    }
+    /*
+    public void test_SetandGet_Created_Comment() throws Exception{
+        
+    }
+    /*
+    public void test_SetandGet_Like_Comment() throws Exception{
+        
+    }
+    /*
+    public void test_EditComment() throws Exception{
+        
+    }
     
     // ######## Like tests #################################
+    /*
+    public void test_SG_UserList() throws Exception{
+        
+    }
+    /*
+    public void test_Add_Like() throws Exception{
+        
+    }
+    /*
+    public void test_Remove_Like() throws Exception{
+        
+    }
+    
+    /*
+    public void test_nrOfLikes() throws Exception{
+        
+    }
     
     // ######## Pictures tests #################################
-    
+    /*
+    public void test_SetandGet_ImagePath_Of_Picture() throws Exception{
+        
+    }
+    /*
+    public void test_SetandGet_Comments_On_Picture() throws Exception{
+        
+    }
+    /*
+    public void test_SetandGet_Uploaded_Picture() throws Exception{
+        
+    }
+    /*
+    public void test_SetandGet_Uploader_Of_Picture() throws Exception{
+        
+    }
+    /*
+    public void test_SetandGet_Like_On_Picture() throws Exception{
+        
+    }
+    /*
+    public void test_Post_Comment_On_Picture() throws Exception{
+        
+    }
+   */
+    // ######## Private help functions ##########################
+
     // Order matters
     private void clearAll() throws Exception {  
         utx.begin();  
@@ -169,4 +247,5 @@ public class TestDatabase {
     private InstaFlickUser createUser(String name){
         return new InstaFlickUser(name);
     }
+
 }

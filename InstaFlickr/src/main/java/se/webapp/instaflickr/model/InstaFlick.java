@@ -39,5 +39,5 @@ public class InstaFlick{
         InstaFlickUser user1 = new InstaFlickUser("Stefan");
         user1.setEmail("stefan.fritzon@gmail.com");
         
-    }
+}
 }
