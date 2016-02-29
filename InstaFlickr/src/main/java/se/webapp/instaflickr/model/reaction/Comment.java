@@ -40,7 +40,9 @@ public class Comment implements Serializable {
     @Setter @Getter @OneToOne
     private Likes like;
     
-    
+    public Comment(){
+        
+    }
     public Comment(InstaFlickUser user, String commentText){
         
         this.user = user;
