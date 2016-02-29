@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.UserRegistry;
+import se.webapp.instaflickr.model.media.Picture;
 
 /**
  * Testing the persistence layer
@@ -42,6 +43,7 @@ public class TestDatabase {
         return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addPackage("se.webapp.instaflickr.model")
                 .addPackage("se.webapp.instaflickr.model.user")
+                .addPackage("se.webapp.instaflickr.model.media")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -75,6 +77,15 @@ public class TestDatabase {
         instaFlick.getUserRegistry().create(u);
         List<InstaFlickUser> users = instaFlick.getUserRegistry().findAll();
         assertTrue(users.size() > 0);
+    }
+
+    @Test
+    public void testPersistAPicture() throws Exception {
+        Picture pic = new Picture();
+        instaFlick.getPictureCatalogue().create(pic);
+        List<Picture> users = instaFlick.getPictureCatalogue().findAll();
+        assertTrue(users.size() > 0);
+        //assertTrue(users.get(0).getName().equals(u.getName()));
     }
     
     @Test

@@ -38,6 +38,12 @@ public class InstaFlick{
     public static void main(String[] arg){
         InstaFlickUser user1 = new InstaFlickUser("Stefan");
         user1.setEmail("stefan.fritzon@gmail.com");
+    }
         
+    @EJB
+    private PictureCatalogue pictureCatalogue;
+    
+    public PictureCatalogue getPictureCatalogue() {
+        return pictureCatalogue;
     }
 }

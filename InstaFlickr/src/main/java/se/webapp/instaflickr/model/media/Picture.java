@@ -50,7 +50,7 @@ public class Picture extends AbstractMedia implements Serializable {
 
     
     public Picture() {
-        likes = new Likes();
+    //    likes = new Likes();
     }
 
     @Override
