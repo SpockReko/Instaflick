@@ -1,5 +1,6 @@
 body { 
     padding-top: 70px; 
+    padding-bottom: 70px;
 }
 
 #profile-box {
@@ -7,9 +8,9 @@ body {
 }
 
 .center-block {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .album-preview td {
@@ -31,4 +32,18 @@ body {
 
 textarea {
     resize: none;
+}
+
+#comment-avatar {
+    max-height: 75px;
+    max-width: 75px;
+}
+
+.comment-row {
+    margin-bottom: 8px;
+    border: 10px;
+}
+
+.comment-row-input {
+    margin-bottom: 8px;
 }

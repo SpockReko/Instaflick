@@ -1,20 +1,51 @@
 <div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-            <img id="single-image" class="img-responsive" src="http://lorempixel.com/600/300/fashion/">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-2">
-            <img class="img-responsive img-circle" src="http://lorempixel.com/200/200/people/">
-        </div>
-        <div class="col-xs-8">
-            <div class="form-group">
-                <textarea class="form-control" rows="2" id="picture-comment"></textarea>
+    <div id="image-container">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <img id="single-image" class="img-responsive" src="{{image.path}}">
             </div>
         </div>
-        <div class="col-xs-2">
+
+        <div class="row">
+            <div class="col-xs-6 col-xs-offset-3" id="image-description">
+                <p><em>{{image.description}}</em></p>
+            </div>
+            <div class="col-xs-2 col-xs-offset-1">
+                <p><small><em>{{image.date}}</em></small></p>
+                <p>
+                    <span class="glyphicon glyphicon-heart"></span> {{image.likes}} likes
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row comment-row-input">
+        <div class="col-xs-3">
+            <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <textarea class="form-control picture-comment-input" rows="2" placeholder="Say something nice!"></textarea>
+            </div>
+        </div>
+        <div class="col-xs-3">
             <button type="submit" class="btn btn-primary">Comment</button>
         </div>
     </div>
+
+    <div id="comment-list">
+        <div class="row comment-row" ng-repeat="comment in comments">
+            <div class="col-xs-3">
+                <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
+            </div>
+            <div class="col-xs-6 comment">
+                <p class="comment-text">{{comment.text}}</p>
+                <p><small><em>{{comment.date}}</em> <span class="glyphicon glyphicon-heart"></span> {{comment.likes}} likes</small></p>
+            </div>
+        </div>
+    </div>
+
 </div>
