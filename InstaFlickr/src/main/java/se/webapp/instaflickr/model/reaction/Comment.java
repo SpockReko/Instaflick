@@ -9,11 +9,9 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,15 +53,12 @@ public class Comment implements Serializable {
         this.commentText = commentText;
         this.like = new Likes();
         this.created = Date.valueOf(LocalDate.MAX);
-        
     }
     
     // Denna metoden känns som setComment() metoden.
     
     public void editComment(String commentText) {
-        
         this.commentText = commentText;
-    
     }
     
 }

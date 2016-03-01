@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -20,12 +22,21 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @Entity
 public class Album implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
+    @Getter
+    @Setter
     private String name;
     @Id
-    private InstaFlickUser admin;
+    @Getter
+    @Setter
+    private InstaFlickUser owner;
     private List<InstaFlickUser> followers;
     private List<Picture> pictures;
 
+    public Album() {} // Används ej
+    
+    public Album(String albumName, InstaFlickUser owner) {
+        name = albumName;
+        this.owner = owner;
+    }
 }

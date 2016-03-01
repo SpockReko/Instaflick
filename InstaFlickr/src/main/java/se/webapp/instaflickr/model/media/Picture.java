@@ -49,8 +49,11 @@ public class Picture extends AbstractMedia implements Serializable {
     private Likes likes;
 
     
-    public Picture() {
-        likes = new Likes();
+    public Picture() {} // Används ej.
+
+    public Picture(InstaFlickUser uploader, Likes likes) {
+        this.uploader = uploader;
+        this.likes = likes;
     }
 
     @Override
