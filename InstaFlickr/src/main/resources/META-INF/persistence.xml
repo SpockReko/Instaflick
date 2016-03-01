@@ -6,6 +6,7 @@
     <class>se.webapp.instaflickr.model.reaction.Comment</class>
     <class>se.webapp.instaflickr.model.reaction.Likes</class>
     <class>se.webapp.instaflickr.model.media.Picture</class>
+    <class>se.webapp.instaflickr.model.media.Album</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

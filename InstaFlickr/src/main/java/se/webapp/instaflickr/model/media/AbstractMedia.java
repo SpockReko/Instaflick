@@ -22,8 +22,8 @@ public abstract class AbstractMedia {
 
     protected abstract EntityManager getEntityManager();
     
-    public boolean postComment(InstaFlickUser user, String mgs) {
-        Comment comment = new Comment(user, mgs);
+    public boolean postComment(InstaFlickUser user, String mgs, Likes like) {
+        Comment comment = new Comment(user, mgs, like);
         comments.add(comment);
         getEntityManager().persist(comment);
         return true;

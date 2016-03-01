@@ -16,7 +16,7 @@ import se.webapp.instaflickr.model.persistence.AbstractDAO;
  * @author Pontus
  */
 @Stateless
-public class PictureCatalogue extends AbstractDAO<Picture, String> {
+public class PictureCatalogue extends AbstractDAO<Picture, Long> {
 
     @PersistenceContext  // Container managed EM
     private EntityManager em;
