@@ -35,4 +35,18 @@ public class InstaFlick{
     public PictureCatalogue getPictureCatalogue() {
         return pictureCatalogue;
     }
+        
+    @EJB
+    private LikesHandler likesHandler;
+    
+    public LikesHandler getLikesHandler() {
+        return likesHandler;
+    }
+        
+    @EJB
+    private AlbumCatalogue albumCatalogue;
+    
+    public AlbumCatalogue getAlbumCatalogue() {
+        return albumCatalogue;
+    }
 }
