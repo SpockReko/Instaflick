@@ -80,3 +80,8 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope',
 
         $scope.testData = testData;
     }]);
+
+instaFlickControllers.controller('PictureCtrl', ['$scope',
+    function ($scope) {
+        
+    }]);

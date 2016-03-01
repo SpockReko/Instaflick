@@ -23,3 +23,12 @@ body {
 .img-responsive{
     width: 100%;
 }
+
+#single-image {
+    max-height: 600px;
+    margin-bottom: 16px;
+}
+
+textarea {
+    resize: none;
+}
