@@ -19,6 +19,12 @@ instaflickr.config(['$routeProvider',
                 when('/settings', {
                     templateUrl: 'partials/settings.html'
                 }).
+                when('/about', {
+                    templateUrl: 'partials/about.html'
+                }).
+                when('/upload', {
+                    templateUrl: 'partials/upload.html'
+                }).
                 when('/login',{
                     templateUrl: 'partials/login.html'
                 }).
