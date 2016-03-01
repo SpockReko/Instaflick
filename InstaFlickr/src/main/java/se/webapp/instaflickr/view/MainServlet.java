@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MainServlet extends HttpServlet {
     
-    @PersistenceContext(unitName = "InstaBase_PU")
+    @PersistenceContext(unitName = "jpa_InstaBase_PU")
     private EntityManager em;
 
     /**

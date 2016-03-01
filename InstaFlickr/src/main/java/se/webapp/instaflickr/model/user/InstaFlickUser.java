@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.media.Picture;
@@ -32,9 +34,11 @@ public class InstaFlickUser implements Serializable {
     private String password;
     @Getter
     @Setter
+    @OneToOne
     private Picture profilePicture;
     @Getter
     @Setter
+    @OneToMany
     private List<Picture> pictures;
     
     
@@ -44,7 +48,6 @@ public class InstaFlickUser implements Serializable {
     
     public InstaFlickUser(String username){
         this.userName = username;
-        this.profilePicture = new Picture();
     }
     
     public InstaFlickUser(String username, Picture picture){
@@ -57,10 +60,6 @@ public class InstaFlickUser implements Serializable {
         /*
         TODO: Implement database connection to remove user.
         */
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
 }
