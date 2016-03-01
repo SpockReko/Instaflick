@@ -8,11 +8,9 @@ package se.webapp.instaflickr.model.reaction;
 import java.io.Serializable;
 import java.sql.Date;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,21 +38,16 @@ public class Comment implements Serializable {
     @Setter @Getter @OneToOne
     private Likes like;
     
-    public Comment(){
-        
-    }
-    public Comment(InstaFlickUser user, String commentText){
-        
+    public Comment(){} // Används ej
+    
+    public Comment(InstaFlickUser user, String commentText, Likes like){
         this.user = user;
         this.commentText = commentText;
-        this.like = new Likes();
-    
+        this.like = like;
     }
     
     public void editComment(String commentText) {
-        
         this.commentText = commentText;
-    
     }
     
 }
