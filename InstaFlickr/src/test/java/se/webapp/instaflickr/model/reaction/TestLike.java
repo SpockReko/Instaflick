@@ -5,6 +5,7 @@
  */
 package se.webapp.instaflickr.model.reaction;
 
+import java.util.List;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
@@ -48,28 +50,37 @@ public class TestLike extends AbstractTest {
     }
     
 
+    @Inject
+    Likes likes;
 
-
-
+    @Inject
+    InstaFlickUser user;
+    
+    @Inject
+    InstaFlickUser user2;
 
     // ######## Like tests #################################
-    /*
-    public void test_SG_UserList() throws Exception{
-        
+    
+    @Test
+    public void test_Add_and_nrOfLikes_Like() throws Exception{
+        user = new InstaFlickUser("Frank");
+        user2 = new InstaFlickUser("James");
+        likes.addLike(user);
+        likes.addLike(user2);
+        int number_Of_Likes = likes.nrOfLikes();
+        int two = 2;
+        assertTrue(number_Of_Likes == two);
     }
-    /*
-    public void test_Add_Like() throws Exception{
-        
-    }
-    /*
+    
+    @Test
     public void test_Remove_Like() throws Exception{
-        
+        user = new InstaFlickUser("Frank");
+        user2 = new InstaFlickUser("James");
+        likes = new Likes();
+        likes.addLike(user);
+        likes.addLike(user2);
+        likes.removeLike(user);
+        assertTrue(likes.nrOfLikes() == 1 && likes.userList.contains(user2));
     }
     
-    /*
-    public void test_nrOfLikes() throws Exception{
-        
-    }
-    
-   */
 }

@@ -47,11 +47,11 @@ public class Comment implements Serializable {
         this.like = new Likes();
     }
     
-    public Comment(InstaFlickUser user, String commentText){
+    public Comment(InstaFlickUser user, String commentText, Likes like){
         
         this.user = user;
         this.commentText = commentText;
-        this.like = new Likes();
+        this.like = like;
         this.created = Date.valueOf(LocalDate.MAX);
     }
     

@@ -47,26 +47,32 @@ public class TestPicture extends AbstractTest {
     
     // ######## Pictures tests #################################
     /*
+    @Test
     public void test_SetandGet_ImagePath_Of_Picture() throws Exception{
         
     }
     /*
+    @Test
     public void test_SetandGet_Comments_On_Picture() throws Exception{
         
     }
     /*
+    @Test
     public void test_SetandGet_Uploaded_Picture() throws Exception{
         
     }
     /*
+    @Test
     public void test_SetandGet_Uploader_Of_Picture() throws Exception{
         
     }
     /*
+    @Test
     public void test_SetandGet_Like_On_Picture() throws Exception{
         
     }
     /*
+    @Test
     public void test_Post_Comment_On_Picture() throws Exception{
         
     }

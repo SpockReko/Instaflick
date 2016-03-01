@@ -56,7 +56,7 @@ public class TestComment extends AbstractTest {
     @Test
     public void test_SetandGet_User_InComment() throws Exception{
         InstaFlickUser newUser = new InstaFlickUser("James");
-        Comment comment = new Comment(null,null);
+        Comment comment = new Comment(null,null,null);
         comment.setUser(newUser);
         InstaFlickUser givenUser = comment.getUser();
         assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
@@ -97,7 +97,7 @@ public class TestComment extends AbstractTest {
 
     @Test
     public void test_EditComment() throws Exception{
-        Comment comment = new Comment(createUser("James"), "First text");
+        Comment comment = new Comment(createUser("James"), "First text", new Likes());
         String editText = "editText";
         comment.editComment(editText);
         assertTrue(editText.equals(comment.getCommentText()));

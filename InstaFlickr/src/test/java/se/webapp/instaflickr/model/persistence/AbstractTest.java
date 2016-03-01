@@ -33,7 +33,11 @@ public class AbstractTest {
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addPackage("se.webapp.instaflickr.model")
+                .addPackage("se.webapp.instaflickr.model.media")
+                .addPackage("se.webapp.instaflickr.model.persistence")
+                .addPackage("se.webapp.instaflickr.model.reaction")
                 .addPackage("se.webapp.instaflickr.model.user")
+                .addPackage("se.webapp.instaflickr.model.view")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
