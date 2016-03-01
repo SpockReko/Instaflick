@@ -8,26 +8,25 @@ package se.webapp.instaflickr.model;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.persistence.AbstractDAO;
+import se.webapp.instaflickr.model.reaction.Likes;
 
 /**
  *
  * @author Pontus
  */
 @Stateless
-public class PictureCatalogue extends AbstractDAO<Picture, Long> {
-
+public class LikesHandler extends AbstractDAO<Likes, Long> {
+ 
     @PersistenceContext  // Container managed EM
     private EntityManager em;
 
-    public PictureCatalogue() {
-        super(Picture.class);
+    public LikesHandler() {
+        super(Likes.class);
     }
         
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    
 }

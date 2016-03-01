@@ -25,7 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.UserRegistry;
+import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.media.Picture;
+import se.webapp.instaflickr.model.reaction.Likes;
 
 /**
  * Testing the persistence layer
@@ -44,6 +46,7 @@ public class TestDatabase {
                 .addPackage("se.webapp.instaflickr.model")
                 .addPackage("se.webapp.instaflickr.model.user")
                 .addPackage("se.webapp.instaflickr.model.media")
+                .addPackage("se.webapp.instaflickr.model.reaction")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -81,13 +84,34 @@ public class TestDatabase {
 
     @Test
     public void testPersistAPicture() throws Exception {
-        Picture pic = new Picture();
+        InstaFlickUser user = new InstaFlickUser("James");
+        instaFlick.getUserRegistry().create(user);
+        Likes like = new Likes();
+        instaFlick.getLikesHandler().create(like);
+        Picture pic = new Picture(user, like);
         instaFlick.getPictureCatalogue().create(pic);
-        List<Picture> users = instaFlick.getPictureCatalogue().findAll();
-        assertTrue(users.size() > 0);
-        //assertTrue(users.get(0).getName().equals(u.getName()));
+        List<Picture> pics = instaFlick.getPictureCatalogue().findAll();
+        assertTrue(pics.size() > 0);
     }
     
+    @Test
+    public void testPersistALikes() throws Exception {
+        Likes l = new Likes();
+        instaFlick.getLikesHandler().create(l);
+        List<Likes> likes = instaFlick.getLikesHandler().findAll();
+        assertTrue(likes.size() > 0);
+    }
+    
+    @Test
+    public void testPersistAnAlbum() throws Exception {
+        InstaFlickUser user = new InstaFlickUser("James");
+        instaFlick.getUserRegistry().create(user);
+        Album a = new Album("testAlbum", user);
+        instaFlick.getAlbumCatalogue().create(a);
+        List<Album> albums = instaFlick.getAlbumCatalogue().findAll();
+        assertTrue(albums.size() > 0);
+    }
+/*    
     @Test
     public void testPresistAUserTwice() throws Exception {
         InstaFlickUser newUser = createUser("James");
@@ -100,7 +124,7 @@ public class TestDatabase {
         }
         assertFalse(saveException == null);
     }
-        
+*/        
     @Test
     public void testDeleteUser() throws Exception {
         InstaFlickUser newUser = createUser("James");
@@ -170,9 +194,10 @@ public class TestDatabase {
     private void clearAll() throws Exception {  
         utx.begin();  
         em.joinTransaction();
-        em.createQuery("delete from Likes").executeUpdate();
         em.createQuery("delete from Comment").executeUpdate();
         em.createQuery("delete from Picture").executeUpdate();
+        em.createQuery("delete from Likes").executeUpdate();
+        em.createQuery("delete from Album").executeUpdate();
         em.createQuery("delete from InstaFlickUser").executeUpdate();
         utx.commit();
     }

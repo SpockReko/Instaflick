@@ -8,7 +8,7 @@ package se.webapp.instaflickr.model;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import se.webapp.instaflickr.model.media.Picture;
+import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.persistence.AbstractDAO;
 
 /**
@@ -16,18 +16,17 @@ import se.webapp.instaflickr.model.persistence.AbstractDAO;
  * @author Pontus
  */
 @Stateless
-public class PictureCatalogue extends AbstractDAO<Picture, Long> {
+public class AlbumCatalogue extends AbstractDAO<Album, String> {
 
     @PersistenceContext  // Container managed EM
     private EntityManager em;
 
-    public PictureCatalogue() {
-        super(Picture.class);
+    public AlbumCatalogue() {
+        super(Album.class);
     }
         
     @Override
     protected EntityManager getEntityManager() {
         return em;
-    }
-    
+    }    
 }
