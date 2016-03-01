@@ -7,6 +7,7 @@ package se.webapp.instaflickr.model.reaction;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,13 +26,13 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @Entity
 public class Comment implements Serializable {
     
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @Getter @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     @Setter @Getter @OneToOne
     private InstaFlickUser user;
     
-    @Getter @Setter
+    @Setter @Getter 
     String commentText;
     
     @Setter @Getter
@@ -42,6 +43,10 @@ public class Comment implements Serializable {
     
     public Comment(){
 
+        this.user = null;
+        this.commentText = "";
+        this.created = Date.valueOf(LocalDate.MAX);
+        this.like = new Likes();
     }
     
     public Comment(InstaFlickUser user, String commentText){
@@ -49,8 +54,11 @@ public class Comment implements Serializable {
         this.user = user;
         this.commentText = commentText;
         this.like = new Likes();
-    
+        this.created = Date.valueOf(LocalDate.MAX);
+        
     }
+    
+    // Denna metoden känns som setComment() metoden.
     
     public void editComment(String commentText) {
         

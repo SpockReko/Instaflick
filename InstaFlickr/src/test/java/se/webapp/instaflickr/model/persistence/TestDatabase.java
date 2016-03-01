@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -73,33 +74,49 @@ public class TestDatabase extends AbstractTest{
         assertTrue(givenUser == null);
     }
 
-    @Test
+    @Test // ** Fel på internet. Ej testat! **
     public void testUpdate_User() throws Exception {
         InstaFlickUser newUser = createUser("James");
-        instaFlick.getUserRegistry().create(newUser);
+        UserRegistry reg = instaFlick.getUserRegistry();
+        reg.create(newUser);
         assertNull(newUser.getPassword());
         newUser.setPassword("weak_password");
-        instaFlick.getUserRegistry().delete("James");
-        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
-        assertTrue(givenUser == null);
+        reg.update(newUser);
+        InstaFlickUser givenUser = reg.find("James");
+        assertTrue( givenUser.getPassword().equals(newUser.getPassword() ) );
     }
 
-    /*
-    @Test
+    
+    @Test // ** Fel på internet. Ej testat! **
     public void test_Find_Range_Of_Users() throws Exception {
-        
+        InstaFlickUser newUser = createUser("James");
+        InstaFlickUser newUser2 = createUser("John");
+        InstaFlickUser newUser3 = createUser("Alice");
+        InstaFlickUser newUser4 = createUser("Lisa");
+        UserRegistry reg = instaFlick.getUserRegistry();
+        reg.create(newUser);
+        reg.create(newUser2);
+        reg.create(newUser3);
+        reg.create(newUser4);
+        List<InstaFlickUser> range = reg.findRange(1, 2);
+        System.out.println("range: " + range.toString());
     }
     
-    /*
-    @Test
+    
+    @Test // ** Fel på internet. Ej testat! **
     public void test_Count_Users() throws Exception {
-    
+        InstaFlickUser newUser = createUser("James");
+        InstaFlickUser newUser2 = createUser("John");
+        InstaFlickUser newUser3 = createUser("Alice");
+        InstaFlickUser newUser4 = createUser("Lisa");
+        UserRegistry reg = instaFlick.getUserRegistry();
+        reg.create(newUser);
+        reg.create(newUser2);
+        reg.create(newUser3);
+        reg.create(newUser4);
+        int number = reg.count();
+        int four = 4;
+        assertTrue(number == four);
     }
-    
-        
-   
-    
-    // ######## Picture Catalog ########################
-    
-*/
+
 }
