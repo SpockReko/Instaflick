@@ -5,6 +5,7 @@
  */
 package se.webapp.instaflickr.model.user;
 
+import java.util.List;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -22,7 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
+import se.webapp.instaflickr.model.reaction.Likes;
 
 /**
  *
@@ -30,15 +33,18 @@ import se.webapp.instaflickr.model.persistence.AbstractTest;
  */
 @RunWith(Arquillian.class)
 public class TestUser extends AbstractTest {
-    
+
     @Inject
     InstaFlick instaFlick;
- 
+    
+    @Inject
+    InstaFlickUser newUser;
+    
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
     EntityManager em;
-   
+
     @Before
     public void preparePersistenceTest() throws Exception {
         clearAll();
@@ -49,21 +55,21 @@ public class TestUser extends AbstractTest {
     public void alwaysTrue() {
         assertTrue(true);
     }
-    
-      // ######## InstaFlickUser tests #################################
-  
+
+
+
     @Test
     public void test_SetAndGet_Username() throws Exception {
-        InstaFlickUser newUser = createUser("Jane");
+        newUser = createUser("Jane");
         newUser.setUserName("James");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
     }
- 
+
     @Test
     public void test_SetAndGet_Email() throws Exception {
-        InstaFlickUser newUser = createUser("James");
+        newUser = createUser("James");
         newUser.setEmail("james.email@domain.se");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
@@ -72,26 +78,36 @@ public class TestUser extends AbstractTest {
 
     @Test
     public void test_SetAndGet_Password() throws Exception {
-        InstaFlickUser newUser = createUser("James");
+        newUser = createUser("James");
         newUser.setPassword("StrongPassword");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getPassword().equals(newUser.getPassword()));
     }
-/*
+
+    @Inject
+    Picture pic;
+    
     @Test
     public void test_SetAndGet_ProfilePicture() throws Exception {
-        // TODO: We must add picture fuction first
+        newUser = createUser("James");
+        pic = new Picture(newUser, new Likes());
+        newUser.setProfilePicture(pic);
+        Picture givenPic = newUser.getProfilePicture();
+        assertTrue(givenPic.equals(pic));
     }
-    /*
+
     @Test
     public void test_SetAndGet_Picture() throws Exception {
-        // TODO: We must add picture functions first
+        newUser = createUser("James");
+        pic = new Picture(newUser, new Likes());
+        newUser.addPicture(pic);
+        List<Picture> picList = newUser.getPictures();
+        boolean test = false;
+        for(int i=0 ; i < picList.size() ; i++ ){
+            if(picList.get(i).equals(pic))
+                test = true;
+        }
+        assertTrue(test);
     }
-  
-*/
-
-
-
-    
 }

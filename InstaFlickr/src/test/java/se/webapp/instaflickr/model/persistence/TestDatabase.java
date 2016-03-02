@@ -74,7 +74,7 @@ public class TestDatabase extends AbstractTest{
         assertTrue(givenUser == null);
     }
 
-    @Test // ** Fel på internet. Ej testat! **
+    @Test 
     public void testUpdate_User() throws Exception {
         InstaFlickUser newUser = createUser("James");
         UserRegistry reg = instaFlick.getUserRegistry();
@@ -87,7 +87,7 @@ public class TestDatabase extends AbstractTest{
     }
 
     
-    @Test // ** Fel på internet. Ej testat! **
+    @Test 
     public void test_Find_Range_Of_Users() throws Exception {
         InstaFlickUser newUser = createUser("James");
         InstaFlickUser newUser2 = createUser("John");
@@ -103,7 +103,7 @@ public class TestDatabase extends AbstractTest{
     }
     
     
-    @Test // ** Fel på internet. Ej testat! **
+    @Test 
     public void test_Count_Users() throws Exception {
         InstaFlickUser newUser = createUser("James");
         InstaFlickUser newUser2 = createUser("John");

@@ -7,6 +7,7 @@ package se.webapp.instaflickr.model;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import se.webapp.instaflickr.model.media.TestAlbum;
 import se.webapp.instaflickr.model.media.TestPicture;
 import se.webapp.instaflickr.model.persistence.TestDatabase;
 import se.webapp.instaflickr.model.reaction.TestComment;
@@ -24,7 +25,7 @@ import se.webapp.instaflickr.model.user.TestUser;
     TestPicture.class,
     TestLike.class,
     TestComment.class,
-    TestPictureCatalog.class
+    TestAlbum.class
 })
 
 public class TestSuite {

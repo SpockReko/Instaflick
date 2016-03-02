@@ -6,6 +6,7 @@
 package se.webapp.instaflickr.model.reaction;
 
 import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
@@ -50,8 +51,6 @@ public class TestComment extends AbstractTest {
         assertTrue(true);
     }
     
-     // ######## Comment tests ################################# 
-    
     // Create comment instans
     @Test
     public void test_SetandGet_User_InComment() throws Exception{
@@ -61,9 +60,7 @@ public class TestComment extends AbstractTest {
         InstaFlickUser givenUser = comment.getUser();
         assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
     }
-    /*
     
-    */
     @Test
     public void test_SetandGet_Text_Comment() throws Exception{
         Comment comment = new Comment();
@@ -72,20 +69,19 @@ public class TestComment extends AbstractTest {
         String givenComment = comment.getCommentText();
         assertTrue(newComment.equals(givenComment));
     }
-    /*
+
     @Test
-    public void test_SetandGet_Created_Comment() throws Exception{
+    public void test_Get_Created_Comment() throws Exception{
         InstaFlickUser user = new InstaFlickUser("James");
         String text = "Hello World";
-        Comment comment = new Comment(user, text);
-        Date createdDate = Date.from(Instant.MIN);
-        comment.setCreated( (java.sql.Date) createdDate);
-        Date givenDate = comment.getCreated();
-        assertTrue(createdDate.equals(givenDate));
+        Comment comment = new Comment(user, text, new Likes());
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
+        Calendar cal = comment.getCreated( );
+        System.out.println("CompareTo: " + cal.compareTo(nowCal) );
+        assertTrue(cal.compareTo(nowCal) <= 0);
     }
-    /* 
     
-    */
     @Test
     public void test_SetandGet_Like_Comment() throws Exception{
         Comment comment = new Comment();
