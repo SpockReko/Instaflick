@@ -2,7 +2,6 @@
 
 /* Services */
 
-var productCatalogueService = angular.module('ProductCatalogueService', []);
 var userRegistryService = angular.module('UserRegistryService', []);
 
 // Representing the remote RESTful ProductCatalogue
