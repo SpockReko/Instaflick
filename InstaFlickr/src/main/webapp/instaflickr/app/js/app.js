@@ -2,7 +2,8 @@
 
 var instaflickr = angular.module('InstaFlickr', [
     'ngRoute',
-    'InstaFlickControllers'
+    'InstaFlickControllers',
+    'UserRegistryService'
 ]);
 
 instaflickr.config(['$routeProvider',
