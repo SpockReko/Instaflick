@@ -56,7 +56,7 @@ public class TestDatabase extends AbstractTest{
     }
     
     @Inject
-    InstaFlick instaflick;
+    InstaFlick instaFlick;
   
     // ######## AbstractADO method tests InstaFlickUser #################################
 
