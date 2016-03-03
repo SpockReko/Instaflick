@@ -15,6 +15,7 @@ import javax.ws.rs.FormParam;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -49,8 +50,21 @@ public class UserResource {
     
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
     
+    @GET
+    public void save() {
+        LOG.warning("Save");
+        InstaFlickUser user = new InstaFlickUser("Stefan");
+        LOG.warning(user.getUserName());
+        try {
+            instaFlick.getUserRegistry().create(user); 
+        } catch (IllegalArgumentException e) {
+            LOG.warning("Error");
+        }
+    }
+    
     @POST
-    public Response create(@QueryParam(value = "username") String username, @QueryParam(value = "password") String password) {
+    public Response create(@QueryParam(value = "username") String username, 
+                           @QueryParam(value = "password") String password) {
         LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password});
         LOG.warning("Creating new user " + username + " " + password);
         InstaFlickUser user = new InstaFlickUser(username);
