@@ -43,14 +43,7 @@ public class TestPicture extends AbstractTest {
         clearAll();
     }
 
-    //Test for to see if the test application works
-    @Test
-    public void alwaysTrue() {
-        assertTrue(true);
-    }
-    
-    // ######## Pictures tests #################################
-    
+        
     @Inject
     InstaFlickUser user;
     

@@ -45,11 +45,6 @@ public class TestComment extends AbstractTest {
         clearAll();
     }
 
-    //Test for to see if the test application works
-    @Test
-    public void alwaysTrue() {
-        assertTrue(true);
-    }
     
     // Create comment instans
     @Test

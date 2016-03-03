@@ -54,6 +54,9 @@ public class TestDatabase extends AbstractTest{
     public void alwaysTrue() {
         assertTrue(true);
     }
+    
+    @Inject
+    InstaFlick instaflick;
   
     // ######## AbstractADO method tests InstaFlickUser #################################
 

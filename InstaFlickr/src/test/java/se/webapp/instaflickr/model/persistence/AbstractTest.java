@@ -25,9 +25,6 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  */
 public class AbstractTest {
    
-
-    @Inject
-    InstaFlick instaFlick;
    
     @Deployment
     public static Archive<?> createDeployment() {
