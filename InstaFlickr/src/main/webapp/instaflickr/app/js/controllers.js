@@ -2,6 +2,20 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
+// Register user controller
+instaFlickControllers.controller('RegCtrl', 
+    ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
+        $scope.save = function() {
+            UserRegistryProxy.create($scope.user.username, $scope.user.password)
+                    .success(function() {
+                        $location.path('/reg');
+                    }).error(function() {
+                ; // TODO;
+            });
+        };        
+    }
+]);
 // Profile controller
 instaFlickControllers.controller('ProfileCtrl', ['$scope',
     function ($scope) {
@@ -79,4 +93,41 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope',
         console.log(testData);
 
         $scope.testData = testData;
+    }]);
+
+instaFlickControllers.controller('PictureCtrl', ['$scope',
+    function ($scope) {
+
+        var testPictureData = {
+            "_id": 1,
+            "path": "http://lorempixel.com/600/300/fashion/",
+            "likes": 18,
+            "description": "This is a cool fashion image!",
+            "date": "2016-03-09"
+        };
+
+        var testCommentData = [
+            {
+                "_id": 1,
+                "text": "This is a comment",
+                "likes": 41,
+                "date": "2016-03-11"
+            },
+            {
+                "_id": 2,
+                "text": "This is another comment",
+                "likes": 0,
+                "date": "2016-03-10"
+            },
+            {
+                "_id": 3,
+                "text": "This is the third comment.",
+                "likes": 2,
+                "date": "2016-03-09"
+            }
+        ];
+
+        $scope.image = testPictureData;
+        $scope.comments = testCommentData;
+
     }]);

@@ -8,15 +8,37 @@ var instaflickr = angular.module('InstaFlickr', [
 instaflickr.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
+                when('/login',{
+                    templateUrl: 'partials/login.html'
+                }).                
+                when('/reg',{
+                    templateUrl: 'partials/reg/reg.html',
+                    controller: 'RegCtrl'
+                }).                
                 when('/profile', {
                     templateUrl: 'partials/profile.html',
                     controller: 'ProfileCtrl'
                 }).
+                when('/picture', {
+                    templateUrl: 'partials/picture.html',
+                    controller: 'PictureCtrl'
+                }).
                 when('/settings', {
                     templateUrl: 'partials/settings.html'
                 }).
+                when('/about', {
+                    templateUrl: 'partials/about.html'
+                }).
+                when('/upload', {
+                    templateUrl: 'partials/upload.html'
+                }).
+
+                when('/',{
+                    templateUrl: 'partials/login.html'
+                }).
                 otherwise({
-                    templateUrl: 'partials/feed.html'
-                });
+                    templateUrl: 'partials/notfound.html'
+                })
+                ;
     }
 ]);
