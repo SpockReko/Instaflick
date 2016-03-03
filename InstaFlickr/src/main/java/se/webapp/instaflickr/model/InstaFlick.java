@@ -16,7 +16,7 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  * @author Pontus
  */
 @ApplicationScoped
-public class InstaFlick{
+public class InstaFlick {
 
     public InstaFlick() {
         Logger.getAnonymousLogger().log(Level.INFO, "InstaFlick is alive");

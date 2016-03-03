@@ -8,7 +8,7 @@ var userRegistryService = angular.module('UserRegistryService', []);
 userRegistryService.factory('UserRegistryProxy', ['$http',
     function($http) {
 
-        var url = '/reg';
+        var url = 'http://localhost:8080/InstaFlick/webresources/reg';
 
   
         return {
