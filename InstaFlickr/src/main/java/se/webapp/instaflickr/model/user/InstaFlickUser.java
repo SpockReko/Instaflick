@@ -1,6 +1,7 @@
 package se.webapp.instaflickr.model.user;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -44,22 +45,22 @@ public class InstaFlickUser implements Serializable {
     
     public InstaFlickUser() {
         this.userName = "User " + (++staticId).toString();
+        this.pictures = new LinkedList<Picture>();
     }
     
     public InstaFlickUser(String username){
         this.userName = username;
+        this.pictures = new LinkedList<Picture>();
     }
     
     public InstaFlickUser(String username, Picture picture){
         this.userName = username;
         this.profilePicture = picture;
+        this.pictures = new LinkedList<Picture>();
     }
     
-    public boolean removeUser() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        /*
-        TODO: Implement database connection to remove user.
-        */
+    public void addPicture(Picture pic){
+        pictures.add(pic);
     }
 
 }

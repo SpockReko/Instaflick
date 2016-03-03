@@ -6,6 +6,7 @@
 package se.webapp.instaflickr.model.reaction;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,7 @@ public class Likes implements Serializable {
     public List<InstaFlickUser> userList;
 
     public Likes(){
+        userList = new LinkedList<InstaFlickUser>();
     }
     
     /**
@@ -66,9 +68,9 @@ public class Likes implements Serializable {
     public boolean removeLike(InstaFlickUser user) {
         return userList.remove(user);
     }
-
+    
     public void setUserList(List<InstaFlickUser> userList) {
         this.userList = userList;
-    }
+}
     
 }

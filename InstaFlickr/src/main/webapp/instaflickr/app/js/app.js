@@ -8,6 +8,13 @@ var instaflickr = angular.module('InstaFlickr', [
 instaflickr.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
+                when('/login',{
+                    templateUrl: 'partials/login.html'
+                }).                
+                when('/reg',{
+                    templateUrl: 'partials/reg/reg.html',
+                    controller: 'RegCtrl'
+                }).                
                 when('/profile', {
                     templateUrl: 'partials/profile.html',
                     controller: 'ProfileCtrl'
@@ -25,9 +32,7 @@ instaflickr.config(['$routeProvider',
                 when('/upload', {
                     templateUrl: 'partials/upload.html'
                 }).
-                when('/login',{
-                    templateUrl: 'partials/login.html'
-                }).
+
                 when('/',{
                     templateUrl: 'partials/login.html'
                 }).

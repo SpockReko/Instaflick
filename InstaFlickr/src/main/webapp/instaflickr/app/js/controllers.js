@@ -2,6 +2,20 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
+// Register user controller
+instaFlickControllers.controller('RegCtrl', 
+    ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
+        $scope.save = function() {
+            UserRegistryProxy.create($scope.user.username, $scope.user.password)
+                    .success(function() {
+                        $location.path('/reg');
+                    }).error(function() {
+                ; // TODO;
+            });
+        };        
+    }
+]);
 // Profile controller
 instaFlickControllers.controller('ProfileCtrl', ['$scope',
     function ($scope) {
