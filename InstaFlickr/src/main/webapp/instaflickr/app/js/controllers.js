@@ -6,6 +6,11 @@ var instaFlickControllers = angular.module('InstaFlickControllers', []);
 instaFlickControllers.controller('RegisterCtrl', 
     ['$scope', '$location', 'UserRegistryProxy',
     function ($scope, $location, UserRegistryProxy) {
+        
+        $scope.goBack = function() {
+            window.history.back();
+        }
+        
         $scope.save = function() {
             UserRegistryProxy.create($scope.user.username, $scope.user.password)
                     .success(function() {
