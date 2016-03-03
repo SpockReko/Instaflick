@@ -1,26 +1,19 @@
-<div>
-    <!--Body content-->
-    <h2>Register User</h2>
-    
-    <a href="#">Back</a>
-    <table class="table">
-        <tr>
-            <td>Username</td>
-            <td>
-                <input ng-model="user.username" type="text"/>
-            </td>
-        <tr>
-            <td>Password</td>
-            <td>
-                <input ng-model="user.password" type="password"/>
-            </td>
-        </tr>
-    </table>
+<form class="form-signin col-xs-offset-3 col-xs-6">
+    <div class="form-group">
+        <h2 class="form-signin-heading">Registration</h2>
 
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input id="inputUsername" class="form-control" placeholder="Username" required autofocus type="text" ng-model="user.username">
 
-    <div class="btn-group">
-        <a class="btn btn-default" href="#products"> Cancel </a> 
-        <input type="button" value="Save" class="btn btn-default" ng-click="save()"/>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input id="inputPassword" class="form-control" placeholder="Password" required type="password" ng-model="user.password">
+
+        <label for="repeatPassword" class="sr-only">Repeat Password</label>
+        <input id="repeatPassword" class="form-control" placeholder="Repeat Password" required type="password" ng-model="user.repeatPassword">
     </div>
-    <p>Debug: {{user.username}}{{user.password}}</p>    
-</div>
+
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" ng-click="window.history.back()">Cancel</button> 
+        <button class="btn btn-primary" type="submit" ng-click="save()">Register</button>
+    </div>
+</form>
