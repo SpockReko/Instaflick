@@ -61,10 +61,10 @@ public class TestUser extends AbstractTest {
     @Test
     public void test_SetAndGet_Username() throws Exception {
         newUser = createUser("Jane");
-        newUser.setUserName("James");
+        newUser.setFname("James");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
-        assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
+        assertTrue(givenUser.getFname().equals(newUser.getFname()));
     }
 
     @Test

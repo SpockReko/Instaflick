@@ -62,8 +62,8 @@ public class TestPicture extends AbstractTest {
     
     @Test
     public void test_Post_Comments_On_Picture() throws Exception{
-        String name = "James";
-        user = createUser(name);
+        String email = "James";
+        user = createUser(email);
         pic = new Picture(user, new Likes());
         String text = "added comment";
         pic.postComment(user, text);
@@ -71,7 +71,7 @@ public class TestPicture extends AbstractTest {
         for (int i = 0; i < pic.getComments().size(); i++) {
             Comment index = pic.getComments().get(i);
             if(index.getCommentText().equals(text) 
-                    && index.getUser().getUserName().equals(name)){
+                    && index.getUser().getEmail().equals(email)){
                 test = true;
             }
         }
@@ -80,7 +80,7 @@ public class TestPicture extends AbstractTest {
 
     @Test
     public void test_SetandGet_Uploaded_Picture() throws Exception{
-        user = new InstaFlickUser("James");
+        user = new InstaFlickUser("James", "1");
         pic = new Picture(user, new Likes());
         Calendar nowCal = Calendar.getInstance();
         nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
@@ -90,7 +90,7 @@ public class TestPicture extends AbstractTest {
 
     @Test
     public void test_Get_Uploader_Of_Picture() throws Exception{
-        user = new InstaFlickUser("James");
+        user = new InstaFlickUser("James", "1");
         pic = new Picture(user, new Likes());
         InstaFlickUser givenUser = pic.getUploader();
         assertTrue(givenUser.equals(user));

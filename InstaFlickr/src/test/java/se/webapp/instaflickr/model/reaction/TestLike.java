@@ -55,8 +55,8 @@ public class TestLike extends AbstractTest {
     
     @Test
     public void test_Add_and_nrOfLikes_Like() throws Exception{
-        user = new InstaFlickUser("Frank");
-        user2 = new InstaFlickUser("James");
+        user = new InstaFlickUser("Frank", "1");
+        user2 = new InstaFlickUser("James", "1");
         likes.addLike(user);
         likes.addLike(user2);
         int number_Of_Likes = likes.nrOfLikes();
@@ -66,8 +66,8 @@ public class TestLike extends AbstractTest {
     
     @Test
     public void test_Remove_Like() throws Exception{
-        user = new InstaFlickUser("Frank");
-        user2 = new InstaFlickUser("James");
+        user = new InstaFlickUser("Frank", "1");
+        user2 = new InstaFlickUser("James", "1");
         likes = new Likes();
         likes.addLike(user);
         likes.addLike(user2);
