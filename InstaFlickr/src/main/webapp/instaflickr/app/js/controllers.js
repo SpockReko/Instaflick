@@ -12,7 +12,7 @@ instaFlickControllers.controller('RegisterCtrl',
         }
         
         $scope.save = function() {
-            console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password);
+            console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password + " " + $scope.user.repeatPassword);
             UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
                     .success(function() {
                         console.log("location: " + $location);

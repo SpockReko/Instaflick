@@ -67,8 +67,8 @@ public class UserResource {
     public Response create(@QueryParam(value = "username") String username, 
                            @QueryParam(value = "password") String password, 
                            @QueryParam(value = "repeatPassword") String repeatPassword) {
-        LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password});
-        LOG.warning("Creating new user " + username + " " + password);
+        LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password, repeatPassword});
+        LOG.warning("Creating new user " + username + " " + password + " " + repeatPassword);
         InstaFlickUser exists = instaFlick.getUserRegistry().find(username);
         if (exists != null)
             return Response.status(Response.Status.CONFLICT).build();
