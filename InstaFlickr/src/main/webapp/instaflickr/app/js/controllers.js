@@ -15,14 +15,14 @@ instaFlickControllers.controller('RegisterCtrl',
             console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password + " " + $scope.user.repeatPassword);
             UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
                     .success(function() {
-                        console.log("location: " + $location);
+                        console.log("Success!");
                         $location.path('/login');
                     }).error(function(data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.user.msg = "Already registered user";
                         }
-                        if (status === 500) {
+                        if (status === 406) {
                             $scope.user.msg = "The password entries do not match";
                         }                        
                          // TODO;
