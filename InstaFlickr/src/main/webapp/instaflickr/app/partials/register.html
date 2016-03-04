@@ -1,0 +1,21 @@
+<form class="form-signin col-xs-offset-3 col-xs-6">
+    <div class="form-group">
+        <h2 class="form-signin-heading">Registration</h2>
+        <div>{{user.msg}}</div><input hidden type="text" ng-model="user.msg">
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input id="inputEmail" class="form-control" placeholder="Email" required autofocus type="email" ng-model="user.email">
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input id="inputPassword" class="form-control" placeholder="Password" required type="password" ng-model="user.password">
+
+        <label for="repeatPassword" class="sr-only">Repeat Password</label>
+        <input id="repeatPassword" class="form-control" placeholder="Repeat Password" required type="password" ng-model="user.repeatPassword">
+
+        
+    </div>
+       
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" ng-click="goBack()">Cancel</button> 
+        <button class="btn btn-primary" type="submit" ng-click="save()">Register</button>
+    </div>
+</form>

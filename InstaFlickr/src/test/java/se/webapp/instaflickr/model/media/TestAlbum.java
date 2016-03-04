@@ -58,8 +58,8 @@ public class TestAlbum extends AbstractTest {
     
     @Test
     public void test_Methods_For_followers(){
-        user = new InstaFlickUser("Frank");
-        user2 = new InstaFlickUser("James");
+        user = new InstaFlickUser("Frank", "1");
+        user2 = new InstaFlickUser("James", "1");
         album = new Album("Photo On Cats <3", user);
         album.addFollower(user);
         album.addFollower(user2);
@@ -69,7 +69,7 @@ public class TestAlbum extends AbstractTest {
     
     @Test
     public void test_Metods_For_Pictures(){
-        user = new InstaFlickUser("James");
+        user = new InstaFlickUser("James", "1");
         album = new Album("Photo On Dogs <3", user);
         pic = new Picture(user, new Likes() );
         pic2 = new Picture(user2, new Likes() );

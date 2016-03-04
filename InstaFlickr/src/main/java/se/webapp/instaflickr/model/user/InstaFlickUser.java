@@ -26,10 +26,13 @@ public class InstaFlickUser implements Serializable {
     @Id
     @Getter
     @Setter
-    private String userName;
+    private String email;
     @Getter
     @Setter
-    private String email;
+    private String fname;
+    @Getter
+    @Setter
+    private String lname;
     @Getter
     @Setter
     private String password;
@@ -44,17 +47,19 @@ public class InstaFlickUser implements Serializable {
     
     
     public InstaFlickUser() {
-        this.userName = "User " + (++staticId).toString();
+        this.email = "User " + (++staticId).toString();
         this.pictures = new LinkedList<Picture>();
     }
     
-    public InstaFlickUser(String username){
-        this.userName = username;
+    public InstaFlickUser(String email, String password){
+        this.email = email;
+        this.password = password;
         this.pictures = new LinkedList<Picture>();
     }
     
-    public InstaFlickUser(String username, Picture picture){
-        this.userName = username;
+    public InstaFlickUser(String email, String password, Picture picture){
+        this.email = email;
+        this.password = password;
         this.profilePicture = picture;
         this.pictures = new LinkedList<Picture>();
     }

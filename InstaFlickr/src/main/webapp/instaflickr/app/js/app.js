@@ -2,18 +2,20 @@
 
 var instaflickr = angular.module('InstaFlickr', [
     'ngRoute',
-    'InstaFlickControllers'
+    'InstaFlickControllers',
+    'UserRegistryService'
 ]);
 
 instaflickr.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
                 when('/login',{
-                    templateUrl: 'partials/login.html'
+                    templateUrl: 'partials/login.html',
+                    controller: 'LoginCtrl'
                 }).                
-                when('/reg',{
-                    templateUrl: 'partials/reg/reg.html',
-                    controller: 'RegCtrl'
+                when('/register',{
+                    templateUrl: 'partials/register.html',
+                    controller: 'RegisterCtrl'
                 }).                
                 when('/profile', {
                     templateUrl: 'partials/profile.html',

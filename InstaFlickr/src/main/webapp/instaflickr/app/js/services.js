@@ -12,34 +12,18 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
 
   
         return {
-            findAll: function() {
-                return $http.get(url);
-            },
-            findRange: function(first, max) {
-                return $http.get(url + "/range?fst=" + first + "&max=" + max);
-            },
-            find: function(id) {
-                return $http.get(url + "/" + id);
-            },
-            update: function(id, name, price) {
-                var data = $.param({
-                    name: name,
-                    price: price
-                }); 
-                return $http.put(url + "/" + id +'?'+ data);;
-            },
-            create: function(username, password) {
+            create: function(username, password, repeatPassword) {
+                console.log("create in UserRegistryProxy: " + username + " " + password + " " + repeatPassword)
                 var data = $.param({
                     username: username,
-                    password: password
+                    password: password,
+                    repeatPassword: repeatPassword
                 });                 
                 return $http.post(url +'?'+ data);;
             },
-            delete: function(id) {
-                return $http.delete(url + "/" + id);
-            },
-            count: function() {
-                return $http.get(url + "/count");
+            login: function(username, password) {
+                console.log("login UserRegistryProxy: " + username + " " + password)
+                return $http.get(url + "?username=" + username + "&password=" + password);
             }
         };
     }

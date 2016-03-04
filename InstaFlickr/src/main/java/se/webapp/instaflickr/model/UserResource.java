@@ -34,6 +34,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
+import se.webapp.instaflickr.model.user.UserWrapper;
 
 /**
  *
@@ -51,27 +52,36 @@ public class UserResource {
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
     
     @GET
-    public void save() {
-        LOG.warning("Save");
-        InstaFlickUser user = new InstaFlickUser("Stefan");
-        LOG.warning(user.getUserName());
-        try {
-            instaFlick.getUserRegistry().create(user); 
-        } catch (IllegalArgumentException e) {
-            LOG.warning("Error");
-        }
+    public Response login(@QueryParam(value = "username") String username, 
+                      @QueryParam(value = "password") String password) {
+        LOG.warning("User trying to log in: " + username + " " + password);
+        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
+        if (user == null)
+            return Response.status(Response.Status.CONFLICT).build();
+        if (!user.getPassword().equals(password))
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        return Response.status(Response.Status.ACCEPTED).build();
     }
     
     @POST
     public Response create(@QueryParam(value = "username") String username, 
-                           @QueryParam(value = "password") String password) {
-        LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password});
-        LOG.warning("Creating new user " + username + " " + password);
-        InstaFlickUser user = new InstaFlickUser(username);
+                           @QueryParam(value = "password") String password, 
+                           @QueryParam(value = "repeatPassword") String repeatPassword) {
+        LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password, repeatPassword});
+        LOG.warning("Creating new user " + username + " " + password + " " + repeatPassword);
+        InstaFlickUser exists = instaFlick.getUserRegistry().find(username);
+        if (exists != null)
+            return Response.status(Response.Status.CONFLICT).build();
+        if (!repeatPassword.equals(password))
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        
+        InstaFlickUser user = new InstaFlickUser(username, password);
         try {
             instaFlick.getUserRegistry().create(user);
             // Tell client where new resource is (URI to)
-            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserName())).build();
+            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getEmail())).build(new UserWrapper(user));
+            LOG.warning("URI " + uri.toString());
+
             return Response.created(uri).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
