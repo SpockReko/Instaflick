@@ -23,8 +23,6 @@ import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-
-
 /**
  *
  * @author Pontus
@@ -54,12 +52,20 @@ public class Picture extends AbstractMedia implements Serializable {
     @Setter
     private Likes likes;
 
-    
-    public Picture() {} // Används ej.
+    public Picture() {
+    } // Används ej.
 
     public Picture(InstaFlickUser uploader, Likes likes) {
         this.uploader = uploader;
         this.likes = likes;
+        this.uploaded = getNow();
+        this.comments = new LinkedList<Comment>();
+    }
+
+    public Picture(InstaFlickUser uploader, Likes likes, String path) {
+        this.uploader = uploader;
+        this.likes = likes;
+        this.imagePath = path;
         this.uploaded = getNow();
         this.comments = new LinkedList<Comment>();
     }
@@ -70,11 +76,11 @@ public class Picture extends AbstractMedia implements Serializable {
     }
 
     public void postComment(InstaFlickUser user, String comment) {
-       Comment newComment = new Comment(user, comment, new Likes());
-       comments.add(newComment);
+        Comment newComment = new Comment(user, comment, new Likes());
+        comments.add(newComment);
     }
 
-    private Calendar getNow(){
+    private Calendar getNow() {
         Calendar newCalendar = Calendar.getInstance();
         newCalendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         return newCalendar;

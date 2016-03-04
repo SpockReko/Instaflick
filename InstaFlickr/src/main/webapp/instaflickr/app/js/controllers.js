@@ -3,56 +3,56 @@
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
 // Log in controller
-instaFlickControllers.controller('LoginCtrl', 
-    ['$scope', '$location', 'UserRegistryProxy',
-    function ($scope, $location, UserRegistryProxy) {
-         
-        $scope.login = function() {
-            console.log("User trying to login LoginCtrl: " + $scope.user.email + " " + $scope.user.password);
-            UserRegistryProxy.login($scope.user.email, $scope.user.password)
-                    .success(function() {
-                        console.log("Success!");
-                        $location.path('/profile');
-                    }).error(function(data, status) {
+instaFlickControllers.controller('LoginCtrl',
+        ['$scope', '$location', 'UserRegistryProxy',
+            function ($scope, $location, UserRegistryProxy) {
+
+                $scope.login = function () {
+                    console.log("User trying to login LoginCtrl: " + $scope.user.email + " " + $scope.user.password);
+                    UserRegistryProxy.login($scope.user.email, $scope.user.password)
+                            .success(function () {
+                                console.log("Success!");
+                                $location.path('/profile');
+                            }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.user.msg = "Email is not registered";
                         }
                         if (status === 406) {
                             $scope.user.msg = "Incorrect password";
-                        }    
-                    }); 
-        };        
-    }
-]);
+                        }
+                    });
+                };
+            }
+        ]);
 
 // Register user controller
-instaFlickControllers.controller('RegisterCtrl', 
-    ['$scope', '$location', 'UserRegistryProxy',
-    function ($scope, $location, UserRegistryProxy) {
-        
-        $scope.goBack = function() {
-            window.history.back();
-        }
-        
-        $scope.save = function() {
-            console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password + " " + $scope.user.repeatPassword);
-            UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
-                    .success(function() {
-                        console.log("Success!");
-                        $location.path('/login');
-                    }).error(function(data, status) {
+instaFlickControllers.controller('RegisterCtrl',
+        ['$scope', '$location', 'UserRegistryProxy',
+            function ($scope, $location, UserRegistryProxy) {
+
+                $scope.goBack = function () {
+                    window.history.back();
+                }
+
+                $scope.save = function () {
+                    console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password + " " + $scope.user.repeatPassword);
+                    UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
+                            .success(function () {
+                                console.log("Success!");
+                                $location.path('/login');
+                            }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.user.msg = "Already registered user";
                         }
                         if (status === 406) {
                             $scope.user.msg = "The password entries do not match";
-                        }                        
+                        }
                     });
-        };        
-    }
-]);
+                };
+            }
+        ]);
 // Profile controller
 instaFlickControllers.controller('ProfileCtrl', ['$scope',
     function ($scope) {
@@ -168,3 +168,26 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
         $scope.comments = testCommentData;
 
     }]);
+
+instaFlickControllers.controller('UploadCtrl',
+        ['$scope', 'MediaProxy',
+            function ($scope, MediaProxy) {
+                
+                $scope.returnPath = function() {
+                    $scope.imagePath = "media/image1.png";
+                };
+                
+                $scope.getImage = function () {
+                    console.log("UploadCtrl getImage");
+                    MediaProxy.getImage()
+                            .success(function (path) {
+                                console.log("Success!");
+                                $scope.imagePath = path;
+                            }).error(function () {
+                        console.log("getImage error");
+                    });
+                };
+            }
+
+        ]);
+

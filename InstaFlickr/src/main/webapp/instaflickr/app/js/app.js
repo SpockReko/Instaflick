@@ -3,20 +3,21 @@
 var instaflickr = angular.module('InstaFlickr', [
     'ngRoute',
     'InstaFlickControllers',
-    'UserRegistryService'
+    'UserRegistryService',
+    'MediaService'
 ]);
 
 instaflickr.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
-                when('/login',{
+                when('/login', {
                     templateUrl: 'partials/login.html',
                     controller: 'LoginCtrl'
-                }).                
-                when('/register',{
+                }).
+                when('/register', {
                     templateUrl: 'partials/register.html',
                     controller: 'RegisterCtrl'
-                }).                
+                }).
                 when('/profile', {
                     templateUrl: 'partials/profile.html',
                     controller: 'ProfileCtrl'
@@ -32,10 +33,10 @@ instaflickr.config(['$routeProvider',
                     templateUrl: 'partials/about.html'
                 }).
                 when('/upload', {
-                    templateUrl: 'partials/upload.html'
+                    templateUrl: 'partials/upload.html',
+                    controller: 'UploadCtrl'
                 }).
-
-                when('/',{
+                when('/', {
                     templateUrl: 'partials/login.html'
                 }).
                 otherwise({
