@@ -34,6 +34,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
+import se.webapp.instaflickr.model.user.UserWrapper;
 
 /**
  *
@@ -71,7 +72,9 @@ public class UserResource {
         try {
             instaFlick.getUserRegistry().create(user);
             // Tell client where new resource is (URI to)
-            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserName())).build();
+            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserName())).build(new UserWrapper(user));
+            LOG.warning("URI " + uri.toString());
+
             return Response.created(uri).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

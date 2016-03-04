@@ -12,12 +12,15 @@ instaFlickControllers.controller('RegisterCtrl',
         }
         
         $scope.save = function() {
+            Console.log("Saving user in RegisterCtrl");
             UserRegistryProxy.create($scope.user.username, $scope.user.password)
                     .success(function() {
-                        $location.path('/reg');
+                        Console.log("location: " + $location);
+                        $location.path('/login');
                     }).error(function() {
-                ; // TODO;
-            });
+                        Console.log("Error in save RegisterCtrl: " + $location);
+                         // TODO;
+                    });
         };        
     }
 ]);
