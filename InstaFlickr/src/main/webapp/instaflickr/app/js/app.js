@@ -10,7 +10,8 @@ instaflickr.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
                 when('/login',{
-                    templateUrl: 'partials/login.html'
+                    templateUrl: 'partials/login.html',
+                    controller: 'LoginCtrl'
                 }).                
                 when('/register',{
                     templateUrl: 'partials/register.html',

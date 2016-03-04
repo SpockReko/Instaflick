@@ -2,6 +2,31 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
+// Log in controller
+instaFlickControllers.controller('LoginCtrl', 
+    ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
+         
+        $scope.login = function() {
+            console.log("User trying to login LoginCtrl: " + $scope.user.email + " " + $scope.user.password);
+            UserRegistryProxy.create($scope.user.email, $scope.user.password)
+                    .success(function() {
+                        console.log("location: " + $location);
+                        $location.path('/home');
+                    }).error(function(data, status) {
+                        console.log("Error in save RegisterCtrl status: " + status);
+                        if (status === 409) {
+                            $scope.user.msg = "Already registered user";
+                        }
+                        if (status === 500) {
+                            $scope.user.msg = "The password entries do not match";
+                        }                        
+                         // TODO;
+                    });
+        };        
+    }
+]);
+
 // Register user controller
 instaFlickControllers.controller('RegisterCtrl', 
     ['$scope', '$location', 'UserRegistryProxy',
