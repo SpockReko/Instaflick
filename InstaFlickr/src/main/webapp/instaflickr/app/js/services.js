@@ -23,6 +23,7 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
             },
             login: function(username, password) {
                 console.log("login UserRegistryProxy: " + username + " " + password)
+                return $http.get(url + "?username=" + username + "&password=" + password);
             }
         };
     }

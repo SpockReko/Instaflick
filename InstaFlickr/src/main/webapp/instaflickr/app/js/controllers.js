@@ -9,20 +9,19 @@ instaFlickControllers.controller('LoginCtrl',
          
         $scope.login = function() {
             console.log("User trying to login LoginCtrl: " + $scope.user.email + " " + $scope.user.password);
-            UserRegistryProxy.create($scope.user.email, $scope.user.password)
+            UserRegistryProxy.login($scope.user.email, $scope.user.password)
                     .success(function() {
-                        console.log("location: " + $location);
-                        $location.path('/home');
+                        console.log("Success!");
+                        $location.path('/profile');
                     }).error(function(data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
-                            $scope.user.msg = "Already registered user";
+                            $scope.user.msg = "Email is not registered";
                         }
-                        if (status === 500) {
-                            $scope.user.msg = "The password entries do not match";
-                        }                        
-                         // TODO;
-                    });
+                        if (status === 406) {
+                            $scope.user.msg = "Incorrect password";
+                        }    
+                    }); 
         };        
     }
 ]);
@@ -50,7 +49,6 @@ instaFlickControllers.controller('RegisterCtrl',
                         if (status === 406) {
                             $scope.user.msg = "The password entries do not match";
                         }                        
-                         // TODO;
                     });
         };        
     }

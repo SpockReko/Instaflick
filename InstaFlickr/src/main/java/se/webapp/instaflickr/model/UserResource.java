@@ -52,15 +52,15 @@ public class UserResource {
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
     
     @GET
-    public void save() {
-        LOG.warning("Save");
-        InstaFlickUser user = new InstaFlickUser("Stefan@gmail.com", "1");
-        LOG.warning(user.getEmail());
-        try {
-            instaFlick.getUserRegistry().create(user); 
-        } catch (IllegalArgumentException e) {
-            LOG.warning("Error");
-        }
+    public Response login(@QueryParam(value = "username") String username, 
+                      @QueryParam(value = "password") String password) {
+        LOG.warning("User trying to log in: " + username + " " + password);
+        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
+        if (user == null)
+            return Response.status(Response.Status.CONFLICT).build();
+        if (!user.getPassword().equals(password))
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        return Response.status(Response.Status.ACCEPTED).build();
     }
     
     @POST
@@ -72,9 +72,8 @@ public class UserResource {
         InstaFlickUser exists = instaFlick.getUserRegistry().find(username);
         if (exists != null)
             return Response.status(Response.Status.CONFLICT).build();
-        if (!repeatPassword.equals(password)) {
+        if (!repeatPassword.equals(password))
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        }
         
         InstaFlickUser user = new InstaFlickUser(username, password);
         try {
