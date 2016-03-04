@@ -54,8 +54,8 @@ public class UserResource {
     @GET
     public void save() {
         LOG.warning("Save");
-        InstaFlickUser user = new InstaFlickUser("Stefan");
-        LOG.warning(user.getUserName());
+        InstaFlickUser user = new InstaFlickUser("Stefan@gmail.com", "1");
+        LOG.warning(user.getEmail());
         try {
             instaFlick.getUserRegistry().create(user); 
         } catch (IllegalArgumentException e) {
@@ -65,14 +65,22 @@ public class UserResource {
     
     @POST
     public Response create(@QueryParam(value = "username") String username, 
-                           @QueryParam(value = "password") String password) {
+                           @QueryParam(value = "password") String password, 
+                           @QueryParam(value = "repeatPassword") String repeatPassword) {
         LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password});
         LOG.warning("Creating new user " + username + " " + password);
-        InstaFlickUser user = new InstaFlickUser(username);
+        InstaFlickUser exists = instaFlick.getUserRegistry().find(username);
+        if (exists != null)
+            return Response.status(Response.Status.CONFLICT).build();
+        if (!repeatPassword.equals(password)) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        
+        InstaFlickUser user = new InstaFlickUser(username, password);
         try {
             instaFlick.getUserRegistry().create(user);
             // Tell client where new resource is (URI to)
-            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserName())).build(new UserWrapper(user));
+            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getEmail())).build(new UserWrapper(user));
             LOG.warning("URI " + uri.toString());
 
             return Response.created(uri).build();

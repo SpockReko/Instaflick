@@ -12,13 +12,19 @@ instaFlickControllers.controller('RegisterCtrl',
         }
         
         $scope.save = function() {
-            Console.log("Saving user in RegisterCtrl");
-            UserRegistryProxy.create($scope.user.username, $scope.user.password)
+            console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password);
+            UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
                     .success(function() {
-                        Console.log("location: " + $location);
+                        console.log("location: " + $location);
                         $location.path('/login');
-                    }).error(function() {
-                        Console.log("Error in save RegisterCtrl: " + $location);
+                    }).error(function(data, status) {
+                        console.log("Error in save RegisterCtrl status: " + status);
+                        if (status === 409) {
+                            $scope.user.msg = "Already registered user";
+                        }
+                        if (status === 500) {
+                            $scope.user.msg = "The password entries do not match";
+                        }                        
                          // TODO;
                     });
         };        

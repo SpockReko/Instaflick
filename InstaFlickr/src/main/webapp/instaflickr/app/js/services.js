@@ -28,10 +28,12 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 }); 
                 return $http.put(url + "/" + id +'?'+ data);;
             },
-            create: function(username, password) {
+            create: function(username, password, repeatPassword) {
+                console.log("in services: " + email + " " + password)
                 var data = $.param({
                     username: username,
-                    password: password
+                    password: password,
+                    repeatPassword: repeatPassword
                 });                 
                 return $http.post(url +'?'+ data);;
             },
