@@ -67,8 +67,8 @@ public class UserResource {
     }
     
     @GET
-    public Response login(@QueryParam(value = "username") String username, 
-                      @QueryParam(value = "password") String password) {
+    public Response login(  @QueryParam(value = "username") String username, 
+                            @QueryParam(value = "password") String password) {
         LOG.warning("User trying to log in: " + username + " " + password);
         InstaFlickUser user = instaFlick.getUserRegistry().find(username);
         if (user == null)
@@ -82,27 +82,48 @@ public class UserResource {
     }
     
     @POST
-    public Response create(@QueryParam(value = "username") String username, 
+    public Response create(@QueryParam(value = "email") String email, 
                            @QueryParam(value = "password") String password, 
                            @QueryParam(value = "repeatPassword") String repeatPassword) {
-        LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password, repeatPassword});
-        LOG.warning("Creating new user " + username + " " + password + " " + repeatPassword);
-        InstaFlickUser exists = instaFlick.getUserRegistry().find(username);
+        LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{email, password, repeatPassword});
+        LOG.warning("Creating new user " + email + " " + password + " " + repeatPassword);
+        InstaFlickUser exists = instaFlick.getUserRegistry().find(email);
         if (exists != null)
             return Response.status(Response.Status.CONFLICT).build();
         if (!repeatPassword.equals(password))
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         
-        InstaFlickUser user = new InstaFlickUser(username, password);
+        InstaFlickUser user = new InstaFlickUser(email, password);
         try {
             instaFlick.getUserRegistry().create(user);
             // Tell client where new resource is (URI to)
             URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getEmail())).build(new UserWrapper(user));
             LOG.warning("URI " + uri.toString());
-
+            session.setSession(true);
+            session.setSessionID(email);
             return Response.created(uri).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    @GET
+    @Path(value = "setup")
+    public Response setupProfile(@QueryParam(value = "username") String username,
+                                 @QueryParam(value = "fname") String fname,
+                                 @QueryParam(value = "lname") String lname,
+                                 @QueryParam(value = "description") String description) {
+        LOG.warning("Setting up profile: " + username + " " + fname + " " + lname + " " + description );
+
+        String email = session.getSessionID();
+        InstaFlickUser user = instaFlick.getUserRegistry().find(email);
+        LOG.warning("Setting up user: " + user.getEmail() );
+        
+        user.setUsername(username);
+        user.setFname(fname);
+        user.setLname(lname);
+        user.setDescription(description);
+        instaFlick.getUserRegistry().update(user);
+        
+        return Response.ok().build();
     }
 }

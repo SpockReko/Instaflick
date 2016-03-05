@@ -32,10 +32,16 @@ public class InstaFlickUser implements Serializable {
     private String password;
     @Getter
     @Setter
+    private String username;
+    @Getter
+    @Setter
     private String fname;
     @Getter
     @Setter
     private String lname;
+    @Getter
+    @Setter
+    private String description;
     @Getter
     @Setter
     @OneToOne

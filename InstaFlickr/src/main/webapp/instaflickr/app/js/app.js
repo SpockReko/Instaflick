@@ -17,6 +17,10 @@ instaflickr.config(['$routeProvider',
                     templateUrl: 'partials/register.html',
                     controller: 'RegisterCtrl'
                 }).                
+                when('/setupProfile',{
+                    templateUrl: 'partials/setupProfile.html',
+                    controller: 'SetupProfileCtrl'
+                }).                
                 when('/profile', {
                     templateUrl: 'partials/profile.html',
                     controller: 'ProfileCtrl'
