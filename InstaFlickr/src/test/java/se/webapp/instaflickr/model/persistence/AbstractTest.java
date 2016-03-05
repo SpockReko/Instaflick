@@ -61,6 +61,6 @@ public class AbstractTest {
     }
     
     public InstaFlickUser createUser(String name){
-        return new InstaFlickUser(name, "1");
+        return new InstaFlickUser(name);
     }
 }

@@ -80,7 +80,7 @@ public class TestPicture extends AbstractTest {
 
     @Test
     public void test_SetandGet_Uploaded_Picture() throws Exception{
-        user = new InstaFlickUser("James", "1");
+        user = new InstaFlickUser("James");
         pic = new Picture(user, new Likes());
         Calendar nowCal = Calendar.getInstance();
         nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);

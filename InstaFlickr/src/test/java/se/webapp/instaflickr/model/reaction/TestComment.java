@@ -49,7 +49,7 @@ public class TestComment extends AbstractTest {
     // Create comment instans
     @Test
     public void test_SetandGet_User_InComment() throws Exception{
-        InstaFlickUser newUser = new InstaFlickUser("James", "1");
+        InstaFlickUser newUser = new InstaFlickUser("James");
         Comment comment = new Comment(null,null,null);
         comment.setUser(newUser);
         InstaFlickUser givenUser = comment.getUser();
@@ -67,7 +67,7 @@ public class TestComment extends AbstractTest {
 
     @Test
     public void test_Get_Created_Comment() throws Exception{
-        InstaFlickUser user = new InstaFlickUser("James", "1");
+        InstaFlickUser user = new InstaFlickUser("James");
         String text = "Hello World";
         Comment comment = new Comment(user, text, new Likes());
         Calendar nowCal = Calendar.getInstance();
