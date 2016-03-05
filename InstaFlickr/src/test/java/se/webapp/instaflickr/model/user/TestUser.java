@@ -50,14 +50,6 @@ public class TestUser extends AbstractTest {
         clearAll();
     }
 
-    //Test for to see if the test application works
-    @Test
-    public void alwaysTrue() {
-        assertTrue(true);
-    }
-
-
-
     @Test
     public void test_SetAndGet_Username() throws Exception {
         newUser = createUser("Jane");
@@ -66,16 +58,17 @@ public class TestUser extends AbstractTest {
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("Jane");
         assertTrue(givenUser.getFname().equals(newUser.getFname()));
     }
-/*
+
     @Test
-    public void test_SetAndGet_Email() throws Exception {
-        newUser = createUser("James");
-        newUser.setEmail("james.email@domain.se");
+    public void test_Update_User() throws Exception {
+        newUser = createUser("james.email@domain.se");
         instaFlick.getUserRegistry().create(newUser);
-        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
-        assertTrue(givenUser.getEmail().equals(newUser.getEmail()));
+        newUser.setUsername("the jamester");
+        instaFlick.getUserRegistry().update(newUser);
+        InstaFlickUser givenUser = instaFlick.getUserRegistry().find("james.email@domain.se");
+        assertTrue(givenUser.getUsername().equals(newUser.getUsername()));
     }
-*/
+
     @Test
     public void test_SetAndGet_Password() throws Exception {
         newUser = createUser("James");
