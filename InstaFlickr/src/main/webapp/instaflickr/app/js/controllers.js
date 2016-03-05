@@ -54,10 +54,22 @@ instaFlickControllers.controller('RegisterCtrl',
     }
 ]);
 // Profile controller
-instaFlickControllers.controller('ProfileCtrl', ['$scope',
-    function ($scope) {
+instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
 
-        $scope.name = "Henry Ottervad";
+        console.log("ProfileCtrl checking that the user is logged in.");
+        UserRegistryProxy.getSession()
+                .success(function(json) {
+                        console.log("Session retrieved in ProfileCtrl");                    
+                        $scope.name = json['email'];
+                })
+                .error(function(data, status) {
+                        console.log("Error in checking session in ProfileCtrl: " + status);                    
+                        if (status === 406) {
+                            $location.path('/login');
+                        }                        
+                });
+        
         $scope.description = "I like long walks on the beach..."
 
         var testData = [

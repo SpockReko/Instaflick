@@ -48,8 +48,23 @@ public class UserResource {
     
     @Inject
     private InstaFlick instaFlick;
+
+    @Inject
+    private SessionHandler session;
     
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
+
+    @GET
+    @Path(value = "session")
+    public Response getSession() {
+        LOG.warning("Getting the session");
+        if (!session.getSession())
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+            
+        String email = session.getSessionID();
+        JsonObject value = Json.createObjectBuilder().add("email", email).build();
+        return Response.ok(value).build();
+    }
     
     @GET
     public Response login(@QueryParam(value = "username") String username, 
@@ -60,6 +75,9 @@ public class UserResource {
             return Response.status(Response.Status.CONFLICT).build();
         if (!user.getPassword().equals(password))
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        
+        session.setSession(true);
+        session.setSessionID(username);
         return Response.status(Response.Status.ACCEPTED).build();
     }
     
