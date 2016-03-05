@@ -170,13 +170,13 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
     }]);
 
 instaFlickControllers.controller('UploadCtrl',
-        ['$scope', 'MediaProxy',
-            function ($scope, MediaProxy) {
-                
-                $scope.returnPath = function() {
+        ['$scope', '$timeout', 'Upload', 'MediaProxy',
+            function ($scope, $timeout, Upload, MediaProxy) {
+
+                $scope.returnPath = function () {
                     $scope.imagePath = "media/image1.png";
                 };
-                
+
                 $scope.getImage = function () {
                     console.log("UploadCtrl getImage");
                     MediaProxy.getImage()
@@ -187,7 +187,29 @@ instaFlickControllers.controller('UploadCtrl',
                         console.log("getImage error");
                     });
                 };
-            }
 
+                $scope.uploadPic = function (file) {
+                    console.log("uploadPic() called");
+                    console.log(file);
+                    file.upload = Upload.upload({
+                        url: 'http://localhost:8080/InstaFlickr/webresources/media',
+                        data: {file: file}
+                    });
+
+                    file.upload.then(function (response) {
+                        $timeout(function () {
+                            file.result = response.data;
+                            console.log(response.data);
+                            $scope.upImg = response.data;
+                        });
+                    }, function (response) {
+                        if (response.status > 0)
+                            $scope.errorMsg = "Server Error! (" + response.data + ")";
+                    }, function (evt) {
+                        // Math.min is to fix IE which reports 200% sometimes
+                        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                    });
+                }
+            }
         ]);
 
