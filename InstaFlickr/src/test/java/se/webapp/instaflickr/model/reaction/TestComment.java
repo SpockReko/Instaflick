@@ -53,7 +53,7 @@ public class TestComment extends AbstractTest {
         Comment comment = new Comment(null,null,null);
         comment.setUser(newUser);
         InstaFlickUser givenUser = comment.getUser();
-        assertTrue(givenUser.getUserName().equals(newUser.getUserName()));
+        assertTrue(givenUser.getEmail().equals(newUser.getEmail()));
     }
     
     @Test

@@ -2,25 +2,91 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
-// Register user controller
-instaFlickControllers.controller('RegCtrl', 
+// Log in controller
+instaFlickControllers.controller('LoginCtrl', 
     ['$scope', '$location', 'UserRegistryProxy',
     function ($scope, $location, UserRegistryProxy) {
-        $scope.save = function() {
-            UserRegistryProxy.create($scope.user.username, $scope.user.password)
+         
+        $scope.login = function() {
+            console.log("User trying to login LoginCtrl: " + $scope.user.email + " " + $scope.user.password);
+            UserRegistryProxy.login($scope.user.email, $scope.user.password)
                     .success(function() {
-                        $location.path('/reg');
-                    }).error(function() {
-                ; // TODO;
-            });
+                        console.log("Success!");
+                        $location.path('/profile');
+                    }).error(function(data, status) {
+                        console.log("Error in save RegisterCtrl status: " + status);
+                        if (status === 409) {
+                            $scope.user.msg = "Email is not registered";
+                        }
+                        if (status === 406) {
+                            $scope.user.msg = "Incorrect password";
+                        }    
+                    }); 
         };        
     }
 ]);
-// Profile controller
-instaFlickControllers.controller('ProfileCtrl', ['$scope',
-    function ($scope) {
 
-        $scope.name = "Henry Ottervad";
+// Register user controller
+instaFlickControllers.controller('RegisterCtrl', 
+    ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
+        
+        $scope.save = function() {
+            console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password + " " + $scope.user.repeatPassword);
+            UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
+                    .success(function() {
+                        console.log("Success!");
+                        $location.path('/setupProfile');
+                    }).error(function(data, status) {
+                        console.log("Error in save RegisterCtrl status: " + status);
+                        if (status === 409) {
+                            $scope.user.msg = "Already registered user";
+                        }
+                        if (status === 406) {
+                            $scope.user.msg = "The password entries do not match";
+                        }                        
+                    });
+        };        
+        
+        $scope.goBack = function() {
+            window.history.back();
+        }
+    }
+]);
+
+// SetupProfile user controller
+instaFlickControllers.controller('SetupProfileCtrl', 
+    ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
+        
+        getSession($scope, $location, UserRegistryProxy);        
+        
+        
+        $scope.setupProfile = function() {
+            console.log("Setting up user profile in RegisterCtrl: " + $scope.user.username + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
+            
+            UserRegistryProxy.setupProfle($scope.user.username, $scope.user.fname, $scope.user.lname, $scope.user.description)
+                    .success(function() {
+                        console.log("Success!");
+                        $location.path('/login');
+                    }).error(function(data, status) {
+                        console.log("Error in save RegisterCtrl status: " + status);
+                    });
+        };    
+        
+        $scope.goBack = function() {
+            window.history.back();
+        }
+    }
+]);          
+        
+// Profile controller
+instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'UserRegistryProxy',
+    function ($scope, $location, UserRegistryProxy) {
+
+        console.log("ProfileCtrl checking that the user is logged in.");
+        getSession($scope, $location, UserRegistryProxy);
+        
         $scope.description = "I like long walks on the beach..."
 
         var testData = [
@@ -131,3 +197,18 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
         $scope.comments = testCommentData;
 
     }]);
+
+// Helper functions
+function getSession($scope, $location, UserRegistryProxy) {
+    UserRegistryProxy.getSession()
+        .success(function(json) {
+                console.log("Session retrieved in ProfileCtrl: " + json['email']);                    
+                $scope.name = json['email'];
+        })
+        .error(function(data, status) {
+                console.log("Error in checking session in ProfileCtrl: " + status);                    
+                if (status === 406) {
+                    $location.path('/login');
+                }                        
+        });    
+}    
