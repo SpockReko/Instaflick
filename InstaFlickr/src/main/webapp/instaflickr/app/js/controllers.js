@@ -81,13 +81,21 @@ instaFlickControllers.controller('SetupProfileCtrl',
         ]);
 
 // Profile controller
-instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'UserRegistryProxy',
-    function ($scope, $location, UserRegistryProxy) {
+instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', 'UserRegistryProxy',
+    function ($scope, $location, MediaProxy, UserRegistryProxy) {
 
         console.log("ProfileCtrl checking that the user is logged in.");
         getSession($scope, $location, UserRegistryProxy);
 
         $scope.description = "I like long walks on the beach..."
+
+        $scope.getManyImages = function () {
+            console.log("Get many images");
+            MediaProxy.getMany($scope.name).success(function(data) {
+                console.log(data);
+                console.log("Success!");
+            });
+        }
 
         var testData = [
             {
@@ -201,7 +209,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy',
             function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy) {
-                
+
                 getSession($scope, $location, UserRegistryProxy);
 
                 $scope.returnPath = function () {
@@ -221,7 +229,7 @@ instaFlickControllers.controller('UploadCtrl',
 
                 $scope.uploadPic = function (file) {
                     getSession($scope, $location, UserRegistryProxy);
-                    
+
                     console.log("uploadPic() called");
                     console.log(file);
                     file.upload = Upload.upload({

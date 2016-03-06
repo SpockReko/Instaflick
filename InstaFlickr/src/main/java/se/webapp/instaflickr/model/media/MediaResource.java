@@ -10,15 +10,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -30,6 +38,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.PictureCatalogue;
+import se.webapp.instaflickr.model.UserRegistry;
 import se.webapp.instaflickr.model.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
@@ -52,12 +61,27 @@ public class MediaResource {
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @GET
-    public Response getImagePath() {
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getImagePath(@QueryParam(value = "username") String email) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        UserRegistry ur = instaFlick.getUserRegistry();
+        
+        InstaFlickUser user = ur.find(email);
+        List<Picture> pictures = user.getPictures(); // Doesn't work
+        pictures = pc.findPicturesByUser(user);
+        
+        /*
+        if(pictures.size() == 0) {
+            LOG.log(Level.INFO, "HERE");
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+*/      
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        
+        for(Picture p : pictures) {
+        }
 
-        pc.find(Long.MIN_VALUE);
-
-        return Response.ok("media/wiifitcap.jpg").build();
+        return Response.ok(builder.build()).build();
     }
 
     @POST
@@ -82,6 +106,7 @@ public class MediaResource {
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
+        user.addPicture(picture); // Doesn't work
         
         // Save the pictures as: pictureId
         fileName = String.valueOf(picture.getId());

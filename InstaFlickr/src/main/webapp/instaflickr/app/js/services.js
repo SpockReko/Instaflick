@@ -51,6 +51,10 @@ mediaService.factory('MediaProxy', ['$http',
             getImage: function () {
                 console.log("Get image in MediaProxy");
                 return $http.get(url);
+            },
+            getMany: function(username) {
+                console.log("getMany in MediaProxy");
+                return $http.get(url + "?username=" + username);
             }
         };
     }

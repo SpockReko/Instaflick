@@ -5,11 +5,15 @@
  */
 package se.webapp.instaflickr.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.persistence.AbstractDAO;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
@@ -24,10 +28,17 @@ public class PictureCatalogue extends AbstractDAO<Picture, Long> {
     public PictureCatalogue() {
         super(Picture.class);
     }
-        
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
+    public List<Picture> findPicturesByUser(InstaFlickUser user) {
+        List<Picture> found = new ArrayList<>();
+
+        List<Picture> picture = em.createQuery("SELECT p FROM Picture p WHERE p.uploader.email = '" + user.getEmail() + "'", Picture.class).getResultList();
+        
+        return picture;
+    }
 }
