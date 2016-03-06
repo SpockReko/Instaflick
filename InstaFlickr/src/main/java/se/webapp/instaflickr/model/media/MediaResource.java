@@ -25,11 +25,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import net.coobird.thumbnailator.Thumbnails;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.UserResource;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
@@ -63,25 +65,33 @@ public class MediaResource {
     public Response uploadImage(@FormDataParam("email") String email,
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-        
-        LOG.log(Level.INFO, "Email param: " + email);
-        
-        email = email.replace("@", "_at_");
-        
-        LOG.log(Level.INFO, "uploadImage() called");
 
-        java.nio.file.Path localPath = generateLocalPath(email);
-        java.nio.file.Path relativePath = generateRelativePath(email);
+        // Get the picture catalogue
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
-        String cleanFileName = fileMetaData.getFileName().replace(' ', '_');
+        // Generate paths
+        String fileName = fileMetaData.getFileName().replace(' ', '_');
+        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+        String cleanEmail = email.replace("@", "_at_");
+        java.nio.file.Path localPath = generateLocalPath(cleanEmail);
+        java.nio.file.Path relativePath = generateRelativePath(cleanEmail);
 
+        // Find the user
+        InstaFlickUser user = instaFlick.getUserRegistry().find(email);
+        
+        // Add new picture to the database
+        Picture picture = new Picture(user, relativePath.toString());
+        pc.create(picture);
+        
+        // Save the pictures as: pictureId
+        fileName = String.valueOf(picture.getId());
+
+        // Write the file to disk
         try {
             int read = 0;
             byte[] bytes = new byte[1024];
-            File file = new File(localPath + "/" + cleanFileName);
+            File file = new File(localPath + "/" + fileName + "/" + fileName + "-original" + fileExtension);
             file.getParentFile().mkdirs();
-
-            LOG.log(Level.INFO, "Upload File Path : " + localPath.toString());
 
             OutputStream out = new FileOutputStream(file);
             while ((read = fileInputStream.read(bytes)) != -1) {
@@ -89,12 +99,17 @@ public class MediaResource {
             }
             out.flush();
             out.close();
+            
+            // Generate thumbnail
+            Thumbnails.of(file)
+                    .size(200, 200)
+                    .toFile(new File(file.getParent() + "/" + fileName + "-thumbnail" + fileExtension));
+            
         } catch (IOException e) {
-            throw new WebApplicationException("Error while uploading file. Please try again !!");
+            throw new WebApplicationException("Error while uploading file. Please try again!!");
         }
-        
-        LOG.log(Level.INFO, relativePath + "/" + cleanFileName);
-        return Response.ok(relativePath + "/" + cleanFileName).build();
+
+        return Response.ok(relativePath + "/" + fileName + "/" + fileName + fileExtension).build();
     }
 
     public java.nio.file.Path generateRelativePath() {

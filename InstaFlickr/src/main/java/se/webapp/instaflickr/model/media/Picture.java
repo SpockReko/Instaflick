@@ -32,6 +32,7 @@ public class Picture extends AbstractMedia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Getter
@@ -65,6 +66,14 @@ public class Picture extends AbstractMedia implements Serializable {
     public Picture(InstaFlickUser uploader, Likes likes, String path) {
         this.uploader = uploader;
         this.likes = likes;
+        this.imagePath = path;
+        this.uploaded = getNow();
+        this.comments = new LinkedList<Comment>();
+    }
+
+    public Picture(InstaFlickUser uploader, String path) {
+        this.uploader = uploader;
+        //this.likes = new Likes();
         this.imagePath = path;
         this.uploaded = getNow();
         this.comments = new LinkedList<Comment>();
