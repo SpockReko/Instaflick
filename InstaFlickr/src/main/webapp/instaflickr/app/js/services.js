@@ -12,18 +12,20 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
         var url = 'http://localhost:8080/InstaFlickr/webresources/reg';
 
         return {
-            create: function(email, password, repeatPassword) {
-                console.log("create in UserRegistryProxy: " + email + " " + password + " " + repeatPassword)
+            create: function(username, password, repeatPassword) {
+                console.log("create in UserRegistryProxy: " + username 
+                        + " " + password + " " + repeatPassword)
                 var data = $.param({
-                    email: email,
+                    username: username,
                     password: password,
                     repeatPassword: repeatPassword
                 });
                 return $http.post(url + '?' + data);
             },
-            setupProfle: function(username, fname, lname, description) {
-                console.log("Setting up profile in UserRegistryProxy: " + username + " " + fname + " " + lname + " " + description)
-                return $http.get(url + "/setup?" + "username=" + username 
+            setupProfle: function(email, fname, lname, description) {
+                console.log("Setting up profile in UserRegistryProxy: " 
+                        + email + " " + fname + " " + lname + " " + description)
+                return $http.get(url + "/setup?" + "email=" + email 
                                                  + "&fname=" + fname 
                                                  + "&lname=" + lname 
                                                  + "&description=" + description);
