@@ -67,15 +67,34 @@ public class UserResource {
     }
     
     @GET
+    @Path(value = "logout")
+    public void logout() {
+        LOG.warning("logging out");
+        if(session.getSession() == false)
+            LOG.warning("you already is looged out!");
+        session.setSession(Boolean.FALSE);
+    }
+    
+    @GET
+    @Path(value = "session")
+    public boolean signedIn() {
+        LOG.warning("fetting boolean");
+        return session.getSession();
+    }
+    
+    @GET
     public Response login(  @QueryParam(value = "username") String username, 
                             @QueryParam(value = "password") String password) {
         LOG.warning("User trying to log in: " + username + " " + password);
         InstaFlickUser user = instaFlick.getUserRegistry().find(username);
-        if (user == null)
+        if (user == null){
+            session.setSession(Boolean.FALSE);
             return Response.status(Response.Status.CONFLICT).build();
-        if (!user.getPassword().equals(password))
+        }
+        if (!user.getPassword().equals(password)){
+            session.setSession(Boolean.FALSE);
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        
+        }
         session.setSession(true);
         session.setSessionID(username);
         return Response.status(Response.Status.ACCEPTED).build();

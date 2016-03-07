@@ -31,6 +31,7 @@ public class SessionHandler implements Serializable {
     }
 
     public void setSession(Boolean session) {
+        System.out.println("Session changed: " + session);
         this.session = session;
     }
 }

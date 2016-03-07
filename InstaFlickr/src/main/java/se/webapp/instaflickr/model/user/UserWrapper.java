@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(name = "InstaFlickUser", propOrder = {
-    "email",
+    "username",
     "password"
 })
 public class UserWrapper {
@@ -33,7 +33,7 @@ public class UserWrapper {
 
     @XmlElement //If serving XML we should use @XmlAttribute 
     public String getEmail() {
-        return user.getEmail();
+        return user.getUsername();
     }
 
     @XmlElement

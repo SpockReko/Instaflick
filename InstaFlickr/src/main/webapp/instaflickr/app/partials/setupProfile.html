@@ -7,9 +7,7 @@
         <div>{{user.msg}}</div><input hidden type="text" ng-model="user.msg">
         
         <label for="inputEmail" class="sr-only">Email</label>
-        <input id="inputEmail" class="form-control input-lg" 
-               pattern="[^ @]*@[^ @]*" placeholder="Email" 
-               required autofocus type="email" ng-model="user.email">
+        <input id="inputEmail" class="form-control input-lg" pattern="[^ @]*@[^ @]*" placeholder="Email" type="email" required autofocus ng-model="user.email">
         
         
         <label for="inputFname" class="sr-only">First name</label>
