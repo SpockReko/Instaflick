@@ -32,7 +32,7 @@ public class InstaFlickUser implements Serializable {
     private String password;
     @Getter
     @Setter
-    private String email;
+    private String email = "";
     @Getter
     @Setter
     private String fname;

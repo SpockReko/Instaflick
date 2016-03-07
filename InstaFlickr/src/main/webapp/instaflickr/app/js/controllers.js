@@ -4,17 +4,17 @@ var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
 // Log in controller
 
-instaFlickControllers.controller('LoginCtrl', 
-    ['$scope', '$location', 'UserRegistryProxy',
-    function ($scope, $location, UserRegistryProxy) {
-         
-        $scope.login = function() {
-            console.log("User trying to login LoginCtrl: " + $scope.user.username + " " + $scope.user.password);
-            UserRegistryProxy.login($scope.user.username, $scope.user.password)
-                    .success(function() {
-                        console.log("Success!");
-                        $location.path('/profile');
-                    }).error(function(data, status) {
+instaFlickControllers.controller('LoginCtrl',
+        ['$scope', '$location', 'UserRegistryProxy',
+            function ($scope, $location, UserRegistryProxy) {
+
+                $scope.login = function () {
+                    console.log("User trying to login LoginCtrl: " + $scope.user.username + " " + $scope.user.password);
+                    UserRegistryProxy.login($scope.user.username, $scope.user.password)
+                            .success(function () {
+                                console.log("Success!");
+                                $location.path('/profile');
+                            }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.user.msg = "Username is not registered";
@@ -29,17 +29,17 @@ instaFlickControllers.controller('LoginCtrl',
 
 // Register user controller
 
-instaFlickControllers.controller('RegisterCtrl', 
-    ['$scope', '$location', 'UserRegistryProxy',
-    function ($scope, $location, UserRegistryProxy) {
-        
-        $scope.save = function() {
-            console.log("Saving user in RegisterCtrl: " + $scope.user.username + " " + $scope.user.password + " " + $scope.user.repeatPassword);
-            UserRegistryProxy.create($scope.user.username, $scope.user.password, $scope.user.repeatPassword)
-                    .success(function() {
-                        console.log("Success!");
-                        $location.path('/setupProfile');
-                    }).error(function(data, status) {
+instaFlickControllers.controller('RegisterCtrl',
+        ['$scope', '$location', 'UserRegistryProxy',
+            function ($scope, $location, UserRegistryProxy) {
+
+                $scope.save = function () {
+                    console.log("Saving user in RegisterCtrl: " + $scope.user.username + " " + $scope.user.password + " " + $scope.user.repeatPassword);
+                    UserRegistryProxy.create($scope.user.username, $scope.user.password, $scope.user.repeatPassword)
+                            .success(function () {
+                                console.log("Success!");
+                                $location.path('/setupProfile');
+                            }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.user.msg = "Already registered user";
@@ -228,13 +228,36 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
     }]);
 
 instaFlickControllers.controller('UploadCtrl',
-        ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy',
-            function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy) {
+        ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
+            function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy, $state) {
 
                 getSession($scope, $location, UserRegistryProxy);
+                MediaProxy.getAlbums()
+                        .success(function (data) {
+                            console.log("Success! " + data[0].albumName);
+                            $scope.albums = data;
+                        })
+                        .error(function (data, error) {
+                            console.log("Error in getAlbum in UploadCtrl status: " + status);
+                        })
+
 
                 $scope.returnPath = function () {
                     $scope.imagePath = "media/image1.png";
+                };
+
+                $scope.createAlbum = function () {
+                    MediaProxy.createAlbum($scope.album.name)
+                            .success(function () {
+                                console.log("Success!");
+                                $state.reload();
+                            })
+                            .error(function (data, status) {
+                                console.log("Error in createAlbum in UploadCtrl status: " + status);
+                                if (status === 409) {
+                                    $scope.msg = "You already have an album called " + $scope.album.name;
+                                }
+                            })
                 };
 
                 $scope.getImage = function () {

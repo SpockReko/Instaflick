@@ -57,7 +57,17 @@ mediaService.factory('MediaProxy', ['$http',
             getMany: function(username) {
                 console.log("getMany in MediaProxy");
                 return $http.get(url + "?username=" + username);
-            }
+            },
+            getAlbums: function() {
+                console.log("Getting albums in MediaProxy")
+                return $http.get(url + "/albums");
+            },
+            createAlbum: function(albumName) {
+                console.log("Creating album in MediaProxy: " + albumName)
+                var data = $.param({
+                    albumName: albumName
+                });
+                return $http.post(url + '/album?' + data);            }
         };
     }
 ]);

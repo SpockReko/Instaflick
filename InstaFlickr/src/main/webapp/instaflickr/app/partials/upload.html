@@ -3,9 +3,12 @@
     <img src="{{imagePath}}">
 
     <form name="uploadForm">
+        <select ng-model="selectAlbum">
+                <option value=""> Select album </option>
+                <option ng-model="albumName" ng-repeat="element in albums track by $index" value="{{element.albumName}}">{{element.albumName}}</option>
+        </select>
         <div class="form-group">
             <input type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required>
-            </form>
         </div>
 
         <div class="form-group">
@@ -22,7 +25,20 @@
         <div class="alert alert-danger" ng-show="errorMsg">Upload Error!</div>
         <div class="alert alert-success" ng-show="picFile.result">Upload Successful.</div>
     </form>
-    
     <img src="{{upImg}}">
     <p>Debug: {{upImg}}</p>
+</div>
+
+<div>
+    <p>{{msg}}</p>
+    <form name="albumForm">
+        <label for="inputAlbum" class="sr-only">Album name</label>
+        <input id="inputAlbum" class="form-control" placeholder="Album name" required autofocus type="text" ng-model="album.name">
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="createAlbum()">Create album</button>
+        
+    </form>
+    
+    
+
 </div>

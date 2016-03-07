@@ -40,6 +40,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import se.webapp.instaflickr.model.AlbumCatalogue;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.SessionHandler;
@@ -62,35 +63,68 @@ public class MediaResource {
 
     @Inject
     private InstaFlick instaFlick;
-    
+
     @Inject
     private SessionHandler sessionHandler;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
+    @POST
+    @Path(value = "album")
+    public Response create(@QueryParam(value = "albumName") String albumName) {
+        String username = sessionHandler.getSessionID();
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        if (!ac.checkAlbum(user, albumName)) {
+            return Response.status(Response.Status.CONFLICT).build();
+        } else {
+            Album album = new Album(albumName, user);
+            ac.create(album);
+            return Response.ok(album).build();
+        }
+    }
+    
+    @GET
+    @Path(value = "albums")
+    public Response getAlbums() {
+        String username = sessionHandler.getSessionID();
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        List<Album> albums = ac.getAlbums(user);
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Album a : albums) {
+            builder.add(Json.createObjectBuilder()
+                    .add("albumName", a.getName()));
+        }
+
+        return Response.ok(builder.build()).build();    
+    }
+    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getImagePath(@QueryParam(value = "username") String email) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
-        
+
         InstaFlickUser user = ur.find(email);
         List<Picture> pictures = user.getPictures(); // Doesn't work
         pictures = pc.findPicturesByUser(user);
-        
+
         /*
         if(pictures.size() == 0) {
             LOG.log(Level.INFO, "HERE");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-*/      
-       
+         */
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        for(Picture p : pictures) {
+        for (Picture p : pictures) {
             builder.add(Json.createObjectBuilder()
-                .add("path", p.getImagePath() + "/" +  p.getId() + "/thumbnail.jpg"));
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg"));
         }
-        
+
         return Response.ok(builder.build()).build();
     }
 
@@ -99,10 +133,10 @@ public class MediaResource {
     public Response uploadImage(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-        
+
         // Get session
         String email = sessionHandler.getSessionID();
-        
+
         // Get the picture catalogue
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
@@ -115,12 +149,12 @@ public class MediaResource {
 
         // Find the user
         InstaFlickUser user = instaFlick.getUserRegistry().find(email);
-        
+
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
-        
+
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -137,21 +171,19 @@ public class MediaResource {
             }
             out.flush();
             out.close();
-            
+
             // Generate big image
             Thumbnails.of(file)
                     .size(1200, 800)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "big"));
-            
+
             // Generate thumbnail
             Thumbnails.of(file)
                     .size(200, 200)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "thumbnail"));
-            
-            
-            
+
         } catch (IOException e) {
             throw new WebApplicationException("Error while uploading file. Please try again!!");
         }
