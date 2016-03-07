@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -198,6 +198,7 @@ public class MediaResource {
             LOG.log(Level.INFO, username + " has not set a profile picture");
             LOG.log(Level.INFO, generateRelativePath().toString());
             builder.add("image", generateRelativePath().toString() + "/default.jpg");
+
         }
 
         return Response.ok(builder.build()).build();
@@ -276,6 +277,7 @@ public class MediaResource {
                 LOG.warning("Adding picture to album: " + albumName);
                 addPictureToAlbum(user, albumName, picture);
             }
+
         } catch (IOException e) {
             throw new WebApplicationException("Error while uploading file. Please try again!!");
         }
@@ -459,4 +461,15 @@ public class MediaResource {
         }
         return builder;
     }
+
+    @POST
+    @Path("/comment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response postComment(@QueryParam("pictureid") long pictureId, @QueryParam("comment") String comment) {
+        instaFlick.getMediaHandler().comment(pictureId, comment);
+        System.out.println(pictureId);
+        System.out.println(comment);
+        return Response.ok().build();
+    }
+
 }
