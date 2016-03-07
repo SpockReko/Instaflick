@@ -19,21 +19,22 @@
             </div>
         </div>
     </div>
-    
+
     <hr>
 
     <div class="row comment-row-input">
         <div class="col-xs-3">
             <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
         </div>
-        <div class="col-xs-6">
-            <div class="form-group">
-                <textarea class="form-control picture-comment-input" rows="2" placeholder="Say something nice!"></textarea>
+        <form>
+            <input readonly hidden class="form-control" name="pictureid" value="{{image.id}}">
+            <div class="col-xs-6 form-group">
+                <textarea class="form-control picture-comment-input" name="comment" rows="2" placeholder="Say something nice!" ng-model="formData.comment"></textarea>
             </div>
-        </div>
-        <div class="col-xs-3">
-            <button type="submit" class="btn btn-primary">Comment</button>
-        </div>
+            <div class="col-xs-3">
+                <button type="submit" class="btn btn-primary" ng-click="postComment()">Comment</button>
+            </div>
+        </form>
     </div>
 
     <div id="comment-list">

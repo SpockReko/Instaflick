@@ -202,6 +202,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
 
             $scope.image = data;
         });
+}]);
 
         var testPictureData = {
             "_id": 1,
@@ -234,8 +235,18 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             }
         ];
 
+
+instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
+    function ($scope, PictureProxy) {
+        $scope.image = testPictureData;
         $scope.comments = testCommentData;
 
+
+        $scope.postComment = function(){
+            testCommentData = [];
+            $scope.comments = testCommentData;
+            PictureProxy.addComment($scope.formData.picture,$scope.formData.comment);
+        };
     }]);
 
 instaFlickControllers.controller('UploadCtrl',

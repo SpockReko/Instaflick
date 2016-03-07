@@ -10,26 +10,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -38,8 +34,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import net.coobird.thumbnailator.Thumbnails;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.AlbumCatalogue;
@@ -221,6 +215,7 @@ public class MediaResource {
             albumBuilder.add("pictureList", innerBuilder);
 
             builder.add(albumBuilder);
+
         }
 
         return Response.ok(builder.build()).build();
@@ -237,6 +232,7 @@ public class MediaResource {
         String username = sessionHandler.getSessionID();
         LOG.warning("Got session: " + username);
 
+
         // Get the picture catalogue
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
@@ -251,12 +247,14 @@ public class MediaResource {
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
+
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
         ur.update(user);
         
+
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -336,4 +334,14 @@ public class MediaResource {
         ac.update(album);
         return true;
     }
+    @POST
+    @Path("/comment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response postComment(@QueryParam("pictureid") long pictureId, @QueryParam("comment") String comment) {
+        instaFlick.getMediaHandler().comment(pictureId, comment);
+        System.out.println(pictureId);
+        System.out.println(comment);
+        return Response.ok().build();
+    }
+
 }
