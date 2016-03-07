@@ -38,6 +38,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.PictureCatalogue;
+import se.webapp.instaflickr.model.SessionHandler;
 import se.webapp.instaflickr.model.UserRegistry;
 import se.webapp.instaflickr.model.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -57,6 +58,9 @@ public class MediaResource {
 
     @Inject
     private InstaFlick instaFlick;
+    
+    @Inject
+    private SessionHandler sessionHandler;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
@@ -79,6 +83,7 @@ public class MediaResource {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         for(Picture p : pictures) {
+            builder.add("path", p.getImagePath() + "/" +  p.getId() + "/thumbnail.jpg");
         }
 
         return Response.ok(builder.build()).build();
@@ -86,16 +91,19 @@ public class MediaResource {
 
     @POST
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response uploadImage(@FormDataParam("email") String email,
+    public Response uploadImage(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-
+        
+        // Get session
+        String email = sessionHandler.getSessionID();
+        
         // Get the picture catalogue
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
         // Generate paths
-        String fileName = fileMetaData.getFileName().replace(' ', '_');
-        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+        String imageId = fileMetaData.getFileName().replace(' ', '_');
+        String fileExtension = imageId.substring(imageId.lastIndexOf("."));
         String cleanEmail = email.replace("@", "_at_");
         java.nio.file.Path localPath = generateLocalPath(cleanEmail);
         java.nio.file.Path relativePath = generateRelativePath(cleanEmail);
@@ -109,13 +117,13 @@ public class MediaResource {
         user.addPicture(picture); // Doesn't work
         
         // Save the pictures as: pictureId
-        fileName = String.valueOf(picture.getId());
+        imageId = String.valueOf(picture.getId());
 
         // Write the file to disk
         try {
             int read = 0;
             byte[] bytes = new byte[1024];
-            File file = new File(localPath + "/" + fileName + "/" + fileName + "-original" + fileExtension);
+            File file = new File(localPath + "/" + imageId + "/" + "tmp" + fileExtension);
             file.getParentFile().mkdirs();
 
             OutputStream out = new FileOutputStream(file);
@@ -125,16 +133,25 @@ public class MediaResource {
             out.flush();
             out.close();
             
+            // Generate big image
+            Thumbnails.of(file)
+                    .size(1200, 800)
+                    .outputFormat("jpg")
+                    .toFile(new File(file.getParent() + "/" + "big"));
+            
             // Generate thumbnail
             Thumbnails.of(file)
                     .size(200, 200)
-                    .toFile(new File(file.getParent() + "/" + fileName + "-thumbnail" + fileExtension));
+                    .outputFormat("jpg")
+                    .toFile(new File(file.getParent() + "/" + "thumbnail"));
+            
+            
             
         } catch (IOException e) {
             throw new WebApplicationException("Error while uploading file. Please try again!!");
         }
 
-        return Response.ok(relativePath + "/" + fileName + "/" + fileName + fileExtension).build();
+        return Response.ok(relativePath + "/" + imageId + "/" + "big.jpg").build();
     }
 
     public java.nio.file.Path generateRelativePath() {

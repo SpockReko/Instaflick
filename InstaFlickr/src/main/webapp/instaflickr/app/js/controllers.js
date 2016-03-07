@@ -94,6 +94,8 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
             MediaProxy.getMany($scope.name).success(function(data) {
                 console.log(data);
                 console.log("Success!");
+                $scope.imagePath = data["path"];
+                console.log(data["path"]);
             });
         }
 
@@ -219,7 +221,7 @@ instaFlickControllers.controller('UploadCtrl',
                 $scope.getImage = function () {
                     console.log("UploadCtrl getImage");
                     MediaProxy.getImage()
-                            .success(function (path) {
+                            .success(function (jsonObject) {
                                 console.log("Success!");
                                 $scope.imagePath = path;
                             }).error(function () {
@@ -228,13 +230,11 @@ instaFlickControllers.controller('UploadCtrl',
                 };
 
                 $scope.uploadPic = function (file) {
-                    getSession($scope, $location, UserRegistryProxy);
-
                     console.log("uploadPic() called");
                     console.log(file);
                     file.upload = Upload.upload({
                         url: 'http://localhost:8080/InstaFlickr/webresources/media',
-                        data: {file: file, email: $scope.name}
+                        data: {file: file}
                     });
 
                     file.upload.then(function (response) {
