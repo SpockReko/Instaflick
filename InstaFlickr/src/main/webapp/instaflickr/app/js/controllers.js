@@ -81,24 +81,43 @@ instaFlickControllers.controller('SetupProfileCtrl',
         ]);
 
 // Profile controller
-instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', 'UserRegistryProxy',
-    function ($scope, $location, MediaProxy, UserRegistryProxy) {
+instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
+    function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
 
         console.log("ProfileCtrl checking that the user is logged in.");
-        getSession($scope, $location, UserRegistryProxy);
 
         $scope.description = "I like long walks on the beach..."
 
-        $scope.getManyImages = function () {
-            console.log("Get many images");
-            MediaProxy.getMany($scope.name).success(function(data) {
+        if ($stateParams.username) {
+
+            console.log("Get profile images: " + $stateParams.username);
+
+            MediaProxy.getMany($stateParams.username).success(function (data) {
                 console.log(data);
                 console.log("Success!");
-                $scope.imagePath = data["path"];
-                console.log(data["path"]);
+                $scope.data = data;
+                console.log(data[0].path);
             });
-        }
+        } else {
 
+
+            UserRegistryProxy.getSession()
+                    .success(function (json) {
+                        console.log("Get profile images: " + json['email']);
+                        MediaProxy.getMany(json['email']).success(function (data) {
+                            console.log(data);
+                            console.log("Success!");
+                            $scope.data = data;
+                            console.log(data[0].path);
+                        });
+                    })
+                    .error(function (data, status) {
+                        console.log("Error in checking session in ProfileCtrl: " + status);
+                        if (status === 406) {
+                            $location.path('/login');
+                        }
+                    });
+        }
         var testData = [
             {
                 "_id": 1,
@@ -259,7 +278,7 @@ function getSession($scope, $location, UserRegistryProxy) {
     UserRegistryProxy.getSession()
             .success(function (json) {
                 console.log("Session retrieved in ProfileCtrl: " + json['email']);
-                $scope.name = json['email'];
+                return json['email'];
             })
             .error(function (data, status) {
                 console.log("Error in checking session in ProfileCtrl: " + status);

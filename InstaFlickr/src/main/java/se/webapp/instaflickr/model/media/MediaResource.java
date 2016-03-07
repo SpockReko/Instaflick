@@ -18,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -34,6 +36,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import net.coobird.thumbnailator.Thumbnails;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.InstaFlick;
@@ -80,12 +84,13 @@ public class MediaResource {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
 */      
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        
+       
+        JsonArrayBuilder builder = Json.createArrayBuilder();
         for(Picture p : pictures) {
-            builder.add("path", p.getImagePath() + "/" +  p.getId() + "/thumbnail.jpg");
+            builder.add(Json.createObjectBuilder()
+                .add("path", p.getImagePath() + "/" +  p.getId() + "/thumbnail.jpg"));
         }
-
+        
         return Response.ok(builder.build()).build();
     }
 

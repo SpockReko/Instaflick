@@ -1,7 +1,7 @@
 <div class="row" id="profile-box">
 
     <div class="col-lg-3 col-md-4 col-xs-6" id="profile-picture">
-        <img class="img-circle center-block img-responsive" src="http://lorempixel.com/400/400/people/">
+        <img class="img-circle center-block img-responsive" src="http://placehold.it/350x150">
     </div>
 
     <div class="col-lg-9 col-md-8 col-xs-6" id="info-box">
@@ -26,10 +26,16 @@
 </div>
 -->
 
-<button ng-click="getManyImages()">Click to get many images</button>
-
-<img src="{{imagePath}}">
-
+<div class="row">
+    <div ng-repeat="element in data track by $index">
+        <div class="col-lg-3 col-md-4 col-xs-6">
+            <a class="thumbnail" href="#">
+                <img class="img-responsive" src="{{element.path}}" alt="">
+            </a>
+        </div>
+    </div>
+</div>
+<!--
 <div class="row">
     <div ng-repeat="element in testData track by $index" ng-switch on="element.type">
         <div class="col-lg-3 col-md-4 col-xs-6">

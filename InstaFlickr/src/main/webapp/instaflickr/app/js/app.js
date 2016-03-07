@@ -1,52 +1,63 @@
 'use strict';
 
 var instaflickr = angular.module('InstaFlickr', [
-    'ngRoute',
+    'ui.router',
     'ngFileUpload',
     'InstaFlickControllers',
     'UserRegistryService',
     'MediaService'
 ]);
 
-instaflickr.config(['$routeProvider',
-    function ($routeProvider) {
-        $routeProvider.
-                when('/login', {
-                    templateUrl: 'partials/login.html',
-                    controller: 'LoginCtrl'
-                }).
-                when('/register', {
-                    templateUrl: 'partials/register.html',
-                    controller: 'RegisterCtrl'
-                }).                
-                when('/setupProfile',{
-                    templateUrl: 'partials/setupProfile.html',
-                    controller: 'SetupProfileCtrl'
-                }).                
-                when('/profile', {
-                    templateUrl: 'partials/profile.html',
-                    controller: 'ProfileCtrl'
-                }).
-                when('/picture', {
-                    templateUrl: 'partials/picture.html',
-                    controller: 'PictureCtrl'
-                }).
-                when('/settings', {
-                    templateUrl: 'partials/settings.html'
-                }).
-                when('/about', {
-                    templateUrl: 'partials/about.html'
-                }).
-                when('/upload', {
-                    templateUrl: 'partials/upload.html',
-                    controller: 'UploadCtrl'
-                }).
-                when('/', {
-                    templateUrl: 'partials/login.html'
-                }).
-                otherwise({
-                    templateUrl: 'partials/notfound.html'
-                })
-                ;
-    }
-]);
+instaflickr.config(function ($stateProvider, $urlRouterProvider) {
+
+    $urlRouterProvider.otherwise('/');
+
+    $stateProvider
+            .state('login', {
+                url: '/login',
+                templateUrl: 'partials/login.html',
+                controller: 'LoginCtrl'
+            })
+            .state('register', {
+                url: '/register',
+                templateUrl: 'partials/register.html',
+                controller: 'RegisterCtrl'
+            })
+            .state('setupProfile', {
+                url: '/setupProfile',
+                templateUrl: 'partials/setupProfile.html',
+                controller: 'SetupProfileCtrl'
+            })
+            .state('userProfile', {
+                url: '/profile',
+                templateUrl: 'partials/profile.html',
+                controller: 'ProfileCtrl'
+            })
+            .state('profile', {
+                url: '/profile/:username',
+                templateUrl: 'partials/profile.html',
+                controller: 'ProfileCtrl'
+            })
+            .state('picture', {
+                url: '/picture',
+                templateUrl: 'partials/picture.html',
+                controller: 'PictureCtrl'
+            })
+            .state('settings', {
+                url: '/settings',
+                templateUrl: 'partials/settings.html'
+            })
+            .state('about', {
+                url: '/about',
+                templateUrl: 'partials/about.html'
+            })
+            .state('upload', {
+                url: '/upload',
+                templateUrl: 'partials/upload.html',
+                controller: 'UploadCtrl'
+            })
+            .state('home', {
+                url: '/login',
+                templateUrl: 'partials/login.html'
+            });
+});
