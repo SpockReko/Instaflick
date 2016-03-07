@@ -8,15 +8,15 @@ instaFlickControllers.controller('LoginCtrl',
     function ($scope, $location, UserRegistryProxy) {
          
         $scope.login = function() {
-            console.log("User trying to login LoginCtrl: " + $scope.user.email + " " + $scope.user.password);
-            UserRegistryProxy.login($scope.user.email, $scope.user.password)
+            console.log("User trying to login LoginCtrl: " + $scope.user.username + " " + $scope.user.password);
+            UserRegistryProxy.login($scope.user.username, $scope.user.password)
                     .success(function() {
                         console.log("Success!");
                         $location.path('/profile');
                     }).error(function(data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
-                            $scope.user.msg = "Email is not registered";
+                            $scope.user.msg = "Username is not registered";
                         }
                         if (status === 406) {
                             $scope.user.msg = "Incorrect password";
@@ -32,8 +32,8 @@ instaFlickControllers.controller('RegisterCtrl',
     function ($scope, $location, UserRegistryProxy) {
         
         $scope.save = function() {
-            console.log("Saving user in RegisterCtrl: " + $scope.user.email + " " + $scope.user.password + " " + $scope.user.repeatPassword);
-            UserRegistryProxy.create($scope.user.email, $scope.user.password, $scope.user.repeatPassword)
+            console.log("Saving user in RegisterCtrl: " + $scope.user.username + " " + $scope.user.password + " " + $scope.user.repeatPassword);
+            UserRegistryProxy.create($scope.user.username, $scope.user.password, $scope.user.repeatPassword)
                     .success(function() {
                         console.log("Success!");
                         $location.path('/setupProfile');
@@ -63,12 +63,13 @@ instaFlickControllers.controller('SetupProfileCtrl',
         
         
         $scope.setupProfile = function() {
-            console.log("Setting up user profile in RegisterCtrl: " + $scope.user.username + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
+            console.log("Setting up user profile in RegisterCtrl: " + $scope.user.email 
+                    + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
             
-            UserRegistryProxy.setupProfle($scope.user.username, $scope.user.fname, $scope.user.lname, $scope.user.description)
+            UserRegistryProxy.setupProfle($scope.user.email, $scope.user.fname, $scope.user.lname, $scope.user.description)
                     .success(function() {
                         console.log("Success!");
-                        $location.path('/login');
+                        $location.path('/profile');
                     }).error(function(data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
@@ -86,8 +87,8 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'UserReg
 
         console.log("ProfileCtrl checking that the user is logged in.");
         getSession($scope, $location, UserRegistryProxy);
-        
-        $scope.description = "I like long walks on the beach..."
+
+        $scope.description = "I like long walks on the beach...";
 
         var testData = [
             {
@@ -202,8 +203,8 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
 function getSession($scope, $location, UserRegistryProxy) {
     UserRegistryProxy.getSession()
         .success(function(json) {
-                console.log("Session retrieved in ProfileCtrl: " + json['email']);                    
-                $scope.name = json['email'];
+                console.log("Session retrieved in ProfileCtrl: " + json['username']);                    
+                $scope.name = json['username'];
         })
         .error(function(data, status) {
                 console.log("Error in checking session in ProfileCtrl: " + status);                    

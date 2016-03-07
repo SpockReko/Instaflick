@@ -4,19 +4,24 @@
         
         <div>{{user.msg}}</div><input hidden type="text" ng-model="user.msg">
         
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input id="inputEmail" class="form-control" placeholder="Email" required autofocus type="email" ng-model="user.email">
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input id="inputUsername" class="form-control" placeholder="Username" 
+               required autofocus type="text" ng-model="user.username">
 
         <label for="inputPassword" class="sr-only">Password</label>
-        <input id="inputPassword" class="form-control" placeholder="Password" required type="password" ng-model="user.password">
+        <input id="inputPassword" class="form-control" placeholder="Password" 
+               required type="password" ng-model="user.password">
 
         <label for="repeatPassword" class="sr-only">Repeat Password</label>
-        <input id="repeatPassword" class="form-control" placeholder="Repeat Password" required type="password" ng-model="user.repeatPassword">
+        <input id="repeatPassword" class="form-control" placeholder="Repeat Password" 
+               required type="password" ng-model="user.repeatPassword">
 
     </div>
        
     <div class="btn-group" role="group">
-        <button class="btn btn-default" ng-click="goBack()">Cancel</button> 
+        
         <button class="btn btn-primary" type="submit" ng-click="save()">Register</button>
+        <button class="btn btn-default" ng-click="goBack()">Cancel</button> 
+        
     </div>
 </form>
