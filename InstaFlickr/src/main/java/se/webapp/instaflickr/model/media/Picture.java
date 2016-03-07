@@ -6,17 +6,11 @@
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
+import javax.persistence.PersistenceContext;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.reaction.Comment;
@@ -30,58 +24,37 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @Entity
 public class Picture extends AbstractMedia implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Getter
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @PersistenceContext
+    static EntityManager em;
+    
     @Getter
     @Setter
     private String imagePath;
-    @Getter
-    @Setter
-    private List<Comment> comments;
-    @Getter
-    @Setter
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Calendar uploaded;
-    @Getter
-    @Setter
-    @OneToOne
-    private InstaFlickUser uploader;
-    @Getter
-    @Setter
-    private Likes likes;
 
     public Picture() {
     } // Används ej.
 
-    public Picture(InstaFlickUser uploader, Likes likes) {
-        this.uploader = uploader;
+    public Picture(InstaFlickUser owner, Likes likes) {
+        this.owner = owner;
         this.likes = likes;
         this.uploaded = getNow();
-        this.comments = new LinkedList<Comment>();
+        this.comments = new LinkedList<>();
     }
 
-    public Picture(InstaFlickUser uploader, Likes likes, String path) {
-        this.uploader = uploader;
+    public Picture(InstaFlickUser owner, Likes likes, String path) {
+        this.owner = owner;
         this.likes = likes;
         this.imagePath = path;
         this.uploaded = getNow();
-        this.comments = new LinkedList<Comment>();
+        this.comments = new LinkedList<>();
     }
 
-    public Picture(InstaFlickUser uploader, String path) {
-        this.uploader = uploader;
+    public Picture(InstaFlickUser owner, String path) {
+        this.owner = owner;
         //this.likes = new Likes();
         this.imagePath = path;
         this.uploaded = getNow();
-        this.comments = new LinkedList<Comment>();
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.comments = new LinkedList<>();
     }
 
     public void postComment(InstaFlickUser user, String comment) {
@@ -93,5 +66,10 @@ public class Picture extends AbstractMedia implements Serializable {
         Calendar newCalendar = Calendar.getInstance();
         newCalendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         return newCalendar;
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
     }
 }

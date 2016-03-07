@@ -12,7 +12,7 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
         var url = 'http://localhost:8080/InstaFlickr/webresources/reg';
 
         return {
-            create: function(email, password, repeatPassword) {
+            create: function (email, password, repeatPassword) {
                 console.log("create in UserRegistryProxy: " + email + " " + password + " " + repeatPassword)
                 var data = $.param({
                     email: email,
@@ -21,19 +21,19 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 });
                 return $http.post(url + '?' + data);
             },
-            setupProfle: function(username, fname, lname, description) {
+            setupProfle: function (username, fname, lname, description) {
                 console.log("Setting up profile in UserRegistryProxy: " + username + " " + fname + " " + lname + " " + description)
-                return $http.get(url + "/setup?" + "username=" + username 
-                                                 + "&fname=" + fname 
-                                                 + "&lname=" + lname 
-                                                 + "&description=" + description);
+                return $http.get(url + "/setup?" + "username=" + username
+                        + "&fname=" + fname
+                        + "&lname=" + lname
+                        + "&description=" + description);
 
             },
-            login: function(username, password) {
+            login: function (username, password) {
                 console.log("login UserRegistryProxy: " + username + " " + password)
                 return $http.get(url + "?username=" + username + "&password=" + password);
             },
-            getSession: function() {
+            getSession: function () {
                 console.log("Getting session in UserRegistryProxy")
                 return $http.get(url + "/session");
             }
@@ -52,9 +52,23 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Get image in MediaProxy");
                 return $http.get(url);
             },
-            getMany: function(username) {
+            getMany: function (username) {
                 console.log("getMany in MediaProxy");
                 return $http.get(url + "?username=" + username);
+            }
+        };
+    }
+]);
+mediaService.factory('PictureProxy', ['$http',
+    function ($http) {
+
+        var url = 'http://localhost:8080/InstaFlickr/webresources/media/comment';
+
+
+        return {
+            addComment: function (picture,acomment) {
+                console.log("addComment in PictureProxy"); 
+                return $http.post(url, {"pictureid":picture, "comment":acomment});
             }
         };
     }

@@ -171,8 +171,7 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         $scope.testData = testData;
     }]);
 
-instaFlickControllers.controller('PictureCtrl', ['$scope',
-    function ($scope) {
+
 
         var testPictureData = {
             "_id": 1,
@@ -203,9 +202,17 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
             }
         ];
 
+instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
+    function ($scope, PictureProxy) {
         $scope.image = testPictureData;
         $scope.comments = testCommentData;
 
+
+        $scope.postComment = function(){
+            testCommentData = [];
+            $scope.comments = testCommentData;
+            PictureProxy.addComment($scope.formData.picture,$scope.formData.comment);
+        };
     }]);
 
 instaFlickControllers.controller('UploadCtrl',

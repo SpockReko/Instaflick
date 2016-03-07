@@ -10,20 +10,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -58,7 +54,7 @@ public class MediaResource {
 
     @Inject
     private InstaFlick instaFlick;
-    
+
     @Inject
     private SessionHandler sessionHandler;
 
@@ -69,21 +65,21 @@ public class MediaResource {
     public Response getImagePath(@QueryParam(value = "username") String email) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
-        
+
         InstaFlickUser user = ur.find(email);
         List<Picture> pictures = user.getPictures(); // Doesn't work
         pictures = pc.findPicturesByUser(user);
-        
+
         /*
         if(pictures.size() == 0) {
             LOG.log(Level.INFO, "HERE");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-*/      
+         */
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        
-        for(Picture p : pictures) {
-            builder.add("path", p.getImagePath() + "/" +  p.getId() + "/thumbnail.jpg");
+
+        for (Picture p : pictures) {
+            builder.add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg");
         }
 
         return Response.ok(builder.build()).build();
@@ -94,10 +90,10 @@ public class MediaResource {
     public Response uploadImage(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-        
+
         // Get session
         String email = sessionHandler.getSessionID();
-        
+
         // Get the picture catalogue
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
@@ -110,12 +106,12 @@ public class MediaResource {
 
         // Find the user
         InstaFlickUser user = instaFlick.getUserRegistry().find(email);
-        
+
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
-        
+
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -132,21 +128,19 @@ public class MediaResource {
             }
             out.flush();
             out.close();
-            
+
             // Generate big image
             Thumbnails.of(file)
                     .size(1200, 800)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "big"));
-            
+
             // Generate thumbnail
             Thumbnails.of(file)
                     .size(200, 200)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "thumbnail"));
-            
-            
-            
+
         } catch (IOException e) {
             throw new WebApplicationException("Error while uploading file. Please try again!!");
         }
@@ -184,4 +178,15 @@ public class MediaResource {
 
         return Paths.get(localPath.toString(), userId);
     }
+
+    @POST
+    @Path("/comment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response postComment(@QueryParam("pictureid") long pictureId, @QueryParam("comment") String comment) {
+        instaFlick.getMediaHandler().comment(pictureId, comment);
+        System.out.println(pictureId);
+        System.out.println(comment);
+        return Response.ok().build();
+    }
+
 }
