@@ -67,6 +67,8 @@ public class UserResource {
         return Response.ok(value).build();
     }
     
+    
+    
     @GET
     @Path(value = "logout")
     public void logout() {
@@ -76,12 +78,6 @@ public class UserResource {
         session.setSession(Boolean.FALSE);
     }
     
-    @GET
-    @Path(value = "session")
-    public boolean signedIn() {
-        LOG.warning("fetting boolean");
-        return session.getSession();
-    }
     
     @GET
     public Response login(  @QueryParam(value = "username") String username, 

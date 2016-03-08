@@ -1,5 +1,8 @@
+/* global isloggedin */
+
 'use strict';
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
+
 instaFlickControllers.controller(
         'IndexCtrl', [
             '$scope',
@@ -9,16 +12,13 @@ instaFlickControllers.controller(
                     $scope,
                     $location,
                     UserRegistryProxy) {
-                
-                $scope.signedIn = false;
-                
+
                 $scope.logout = function () {
                     console.log("User trying to logout IndexCtrl")
                     UserRegistryProxy.
                             logout().
                             success(
                                     function () {
-
                                         console.log("Success logout!");
                                         $location.path('/login');
                                     }
@@ -31,50 +31,20 @@ instaFlickControllers.controller(
                                                 );
                                     });
                 };
-                
-                $scope.signedIn = function ( $scope , UserRegistryProxy ) {
-                            UserRegistryProxy.signedIn().
-                                    success(function (boolean) {
-                                        console.log(
-                                                "get boolean from somethere: " +
-                                                boolean['session']
-                                                );
-                                        return isLoggedIn;
-                                    }).
-                                    error(
-                                            function (
-                                                    data,
-                                                    status
-                                                    )
-                                            {
-
-                                                console.log(
-                                                        "Error in checking session in ProfileCtrl: " +
-                                                        status
-                                                        );
-                                            }
-                                    )
-                        }
-                    
             }
         ]
         );
 // Log in controller
-instaFlickControllers.controller(
-        'LoginCtrl',
-        ['$scope',
-            '$location',
-            'UserRegistryProxy',
-            function (
-                    $scope,
-                    $location,
-                    UserRegistryProxy) {
+instaFlickControllers.controller('LoginCtrl',
+        ['$scope', '$location', 'UserRegistryProxy',
+            function ($scope, $location, UserRegistryProxy) {
 
                 $scope.login = function () {
                     console.log(
                             "User trying to login LoginCtrl: " +
                             $scope.user.username + " " +
                             $scope.user.password);
+
                     UserRegistryProxy.login(
                             $scope.user.username,
                             $scope.user.password).
@@ -90,6 +60,7 @@ instaFlickControllers.controller(
                         if (status === 406) {
 
                             $scope.user.msg = "Incorrect password";
+
                         }
                     });
                 };
@@ -361,7 +332,7 @@ instaFlickControllers.
                                         console.log("getImage error");
                                     });
                         };
-                        
+
                         $scope.createAlbum = function () {
                             console.log("Creating album: " + $scope.album.name);
                             MediaProxy.createAlbum($scope.album.name)
@@ -388,10 +359,10 @@ instaFlickControllers.
                          });
                          };
                          */
-                        }
-                        
-                        ]);
-    
+                    }
+
+                ]);
+
 // Helper functions
 function getSession(
         $scope,

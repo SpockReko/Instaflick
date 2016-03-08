@@ -46,10 +46,6 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 return $http.get(url + "/session");
             },
             
-            signedIn: function() {
-                console.log("getting boolean from index to logedin")
-                return $http.get(url + "/session");
-            }
         };
     }
 ]);
