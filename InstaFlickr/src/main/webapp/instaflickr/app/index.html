@@ -34,15 +34,24 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right"> 
                         <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-                        <!--<div ng-init="isLoggedIn=signedIn()" ng-controller="signedinCtrl">
-                            <span ng-hide="isLoggedIn"> -->
-                        <li ng-hide="{{signedIn}}"><a href="#/login" ><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
-                            <!--</span>
-                            <span ng-show="isLoggedIn"> -->
-                        <li ng-show="{{signedIn}}"><a href="#" ng-btn ng-click="logout()"> <span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
-                            <!--</span>-->
-                        <!--</div> -->
-                        <li><a href="#/register"><span class="glyphicon glyphicon-log-in"></span> Register</a></li>
+                        <li ng-hide="{{signedIn}}">
+                            <a href="#/login" >
+                                <span class="glyphicon glyphicon-log-in"></span>    
+                                Sign In
+                            </a>
+                        </li>
+                        <li ng-show="{{signedIn}}">
+                            <a href="#" ng-btn ng-click="logout()"> 
+                                <span class="glyphicon glyphicon-log-out"></span>
+                                Log Out
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/register">
+                                <span class="glyphicon glyphicon-log-in"></span> 
+                                Register
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

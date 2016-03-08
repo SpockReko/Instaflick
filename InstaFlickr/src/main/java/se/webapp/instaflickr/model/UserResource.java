@@ -63,6 +63,7 @@ public class UserResource {
             
         String username = session.getSessionID();
         JsonObject value = Json.createObjectBuilder().add("username", username).build();
+        LOG.info(username);
         return Response.ok(value).build();
     }
     

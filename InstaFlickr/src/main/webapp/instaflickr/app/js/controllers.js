@@ -9,7 +9,9 @@ instaFlickControllers.controller(
                     $scope,
                     $location,
                     UserRegistryProxy) {
+                
                 $scope.signedIn = false;
+                
                 $scope.logout = function () {
                     console.log("User trying to logout IndexCtrl")
                     UserRegistryProxy.
@@ -29,6 +31,31 @@ instaFlickControllers.controller(
                                                 );
                                     });
                 };
+                
+                $scope.signedIn = function ( $scope , UserRegistryProxy ) {
+                            UserRegistryProxy.signedIn().
+                                    success(function (boolean) {
+                                        console.log(
+                                                "get boolean from somethere: " +
+                                                boolean['session']
+                                                );
+                                        return isLoggedIn;
+                                    }).
+                                    error(
+                                            function (
+                                                    data,
+                                                    status
+                                                    )
+                                            {
+
+                                                console.log(
+                                                        "Error in checking session in ProfileCtrl: " +
+                                                        status
+                                                        );
+                                            }
+                                    )
+                        }
+                    
             }
         ]
         );
@@ -294,47 +321,6 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
         $scope.comments = testCommentData;
     }]);
 
-
-instaFlickControllers.
-        controller('signedinCtrl',
-                ['$scope',
-                    'UserRegistryProxy',
-                    function (
-                            $scope,
-                            UserRegistryProxy
-                            )
-                    {
-                        function signedIn(
-                                $scope,
-                                UserRegistryProxy
-                                ) {
-                            UserRegistryProxy.signedIn().
-                                    success(function (boolean) {
-
-                                        console.log(
-                                                "get boolean from somethere: " +
-                                                boolean['session']
-                                                );
-                                        $scope.isLoggedIn;
-                                        return isLoggedIn;
-                                    }).
-                                    error(
-                                            function (
-                                                    data,
-                                                    status
-                                                    )
-                                            {
-
-                                                console.log(
-                                                        "Error in checking session in ProfileCtrl: " +
-                                                        status
-                                                        );
-                                            }
-                                    )
-                        }
-                    }
-                ]
-                );
 instaFlickControllers.
         controller('UploadCtrl',
                 [
@@ -375,7 +361,7 @@ instaFlickControllers.
                                         console.log("getImage error");
                                     });
                         };
-
+                        
                         $scope.createAlbum = function () {
                             console.log("Creating album: " + $scope.album.name);
                             MediaProxy.createAlbum($scope.album.name)
@@ -403,10 +389,9 @@ instaFlickControllers.
                          };
                          */
                         }
-                        }
+                        
                         ]);
-    }
-]);
+    
 // Helper functions
 function getSession(
         $scope,
