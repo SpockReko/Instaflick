@@ -70,7 +70,7 @@ instaFlickControllers.controller('SetupProfileCtrl',
                     UserRegistryProxy.setupProfle($scope.user.username, $scope.user.fname, $scope.user.lname, $scope.user.description)
                             .success(function () {
                                 console.log("Success!");
-                                $location.path('/login');
+                                $location.path('/profile');
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
