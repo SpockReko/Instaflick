@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
@@ -142,6 +143,7 @@ public class MediaResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfileImages(@QueryParam(value = "username") String username) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
 
         InstaFlickUser user = ur.find(username);
@@ -149,11 +151,67 @@ public class MediaResource {
         //List<Picture> pictures = user.getPictures(); // Doesn't work
         List<Picture> pictures = pc.findPicturesByUser(user);
 
-        JsonArrayBuilder builder = Json.createArrayBuilder();
+        List<Album> albums = ac.getAlbums(user);
+        List<List<Long>> albumPictureIds = new ArrayList();
+
+        LOG.log(Level.INFO, "List of albums created by " + username + ":");
+        for (Album a : albums) {
+            LOG.log(Level.INFO, "Album name: " + a.getName());
+            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+            albumPictureIds.add(ac.getPictureIds(user, a.getName()));
+        }
+
+        List<List<Picture>> albumPictures = new ArrayList();
+
+        for (int i = 0; i < albumPictureIds.size(); i++) {
+            List<Long> ids = albumPictureIds.get(i);
+
+            albumPictures.add(new ArrayList());
+            for (int j = 0; j < 4 && j < ids.size(); j++) {
+                albumPictures.get(i).add(pc.findPictureById(ids.get(j)));
+            }
+        }
+
+        List<Picture> noDuplicates = new ArrayList();
+
         for (Picture p : pictures) {
+            boolean duplicate = false;
+            for (List<Picture> list : albumPictures) {
+                for (Picture q : list) {
+                    if (Objects.equals(q.getId(), p.getId())) {
+                        duplicate = true;
+                        LOG.log(Level.INFO, "Duplicate found. Id: " + p.getId());
+                    }
+                }
+            }
+            if (!duplicate) {
+                noDuplicates.add(p);
+            }
+        }
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Picture p : noDuplicates) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId()));
+                    .add("id", p.getId()).add("type", "image"));
+        }
+
+        int index = 0;
+        for (List<Picture> pList : albumPictures) {
+            JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
+            albumBuilder.add("albumName", albums.get(index).getName());
+            albumBuilder.add("type", "album");
+
+            JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
+            for (Picture p : pList) {
+                innerBuilder.add(Json.createObjectBuilder()
+                        .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                        .add("id", p.getId()));
+            }
+
+            albumBuilder.add("pictureList", innerBuilder);
+
+            builder.add(albumBuilder);
         }
 
         return Response.ok(builder.build()).build();

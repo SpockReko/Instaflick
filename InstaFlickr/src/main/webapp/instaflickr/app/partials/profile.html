@@ -26,6 +26,7 @@
 </div>
 -->
 
+<!--
 <div class="row">
     <div ng-repeat="element in data track by $index">
         <div class="col-lg-3 col-md-4 col-xs-6">
@@ -35,21 +36,22 @@
         </div>
     </div>
 </div>
-<!--
+-->
+
 <div class="row">
-    <div ng-repeat="element in testData track by $index" ng-switch on="element.type">
+    <div ng-repeat="element in data track by $index" ng-switch on="element.type">
         <div class="col-lg-3 col-md-4 col-xs-6">
             <a class="thumbnail" href="#" ng-switch-when="image">
-                <img class="img-responsive" src="http://placehold.it/400x400">
+                <img class="img-responsive" src="{{element.path}}">
             </a>
             <a class="thumbnail" href="#" ng-switch-when="album">
                 <table class="album-preview">
-                    <tr ng-repeat="thing in element.alb track by $index" ng-if="$index % 2 == 0">
+                    <tr ng-repeat="thing in element.pictureList track by $index" ng-if="$index % 2 == 0">
                         <td>
-                            <img class="img-responsive" src="http://placehold.it/400x400">
+                            <img class="img-responsive" src="{{thing.path}}">
                         </td>
-                        <td ng-if="$index + 1 < element.alb.length">
-                            <img class="img-responsive" src="http://placehold.it/400x400">
+                        <td ng-if="$index + 1 < element.pictureList.length">
+                            <img class="img-responsive" src="{{element.pictureList[$index+1].path}}">
                         </td>
                     </tr>
                 </table>

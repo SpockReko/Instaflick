@@ -46,11 +46,22 @@ public class AlbumCatalogue extends AbstractDAO<Album, String> {
         }
         return album;
     }
+    
     public List<Album> getAlbums(InstaFlickUser user) {
         Query query = em.createQuery( "SELECT a FROM Album a WHERE a.owner = ?1" );
         query.setParameter( 1, user );
         List<Album> albums = new ArrayList<>( query.getResultList());
         return albums;
+    }
+    
+    public List<Long> getPictureIds(InstaFlickUser user, String albumName) {
+        Query query = em.createNativeQuery("SELECT PICTURES_ID FROM ALBUM_PICTURE WHERE OWNER_USERNAME = ?1 AND NAME = ?2");
+        query.setParameter(1, user.getUsername());
+        query.setParameter(2, albumName);
+        
+        List<Long> pictureIds = query.getResultList();
+        
+        return pictureIds;
     }
 
 }
