@@ -39,7 +39,7 @@ instaflickr.config(function ($stateProvider, $urlRouterProvider) {
                 controller: 'ProfileCtrl'
             })
             .state('picture', {
-                url: '/picture',
+                url: '/picture/:id',
                 templateUrl: 'partials/picture.html',
                 controller: 'PictureCtrl'
             })

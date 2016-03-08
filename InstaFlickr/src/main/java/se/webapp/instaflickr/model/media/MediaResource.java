@@ -28,6 +28,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -40,6 +41,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import se.webapp.instaflickr.model.AlbumCatalogue;
 import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.SessionHandler;
@@ -62,35 +64,98 @@ public class MediaResource {
 
     @Inject
     private InstaFlick instaFlick;
-    
+
     @Inject
     private SessionHandler sessionHandler;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @GET
+    @Path("picture")
+    public Response getPicture(
+            @QueryParam("pictureId") Long pictureId) {
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture picture = pc.find(pictureId);
+        JsonObject pictureData = Json.createObjectBuilder()
+                .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
+                .build();
+        return Response.ok(pictureData).build();
+    }
+
+    @POST
+    @Path("album")
+    public Response createAlbum(@QueryParam(value = "albumName") String albumName) {
+        String username = sessionHandler.getSessionID();
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        Album album = ac.getAlbum(user, albumName);
+        if (album != null) {
+            return Response.status(Response.Status.CONFLICT).build();
+        } else {
+            album = new Album(albumName, user);
+            ac.create(album);
+            return Response.ok(album).build();
+        }
+    }
+
+    @GET
+    @Path("albums")
+    public Response getAlbums() {
+        String username = sessionHandler.getSessionID();
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        List<Album> albums = ac.getAlbums(user);
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Album a : albums) {
+            builder.add(Json.createObjectBuilder()
+                    .add("albumName", a.getName()));
+        }
+
+        return Response.ok(builder.build()).build();
+    }
+
+    @GET
+    @Path("add-to-album")
+    public Response addToAlbum(
+            @QueryParam("albumName") String albumName,
+            @QueryParam(value = "pictureID") Long pictureID) {
+        String username = sessionHandler.getSessionID();
+        LOG.warning("Got session: " + username);
+        /*
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        LOG.warning("Got user: " + user.getUsername());
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        Album album = ac.getAlbum(user, albumName);
+        LOG.warning("Got album: " + album.getName());
+        /*PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture picture = pc.find(pictureID);
+        album.addPicture(picture);
+        ac.update(album); */
+        return Response.ok().build();
+    }
+
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getImagePath(@QueryParam(value = "username") String email) {
+    public Response getProfileImages(@QueryParam(value = "username") String username) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
-        
-        InstaFlickUser user = ur.find(email);
-        List<Picture> pictures = user.getPictures(); // Doesn't work
-        pictures = pc.findPicturesByUser(user);
-        
-        /*
-        if(pictures.size() == 0) {
-            LOG.log(Level.INFO, "HERE");
-            return Response.status(Response.Status.NO_CONTENT).build();
-        }
-*/      
-       
+
+        InstaFlickUser user = ur.find(username);
+        LOG.warning(user.getUsername());
+        //List<Picture> pictures = user.getPictures(); // Doesn't work
+        List<Picture> pictures = pc.findPicturesByUser(user);
+
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        for(Picture p : pictures) {
+        for (Picture p : pictures) {
             builder.add(Json.createObjectBuilder()
-                .add("path", p.getImagePath() + "/" +  p.getId() + "/thumbnail.jpg"));
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("id", p.getId()));
         }
-        
+
         return Response.ok(builder.build()).build();
     }
 
@@ -98,29 +163,31 @@ public class MediaResource {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadImage(
             @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-        
+            @FormDataParam("file") FormDataContentDisposition fileMetaData,
+            @FormDataParam("albumName") String albumName) throws Exception {
+
         // Get session
-        String email = sessionHandler.getSessionID();
-        
+        String username = sessionHandler.getSessionID();
+        LOG.warning("Got session: " + username);
+
         // Get the picture catalogue
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
         // Generate paths
         String imageId = fileMetaData.getFileName().replace(' ', '_');
         String fileExtension = imageId.substring(imageId.lastIndexOf("."));
-        String cleanEmail = email.replace("@", "_at_");
-        java.nio.file.Path localPath = generateLocalPath(cleanEmail);
-        java.nio.file.Path relativePath = generateRelativePath(cleanEmail);
+        String cleanUsername = username.replace("@", "_at_");
+        java.nio.file.Path localPath = generateLocalPath(cleanUsername);
+        java.nio.file.Path relativePath = generateRelativePath(cleanUsername);
 
         // Find the user
-        InstaFlickUser user = instaFlick.getUserRegistry().find(email);
-        
+        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
+
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
-        
+
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -137,26 +204,28 @@ public class MediaResource {
             }
             out.flush();
             out.close();
-            
+
             // Generate big image
             Thumbnails.of(file)
                     .size(1200, 800)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "big"));
-            
+
             // Generate thumbnail
             Thumbnails.of(file)
                     .size(200, 200)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "thumbnail"));
-            
-            
-            
+
+            if (!albumName.isEmpty()) {
+                LOG.warning("Adding picture to album: " + albumName);
+                addPictureToAlbum(user, albumName, picture);
+            }
         } catch (IOException e) {
             throw new WebApplicationException("Error while uploading file. Please try again!!");
         }
 
-        return Response.ok(relativePath + "/" + imageId + "/" + "big.jpg").build();
+        return Response.ok(relativePath + "/" + imageId + "/" + "thumbnail.jpg").build();
     }
 
     public java.nio.file.Path generateRelativePath() {
@@ -188,5 +257,14 @@ public class MediaResource {
         localPath = Paths.get(contextPath.getParent().getParent().toString(), "src/main/webapp/instaflickr/app/media");
 
         return Paths.get(localPath.toString(), userId);
+    }
+
+    public boolean addPictureToAlbum(InstaFlickUser user, String albumName, Picture picture) {
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        Album album = ac.getAlbum(user, albumName);
+        LOG.warning("Got album: " + album.getName());
+        album.addPicture(picture);
+        ac.update(album);
+        return true;
     }
 }
