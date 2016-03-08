@@ -70,9 +70,21 @@ public class MediaResource {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
+    @GET
+    @Path("picture")
+    public Response getPicture(
+            @QueryParam("pictureId") Long pictureId) {
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture picture = pc.find(pictureId);
+        JsonObject pictureData = Json.createObjectBuilder()
+                .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
+                .build();
+        return Response.ok(pictureData).build();
+    }
+
     @POST
     @Path("album")
-    public Response create(@QueryParam(value = "albumName") String albumName) {
+    public Response createAlbum(@QueryParam(value = "albumName") String albumName) {
         String username = sessionHandler.getSessionID();
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
@@ -128,7 +140,7 @@ public class MediaResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getImages(@QueryParam(value = "username") String username) {
+    public Response getProfileImages(@QueryParam(value = "username") String username) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
 
@@ -137,16 +149,11 @@ public class MediaResource {
         //List<Picture> pictures = user.getPictures(); // Doesn't work
         List<Picture> pictures = pc.findPicturesByUser(user);
 
-        /*
-        if(pictures.size() == 0) {
-            LOG.log(Level.INFO, "HERE");
-            return Response.status(Response.Status.NO_CONTENT).build();
-        }
-         */
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Picture p : pictures) {
             builder.add(Json.createObjectBuilder()
-                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg"));
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("id", p.getId()));
         }
 
         return Response.ok(builder.build()).build();

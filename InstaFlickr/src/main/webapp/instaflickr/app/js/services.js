@@ -49,12 +49,12 @@ mediaService.factory('MediaProxy', ['$http',
         var url = 'http://localhost:8080/InstaFlickr/webresources/media';
 
         return {
-            getImage: function () {
+            getImage: function (pictureId) {
                 console.log("Get image in MediaProxy");
-                return $http.get(url);
+                return $http.get(url + "/picture" + "?pictureId=" + pictureId);
             },
-            getMany: function(username) {
-                console.log("getMany in MediaProxy");
+            getProfileImages: function(username) {
+                console.log("getProfileImages in MediaProxy");
                 return $http.get(url + "?username=" + username);
             },
             getAlbums: function() {

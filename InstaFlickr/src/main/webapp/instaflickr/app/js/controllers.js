@@ -92,11 +92,11 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
 
             console.log("Get profile images: " + $stateParams.username);
 
-            MediaProxy.getMany($stateParams.username).success(function (data) {
+            MediaProxy.getProfileImages($stateParams.username).success(function (data) {
                 console.log(data);
                 console.log("Success!");
                 $scope.data = data;
-                console.log(data[0].path);
+                console.log("id" + data[0].id);
             });
         } else {
 
@@ -104,11 +104,11 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
             UserRegistryProxy.getSession()
                     .success(function (json) {
                         console.log("Get profile images: " + json['username']);
-                        MediaProxy.getMany(json['username']).success(function (data) {
+                        MediaProxy.getProfileImages(json['username']).success(function (data) {
                             console.log(data);
                             console.log("Success!");
                             $scope.data = data;
-                            console.log(data[0].path);
+                            console.log("id: " + data[0].id);
                         });
                     })
                     .error(function (data, status) {
@@ -190,8 +190,15 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         $scope.testData = testData;
     }]);
 
-instaFlickControllers.controller('PictureCtrl', ['$scope',
-    function ($scope) {
+instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy',
+    function ($scope, $stateParams, MediaProxy) {
+
+        MediaProxy.getImage($stateParams.id).success(function (data) {
+            console.log("Success!");
+            console.log(data);
+            
+            $scope.image = data;
+        });
 
         var testPictureData = {
             "_id": 1,
@@ -200,6 +207,8 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
             "description": "This is a cool fashion image!",
             "date": "2016-03-09"
         };
+
+        
 
         var testCommentData = [
             {
@@ -222,7 +231,6 @@ instaFlickControllers.controller('PictureCtrl', ['$scope',
             }
         ];
 
-        $scope.image = testPictureData;
         $scope.comments = testCommentData;
 
     }]);
@@ -260,7 +268,7 @@ instaFlickControllers.controller('UploadCtrl',
                                 }
                             })
                 };
-
+/*
                 $scope.getImage = function () {
                     console.log("UploadCtrl getImage");
                     MediaProxy.getImage()
@@ -271,7 +279,7 @@ instaFlickControllers.controller('UploadCtrl',
                         console.log("getImage error");
                     });
                 };
-
+*/
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
                     console.log(file);
@@ -282,7 +290,7 @@ instaFlickControllers.controller('UploadCtrl',
                     file.upload = Upload.upload({
                         url: 'http://localhost:8080/InstaFlickr/webresources/media',
                         data: {file: file,
-                               albumName: albumName}
+                            albumName: albumName}
                     });
 
                     file.upload.then(function (response) {
