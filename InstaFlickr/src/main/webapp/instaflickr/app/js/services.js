@@ -48,7 +48,6 @@ mediaService.factory('MediaProxy', ['$http',
 
         var url = 'http://localhost:8080/InstaFlickr/webresources/media';
 
-
         return {
             getImage: function () {
                 console.log("Get image in MediaProxy");
@@ -67,7 +66,12 @@ mediaService.factory('MediaProxy', ['$http',
                 var data = $.param({
                     albumName: albumName
                 });
-                return $http.post(url + '/album?' + data);            }
+                return $http.post(url + '/album?' + data);            
+            },
+            addPictureToAlbum: function(pictureID, albumName) {
+                console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName) 
+                return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
+            }
         };
     }
 ]);

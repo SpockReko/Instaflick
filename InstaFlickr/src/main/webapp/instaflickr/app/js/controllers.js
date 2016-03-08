@@ -247,6 +247,7 @@ instaFlickControllers.controller('UploadCtrl',
                 };
 
                 $scope.createAlbum = function () {
+                    console.log("Creating album: " + $scope.album.name);
                     MediaProxy.createAlbum($scope.album.name)
                             .success(function () {
                                 console.log("Success!");
@@ -274,16 +275,21 @@ instaFlickControllers.controller('UploadCtrl',
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
                     console.log(file);
+                    var albumName = "";
+                    if ($scope.selectedAlbum !== undefined) {
+                        albumName = $scope.selectedAlbum;
+                    }
                     file.upload = Upload.upload({
                         url: 'http://localhost:8080/InstaFlickr/webresources/media',
-                        data: {file: file}
+                        data: {file: file,
+                               albumName: albumName}
                     });
 
                     file.upload.then(function (response) {
                         $timeout(function () {
                             file.result = response.data;
                             console.log(response.data);
-                            $scope.upImg = response.data;
+                            //$scope.upImg = response.data;
                         });
                     }, function (response) {
                         if (response.status > 0)

@@ -35,10 +35,12 @@ public class PictureCatalogue extends AbstractDAO<Picture, Long> {
     }
 
     public List<Picture> findPicturesByUser(InstaFlickUser user) {
-        List<Picture> found = new ArrayList<>();
-
         List<Picture> picture = em.createQuery("SELECT p FROM Picture p WHERE p.uploader.email = '" + user.getEmail() + "'", Picture.class).getResultList();
-        
+        return picture;
+    }
+
+    public Picture findPictureByPath(String path) {
+        Picture picture = em.createQuery("SELECT p FROM Picture p WHERE p.path = '" + path + "'", Picture.class).getSingleResult();
         return picture;
     }
 }
