@@ -6,6 +6,8 @@ instaFlickControllers.controller('IndexCtrl',
         ['$scope', '$location', 'UserRegistryProxy',
             function ($scope, $location, UserRegistryProxy) {
                 
+                $scope.signedIn = false;
+                
                 $scope.logout = function () {
                     console.log("User trying to logout IndexCtrl")
                     UserRegistryProxy.logout()
@@ -228,6 +230,7 @@ instaFlickControllers.controller('signedinCtrl', ['$scope', 'UserRegistryProxy',
                 .success(function(boolean) {
                 console.log("get boolean from somethere: " + boolean['session']);
                         $scope.isLoggedIn;
+                        return isLoggedIn;
                 })
                 .error(function(data, status) {
                 console.log("Error in checking session in ProfileCtrl: " + status);
