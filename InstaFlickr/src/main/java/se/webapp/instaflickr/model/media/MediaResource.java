@@ -128,13 +128,14 @@ public class MediaResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getImagePath(@QueryParam(value = "username") String email) {
+    public Response getImages(@QueryParam(value = "username") String username) {
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
 
-        InstaFlickUser user = ur.find(email);
-        List<Picture> pictures = user.getPictures(); // Doesn't work
-        pictures = pc.findPicturesByUser(user);
+        InstaFlickUser user = ur.find(username);
+        LOG.warning(user.getUsername());
+        //List<Picture> pictures = user.getPictures(); // Doesn't work
+        List<Picture> pictures = pc.findPicturesByUser(user);
 
         /*
         if(pictures.size() == 0) {
