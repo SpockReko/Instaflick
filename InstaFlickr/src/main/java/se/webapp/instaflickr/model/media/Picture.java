@@ -10,6 +10,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.reaction.Comment;
@@ -43,7 +46,7 @@ public class Picture extends AbstractMedia implements Serializable {
     private List<Comment> comments;
     @Getter
     @Setter
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar uploaded;
     @Getter
     @Setter
@@ -52,14 +55,14 @@ public class Picture extends AbstractMedia implements Serializable {
     @Getter
     @Setter
     private Likes likes;
-
+    
     public Picture() {
     } // Används ej.
 
     public Picture(InstaFlickUser uploader, Likes likes) {
         this.uploader = uploader;
         this.likes = likes;
-        this.uploaded = getNow();
+        this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
     }
 
@@ -67,7 +70,7 @@ public class Picture extends AbstractMedia implements Serializable {
         this.uploader = uploader;
         this.likes = likes;
         this.imagePath = path;
-        this.uploaded = getNow();
+        this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
     }
 
@@ -75,7 +78,8 @@ public class Picture extends AbstractMedia implements Serializable {
         this.uploader = uploader;
         //this.likes = new Likes();
         this.imagePath = path;
-        this.uploaded = getNow();
+        this.uploaded = Calendar.getInstance();
+        
         this.comments = new LinkedList<Comment>();
     }
 
@@ -87,11 +91,5 @@ public class Picture extends AbstractMedia implements Serializable {
     public void postComment(InstaFlickUser user, String comment) {
         Comment newComment = new Comment(user, comment, new Likes());
         comments.add(newComment);
-    }
-
-    private Calendar getNow() {
-        Calendar newCalendar = Calendar.getInstance();
-        newCalendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
-        return newCalendar;
     }
 }
