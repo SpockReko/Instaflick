@@ -27,14 +27,16 @@
                type="text" ng-model="user.description">
         
         <br>
-        
-        <label for="inputPPicture" class="sr-only">Profile picture</label>
-        <input id="inputPPicture" class="form-control" type="file" ng-model="user.ppicture">
+
+        <div class="form-group">
+            <label for="inputPPicture" class="sr-only">Profile picture</label>
+            <input id="inputPPicture" class="form-control" type="file" ngf-select ng-model="profilePictures" name="file" accept="image/*" ngf-max-size="2MB" required>
+        </div>
 
     </div>
        
     <div class="btn-group" role="group">
-        <button class="btn btn-primary" type="submit" ng-click="setupProfile()">Register</button>
+        <button class="btn btn-primary" type="submit" ng-click="setupProfile(file)">Register</button>
         <button class="btn btn-default" type="button" ng-click="goBack()">Cancel</button> 
     </div>
 </form>

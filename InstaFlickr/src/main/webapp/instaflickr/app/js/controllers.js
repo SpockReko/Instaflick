@@ -42,10 +42,10 @@ instaFlickControllers.controller('RegisterCtrl',
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
-                            $scope.user.msg = "Already registered user";
+                            $scope.msg = "Already registered user";
                         }
                         if (status === 406) {
-                            $scope.user.msg = "The password entries do not match";
+                            $scope.msg = "The password entries do not match";
                         }
                     });
                 };
@@ -64,7 +64,7 @@ instaFlickControllers.controller('SetupProfileCtrl',
                 getSession($scope, $location, UserRegistryProxy);
 
 
-                $scope.setupProfile = function () {
+                $scope.setupProfile = function (image) {
                     console.log("Setting up user profile in RegisterCtrl: " + $scope.user.username + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
 
                     UserRegistryProxy.setupProfle($scope.user.username, $scope.user.fname, $scope.user.lname, $scope.user.description)
@@ -74,6 +74,12 @@ instaFlickControllers.controller('SetupProfileCtrl',
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
+                    file.upload = Upload.upload({
+                        url: 'http://localhost:8080/InstaFlickr/webresources/media',
+                        data: {file: file,
+                            albumName: albumName}
+                    });
+                    
                 };
 
                 $scope.goBack = function () {
