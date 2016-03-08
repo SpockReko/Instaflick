@@ -3,14 +3,14 @@
 /* Services */
 
 var userRegistryService = angular.module('UserRegistryService', []);
+var mediaService = angular.module('MediaService', []);
 
 // Representing the remote RESTful ProductCatalogue
 userRegistryService.factory('UserRegistryProxy', ['$http',
-    function($http) {
+    function ($http) {
 
         var url = 'http://localhost:8080/InstaFlickr/webresources/reg';
 
-  
         return {
             create: function(username, password, repeatPassword) {
                 console.log("create in UserRegistryProxy: " + username 
@@ -19,8 +19,8 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                     username: username,
                     password: password,
                     repeatPassword: repeatPassword
-                });                 
-                return $http.post(url +'?'+ data);;
+                });
+                return $http.post(url + '?' + data);
             },
             setupProfle: function(email, fname, lname, description) {
                 console.log("Setting up profile in UserRegistryProxy: " 
@@ -49,6 +49,25 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
             signedIn: function() {
                 console.log("getting boolean from index to logedin")
                 return $http.get(url + "/session");
+            }
+        };
+    }
+]);
+
+mediaService.factory('MediaProxy', ['$http',
+    function ($http) {
+
+        var url = 'http://localhost:8080/InstaFlickr/webresources/media';
+
+
+        return {
+            getImage: function () {
+                console.log("Get image in MediaProxy");
+                return $http.get(url);
+            },
+            getMany: function(username) {
+                console.log("getMany in MediaProxy");
+                return $http.get(url + "?username=" + username);
             }
         };
     }
