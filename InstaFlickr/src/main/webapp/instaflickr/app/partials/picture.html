@@ -27,7 +27,7 @@
             <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
         </div>
         <form>
-            <input readonly hidden class="form-control" name="pictureid" value="{{image.id}}">
+            <input readonly hidden name="pictureid" value="{{image.id}}">
             <div class="col-xs-6 form-group">
                 <textarea class="form-control picture-comment-input" name="comment" rows="2" placeholder="Say something nice!" ng-model="formData.comment"></textarea>
             </div>
@@ -37,15 +37,13 @@
         </form>
     </div>
 
-    <div id="comment-list">
-        <div class="row comment-row" ng-repeat="comment in comments">
-            <div class="col-xs-3">
-                <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
-            </div>
-            <div class="col-xs-6 comment">
-                <p class="comment-text">{{comment.text}}</p>
-                <p><small><em>{{comment.date}}</em> <span class="glyphicon glyphicon-heart"></span> {{comment.likes}} likes</small></p>
-            </div>
+    <div id="comment-list" class="row comment-row" ng-repeat="comment in comments">
+        <div class="col-xs-3">
+            <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
+        </div>
+        <div class="col-xs-6 comment">
+            <p class="comment-text">{{comment.text}}</p>
+            <p><small><em>{{comment.date}}</em> <span class="glyphicon glyphicon-heart"></span> {{comment.likes}} likes</small></p>
         </div>
     </div>
 
