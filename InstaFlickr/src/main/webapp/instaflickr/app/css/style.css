@@ -21,13 +21,13 @@ body {
     height: 100%;
 }
 
-.img-responsive{
-    width: 100%;
-}
-
 #single-image {
     max-height: 600px;
     margin-bottom: 16px;
+}
+
+.thumbnail .img-responsive {
+    width: 100%;
 }
 
 textarea {

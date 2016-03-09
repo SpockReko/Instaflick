@@ -22,7 +22,7 @@
             <a class="thumbnail" href="#/picture/{{element.id}}" ng-switch-when="image">
                 <img class="img-responsive" src="{{element.path}}">
             </a>
-            <a class="thumbnail" href="#" ng-switch-when="album">
+            <a class="thumbnail" href="#/{{username}}/{{albumname}}" ng-switch-when="album">
                 <table class="album-preview">
                     <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 == 0">
                         <td>
@@ -37,63 +37,3 @@
         </div>
     </div>
 </div>
-
-<!--
-<div class="row">
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-xs-6" >
-        <a class="thumbnail" href="#">
-            <table class="album-preview">
-                <tr>
-                    <td>
-                        <img class="img-responsive" src="http://placehold.it/400x400">
-                    </td>
-                    <td>
-                        <img class="img-responsive" src="http://placehold.it/400x400">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img class="img-responsive" src="http://placehold.it/400x400">
-                    </td>
-                </tr>
-            </table>
-        </a>
-    </div>
-    <div class="clearfix visible-md-block"></div>
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-xs-6">
-        <a class="thumbnail" href="#">
-            <img class="img-responsive" src="http://placehold.it/400x400">
-        </a>
-    </div>
-</div>
--->

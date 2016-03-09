@@ -5,18 +5,22 @@
  */
 package se.webapp.instaflickr.model.media;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -38,6 +42,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -147,40 +152,19 @@ public class MediaResource {
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
         LOG.warning(user.getUsername());
-        
+
         List<Picture> pictures = user.getPictures();
         List<Album> albums = user.getAlbums();
 
         List<List<Picture>> albumPictures = new ArrayList();
-        
+
         LOG.log(Level.INFO, "List of albums created by " + username + ":");
         for (Album a : albums) {
             LOG.log(Level.INFO, "Album name: " + a.getName());
             LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
             albumPictures.add(a.getPictures());
         }
- 
-/*            
-        List<List<Long>> albumPictureIds = new ArrayList();
 
-        LOG.log(Level.INFO, "List of albums created by " + username + ":");
-        for (Album a : albums) {
-            LOG.log(Level.INFO, "Album name: " + a.getName());
-            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
-            albumPictureIds.add(ac.getPictureIds(user, a.getName()));
-        }
-
-        List<List<Picture>> albumPictures = new ArrayList();
-
-        for (int i = 0; i < albumPictureIds.size(); i++) {
-            List<Long> ids = albumPictureIds.get(i);
-
-            albumPictures.add(new ArrayList());
-            for (int j = 0; j < 4 && j < ids.size(); j++) {
-                albumPictures.get(i).add(pc.findPictureById(ids.get(j)));
-            }
-        }
-*/
         List<Picture> noDuplicates = new ArrayList();
 
         for (Picture p : pictures) {
@@ -267,9 +251,9 @@ public class MediaResource {
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
-        user.addPicture(picture); // Doesn't work
+        user.addPicture(picture);
         ur.update(user);
-        
+
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -295,9 +279,18 @@ public class MediaResource {
 
             // Generate thumbnail
             Thumbnails.of(file)
+                    .crop(Positions.CENTER)
                     .size(200, 200)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "thumbnail"));
+
+            try {
+                Files.delete(file.toPath());
+            } catch (NoSuchFileException x) {
+                System.err.format("%s: no such" + " file or directory%n", file.toPath());
+            } catch (IOException x) {
+                System.err.println(x);
+            }
 
             if (!albumName.isEmpty()) {
                 LOG.warning("Adding picture to album: " + albumName);
