@@ -15,12 +15,12 @@ instaFlickControllers.controller('LoginCtrl',
                                 console.log("Success!");
                                 $location.path('/profile');
                             }).error(function (data, status) {
-                        console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.user.msg = "Username is not registered";
-                        }
-                        if (status === 406) {
+                        } else if (status === 406) {
                             $scope.user.msg = "Incorrect password";
+                        } else {
+                            console.log("Error in save RegisterCtrl status: " + status);
                         }
                     });
                 };
@@ -40,12 +40,12 @@ instaFlickControllers.controller('RegisterCtrl',
                                 console.log("Success!");
                                 $location.path('/setupProfile');
                             }).error(function (data, status) {
-                        console.log("Error in save RegisterCtrl status: " + status);
                         if (status === 409) {
                             $scope.msg = "Already registered user";
-                        }
-                        if (status === 406) {
-                            $scope.msg = "The password entries do not match";
+                        } else if (status === 406) {
+                            $scope.user.msg = "The password entries do not match";
+                        } else {
+                            console.log("Error in save RegisterCtrl status: " + status);
                         }
                     });
                 };
@@ -58,10 +58,10 @@ instaFlickControllers.controller('RegisterCtrl',
 
 // SetupProfile user controller
 instaFlickControllers.controller('SetupProfileCtrl',
-        ['$scope', '$location', 'UserRegistryProxy',
-            function ($scope, $location, UserRegistryProxy) {
+        ['$scope', '$location', '$timeout', 'Upload', 'UserRegistryProxy',
+            function ($scope, $location, $timeout, Upload, UserRegistryProxy) {
 
-                getSession($scope, $location, UserRegistryProxy);
+                getSession($location, UserRegistryProxy);
 
 
                 $scope.setupProfile = function (image) {
@@ -74,12 +74,24 @@ instaFlickControllers.controller('SetupProfileCtrl',
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
-                    file.upload = Upload.upload({
-                        url: 'http://localhost:8080/InstaFlickr/webresources/media',
-                        data: {file: file,
-                            albumName: albumName}
+                    image.upload = Upload.upload({
+                        url: 'http://localhost:8080/InstaFlickr/webresources/media/profile-image',
+                        data: {file: image}
                     });
-                    
+
+                    image.upload.then(function (response) {
+                        $timeout(function () {
+                            image.result = response.data;
+                            console.log(response.data);
+                            //$scope.upImg = response.data;
+                        });
+                    }, function (response) {
+                        if (response.status > 0)
+                            $scope.errorMsg = "Server Error! (" + response.data + ")";
+                    }, function (evt) {
+                        // Math.min is to fix IE which reports 200% sometimes
+                        image.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                    });
                 };
 
                 $scope.goBack = function () {
@@ -95,32 +107,20 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         $scope.description = "I like long walks on the beach..."
 
         if ($stateParams.username) {
-
-            console.log("Get profile images: " + $stateParams.username);
-
-            MediaProxy.getProfileImages($stateParams.username).success(function (data) {
-                console.log(data);
-                console.log("Success!");
-                $scope.data = data;
-                console.log("id" + data[0].id);
-            });
+            getProfilePicture($stateParams.username, MediaProxy, $scope)
+            getProfileImages($stateParams.username, MediaProxy, $scope)
         } else {
-
-
             UserRegistryProxy.getSession()
                     .success(function (json) {
                         console.log("Get profile images: " + json['username']);
-                        MediaProxy.getProfileImages(json['username']).success(function (data) {
-                            console.log(data);
-                            console.log("Success!");
-                            $scope.data = data;
-                            console.log("id: " + data[0].id);
-                        });
+                        getProfilePicture(json['username'], MediaProxy, $scope)
+                        getProfileImages(json['username'], MediaProxy, $scope)
                     })
                     .error(function (data, status) {
-                        console.log("Error in checking session in ProfileCtrl: " + status);
                         if (status === 406) {
                             $location.path('/login');
+                        } else {
+                            console.log("Error in checking session in ProfileCtrl: " + status);
                         }
                     });
         }
@@ -202,7 +202,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
         MediaProxy.getImage($stateParams.id).success(function (data) {
             console.log("Success!");
             console.log(data);
-            
+
             $scope.image = data;
         });
 
@@ -214,7 +214,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             "date": "2016-03-09"
         };
 
-        
+
 
         var testCommentData = [
             {
@@ -245,7 +245,8 @@ instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
             function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy, $state) {
 
-                getSession($scope, $location, UserRegistryProxy);
+                getSession($location, UserRegistryProxy);
+
                 MediaProxy.getAlbums()
                         .success(function (data) {
                             console.log("Success! " + data[0].albumName);
@@ -261,6 +262,7 @@ instaFlickControllers.controller('UploadCtrl',
                 };
 
                 $scope.createAlbum = function () {
+                    $scope.msg = "";
                     console.log("Creating album: " + $scope.album.name);
                     MediaProxy.createAlbum($scope.album.name)
                             .success(function () {
@@ -268,24 +270,14 @@ instaFlickControllers.controller('UploadCtrl',
                                 $state.reload();
                             })
                             .error(function (data, status) {
-                                console.log("Error in createAlbum in UploadCtrl status: " + status);
                                 if (status === 409) {
                                     $scope.msg = "You already have an album called " + $scope.album.name;
+                                } else {
+                                    console.log("Error in createAlbum in UploadCtrl status: " + status);
                                 }
                             })
                 };
-/*
-                $scope.getImage = function () {
-                    console.log("UploadCtrl getImage");
-                    MediaProxy.getImage()
-                            .success(function (jsonObject) {
-                                console.log("Success!");
-                                $scope.imagePath = path;
-                            }).error(function () {
-                        console.log("getImage error");
-                    });
-                };
-*/
+
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
                     console.log(file);
@@ -293,40 +285,61 @@ instaFlickControllers.controller('UploadCtrl',
                     if ($scope.selectedAlbum !== undefined) {
                         albumName = $scope.selectedAlbum;
                     }
-                    file.upload = Upload.upload({
-                        url: 'http://localhost:8080/InstaFlickr/webresources/media',
-                        data: {file: file,
-                            albumName: albumName}
-                    });
-
-                    file.upload.then(function (response) {
-                        $timeout(function () {
-                            file.result = response.data;
-                            console.log(response.data);
-                            //$scope.upImg = response.data;
-                        });
-                    }, function (response) {
-                        if (response.status > 0)
-                            $scope.errorMsg = "Server Error! (" + response.data + ")";
-                    }, function (evt) {
-                        // Math.min is to fix IE which reports 200% sometimes
-                        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-                    });
+                    uploadPicture($scope, $timeout, Upload, file, albumName);
                 }
             }
         ]);
 
 // Helper functions
-function getSession($scope, $location, UserRegistryProxy) {
+function getSession($location, UserRegistryProxy) {
     UserRegistryProxy.getSession()
             .success(function (json) {
                 console.log("Session retrieved in ProfileCtrl: " + json['username']);
                 return json['username'];
             })
             .error(function (data, status) {
-                console.log("Error in checking session in ProfileCtrl: " + status);
                 if (status === 406) {
                     $location.path('/login');
+                } else {
+                    console.log("Error in checking session in ProfileCtrl: " + status);
                 }
             });
+}
+
+function uploadPicture($scope, $timeout, Upload, image, albumName) {
+    image.upload = Upload.upload({
+        url: 'http://localhost:8080/InstaFlickr/webresources/media',
+        data: {file: image, albumName: albumName}
+    });
+
+    image.upload.then(function (response) {
+        $timeout(function () {
+            image.result = response.data;
+            console.log(response.data);
+            //$scope.upImg = response.data;
+        });
+    }, function (response) {
+        if (response.status > 0)
+            $scope.errorMsg = "Server Error! (" + response.data + ")";
+    }, function (evt) {
+        // Math.min is to fix IE which reports 200% sometimes
+        image.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    });
+}
+
+function getProfileImages(userName, MediaProxy, $scope) {
+    console.log("Get profile images: " + userName);
+    MediaProxy.getProfileImages(userName).success(function (data) {
+        console.log(data);
+        console.log("Success!");
+        $scope.data = data;
+    });
+}
+function getProfilePicture(userName, MediaProxy, $scope) {
+    console.log("Get profile picture: " + userName);
+    MediaProxy.getProfilePicture(userName).success(function (data) {
+        console.log(data);
+        console.log("Success!");
+        $scope.profilePicture = data['image'];
+    });
 }

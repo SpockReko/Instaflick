@@ -9,6 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
+import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.media.Picture;
 
 
@@ -50,33 +51,43 @@ public class InstaFlickUser implements Serializable {
     @Setter
     @OneToMany
     private List<Picture> pictures;
-    
+    @Getter
+    @Setter
+    @OneToMany
+    private List<Album> albums;    
     
     public InstaFlickUser() {
         this.username = "User " + (++staticId).toString();
         this.pictures = new LinkedList<Picture>();
+        this.albums = new LinkedList<Album>();
     }
     
     public InstaFlickUser(String username){
         this.username = username;
         this.pictures = new LinkedList<Picture>();
+        this.albums = new LinkedList<Album>();
     }
     
     public InstaFlickUser(String username, String password){
         this.username = username;
         this.password = password;
         this.pictures = new LinkedList<Picture>();
-    }
+        this.albums = new LinkedList<Album>();
+   }
     
     public InstaFlickUser(String username, String password, Picture picture){
         this.username = username;
         this.password = password;
         this.profilePicture = picture;
         this.pictures = new LinkedList<Picture>();
+        this.albums = new LinkedList<Album>();
     }
     
     public void addPicture(Picture pic){
         pictures.add(pic);
     }
-
+    
+    public void addAlbum(Album album){
+        albums.add(album);
+    }
 }

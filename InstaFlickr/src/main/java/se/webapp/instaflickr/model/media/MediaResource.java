@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
@@ -88,6 +89,7 @@ public class MediaResource {
         String username = sessionHandler.getSessionID();
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
+        LOG.warning("Got user: " + user.getUsername());
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         Album album = ac.getAlbum(user, albumName);
         if (album != null) {
@@ -95,7 +97,9 @@ public class MediaResource {
         } else {
             album = new Album(albumName, user);
             ac.create(album);
-            return Response.ok(album).build();
+            user.addAlbum(album);
+            ur.update(user);
+            return Response.ok().build();
         }
     }
 
@@ -105,8 +109,7 @@ public class MediaResource {
         String username = sessionHandler.getSessionID();
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
-        List<Album> albums = ac.getAlbums(user);
+        List<Album> albums = user.getAlbums();
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Album a : albums) {
@@ -141,22 +144,99 @@ public class MediaResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfileImages(@QueryParam(value = "username") String username) {
-        PictureCatalogue pc = instaFlick.getPictureCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
-
         InstaFlickUser user = ur.find(username);
         LOG.warning(user.getUsername());
-        //List<Picture> pictures = user.getPictures(); // Doesn't work
-        List<Picture> pictures = pc.findPicturesByUser(user);
+        
+        List<Picture> pictures = user.getPictures();
+        List<Album> albums = user.getAlbums();
+
+        List<List<Picture>> albumPictures = new ArrayList();
+        
+        LOG.log(Level.INFO, "List of albums created by " + username + ":");
+        for (Album a : albums) {
+            LOG.log(Level.INFO, "Album name: " + a.getName());
+            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+            albumPictures.add(a.getPictures());
+        }
+ 
+/*            
+        List<List<Long>> albumPictureIds = new ArrayList();
+
+        LOG.log(Level.INFO, "List of albums created by " + username + ":");
+        for (Album a : albums) {
+            LOG.log(Level.INFO, "Album name: " + a.getName());
+            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+            albumPictureIds.add(ac.getPictureIds(user, a.getName()));
+        }
+
+        List<List<Picture>> albumPictures = new ArrayList();
+
+        for (int i = 0; i < albumPictureIds.size(); i++) {
+            List<Long> ids = albumPictureIds.get(i);
+
+            albumPictures.add(new ArrayList());
+            for (int j = 0; j < 4 && j < ids.size(); j++) {
+                albumPictures.get(i).add(pc.findPictureById(ids.get(j)));
+            }
+        }
+*/
+        List<Picture> noDuplicates = new ArrayList();
+
+        for (Picture p : pictures) {
+            boolean duplicate = false;
+            for (List<Picture> list : albumPictures) {
+                for (Picture q : list) {
+                    if (Objects.equals(q.getId(), p.getId())) {
+                        duplicate = true;
+                        LOG.log(Level.INFO, "Duplicate found. Id: " + p.getId());
+                    }
+                }
+            }
+            if (!duplicate) {
+                noDuplicates.add(p);
+            }
+        }
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Picture p : pictures) {
+        for (Picture p : noDuplicates) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId()));
+                    .add("id", p.getId()).add("type", "image"));
+        }
+
+        int index = 0;
+        for (List<Picture> pList : albumPictures) {
+            JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
+            albumBuilder.add("albumName", albums.get(index).getName());
+            albumBuilder.add("type", "album");
+
+            JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
+            for (Picture p : pList) {
+                innerBuilder.add(Json.createObjectBuilder()
+                        .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                        .add("id", p.getId()));
+            }
+
+            albumBuilder.add("pictureList", innerBuilder);
+
+            builder.add(albumBuilder);
         }
 
         return Response.ok(builder.build()).build();
+    }
+    @GET
+    @Path("profile-image")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getProfilePicture(@QueryParam(value = "username") String username) {
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        LOG.warning(user.getUsername());
+        
+        Picture profilePicture = user.getProfilePicture();
+        JsonObject value = Json.createObjectBuilder().add("image", profilePicture.getImagePath() + "/profile.jpg").build();
+
+        return Response.ok(value).build();
     }
 
     @POST
@@ -181,13 +261,15 @@ public class MediaResource {
         java.nio.file.Path relativePath = generateRelativePath(cleanUsername);
 
         // Find the user
-        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
-
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
-
+        ur.update(user);
+        
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -228,6 +310,66 @@ public class MediaResource {
         return Response.ok(relativePath + "/" + imageId + "/" + "thumbnail.jpg").build();
     }
 
+    @POST
+    @Path("profile-image")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response uploadProfileImage(
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
+        LOG.warning("Uploading profile picture");
+        
+        // Get session
+        String username = sessionHandler.getSessionID();
+        LOG.warning("Got session: " + username);
+
+        // Get the picture catalogue
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+
+        // Generate paths
+        String imageId = fileMetaData.getFileName().replace(' ', '_');
+        String fileExtension = imageId.substring(imageId.lastIndexOf("."));
+        String cleanUsername = username.replace("@", "_at_");
+        java.nio.file.Path localPath = generateLocalPath(cleanUsername);
+        java.nio.file.Path relativePath = generateRelativePath(cleanUsername);
+
+        // Find the user
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        LOG.warning("Got user: " + user.getUsername());
+        // Add new picture to the database
+        Picture picture = new Picture(null, relativePath.toString());
+        pc.create(picture);
+        user.setProfilePicture(picture);
+        ur.update(user);
+
+        // Write the file to disk
+        try {
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            File file = new File(localPath + "/" + "tmp" + fileExtension);
+            file.getParentFile().mkdirs();
+
+            OutputStream out = new FileOutputStream(file);
+            while ((read = fileInputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+
+            // Generate thumbnail
+            Thumbnails.of(file)
+                    .size(200, 200)
+                    .outputFormat("jpg")
+                    .toFile(new File(file.getParent() + "/" + "profile"));
+
+        } catch (IOException e) {
+            throw new WebApplicationException("Error while uploading file. Please try again!!");
+        }
+
+        return Response.ok(relativePath + "/" + "profile.jpg").build();
+
+    }
+        
     public java.nio.file.Path generateRelativePath() {
         java.nio.file.Path contextPath, localPath, relativePath;
 

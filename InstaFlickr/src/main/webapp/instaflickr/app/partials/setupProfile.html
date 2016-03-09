@@ -1,4 +1,4 @@
-<form class="form-signin col-xs-offset-3 col-xs-6">
+<form name="ProfileSetup" class="form-signin col-xs-offset-3 col-xs-6">
     <div class="form-group">
         <h2 class="form-signin-heading">Set up your<br> InstaFlickr profile</h2>
              
@@ -30,13 +30,13 @@
 
         <div class="form-group">
             <label for="inputPPicture" class="sr-only">Profile picture</label>
-            <input id="inputPPicture" class="form-control" type="file" ngf-select ng-model="profilePictures" name="file" accept="image/*" ngf-max-size="2MB" required>
+            <input id="inputPPicture" class="form-control" required type="file" ngf-select ng-model="profilePicture" name="profilePicture" accept="image/*" ngf-max-size="2MB" required>
         </div>
 
     </div>
        
     <div class="btn-group" role="group">
-        <button class="btn btn-primary" type="submit" ng-click="setupProfile(file)">Register</button>
+        <button class="btn btn-primary" type="submit" ng-disabled="!ProfileSetup.$valid" ng-click="setupProfile(profilePicture)">Register</button>
         <button class="btn btn-default" type="button" ng-click="goBack()">Cancel</button> 
     </div>
 </form>

@@ -53,6 +53,10 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Get image in MediaProxy");
                 return $http.get(url + "/picture" + "?pictureId=" + pictureId);
             },
+            getProfilePicture: function(username) {
+                console.log("getProfilePicture in MediaProxy");
+                return $http.get(url + "/profile-image" + "?username=" + username);
+            },
             getProfileImages: function(username) {
                 console.log("getProfileImages in MediaProxy");
                 return $http.get(url + "?username=" + username);
