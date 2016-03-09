@@ -6,12 +6,15 @@
 
     <div class="col-lg-9 col-md-8 col-xs-6" id="info-box">
 
-        <div>
-            <h3>{{ name}}</h3>
+        <div id="person-name-header">
+            <h3>{{ profileData.fname}} {{profileData.lname}}</h3>
+        </div>
+        <div id="user-name-header">
+            <h4>@{{profileData.username}}</h4>
         </div>
 
         <div ng-model="description">
-            <p>{{ description}}</p>
+            <p>{{ profileData.description}}</p>
         </div>
     </div>
 </div>
@@ -29,7 +32,7 @@
                             <img class="img-responsive" src="{{image.path}}">
                         </td>
                         <td ng-if="$index + 1 < element.pictureList.length">
-                            <img class="img-responsive" src="{{element.pictureList[$index+1].path}}">
+                            <img class="img-responsive" src="{{element.pictureList[$index + 1].path}}">
                         </td>
                     </tr>
                 </table>

@@ -38,6 +38,10 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
             getSession: function() {
                 console.log("Getting session in UserRegistryProxy")
                 return $http.get(url + "/session");
+            },
+            getUserProfile: function(username) {
+                console.log("getUserProfile in UserRegistryProxy");
+                return $http.get(url + "/userprofile" + "?username=" + username);
             }
         };
     }

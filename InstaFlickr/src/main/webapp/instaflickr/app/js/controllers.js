@@ -107,12 +107,14 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         $scope.description = "I like long walks on the beach..."
 
         if ($stateParams.username) {
+            getUserProfile($stateParams.username, UserRegistryProxy, $scope);
             getProfilePicture($stateParams.username, MediaProxy, $scope)
             getProfileImages($stateParams.username, MediaProxy, $scope)
         } else {
             UserRegistryProxy.getSession()
                     .success(function (json) {
                         console.log("Get profile images: " + json['username']);
+                        getUserProfile(json['username'], UserRegistryProxy, $scope);
                         getProfilePicture(json['username'], MediaProxy, $scope)
                         getProfileImages(json['username'], MediaProxy, $scope)
                     })
@@ -324,6 +326,15 @@ function uploadPicture($scope, $timeout, Upload, image, albumName) {
     }, function (evt) {
         // Math.min is to fix IE which reports 200% sometimes
         image.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    });
+}
+
+function getUserProfile(username, UserRegistryProxy, $scope) {
+    console.log("Get user profile: " + username);
+    UserRegistryProxy.getUserProfile(username).success(function (data) {
+        console.log(data);
+        console.log("Success! user profile");
+        $scope.profileData = data;
     });
 }
 

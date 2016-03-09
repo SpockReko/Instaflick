@@ -209,6 +209,7 @@ public class MediaResource {
 
         return Response.ok(builder.build()).build();
     }
+
     @GET
     @Path("profile-image")
     @Produces({MediaType.APPLICATION_JSON})
@@ -216,11 +217,19 @@ public class MediaResource {
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
         LOG.warning(user.getUsername());
-        
-        Picture profilePicture = user.getProfilePicture();
-        JsonObject value = Json.createObjectBuilder().add("image", profilePicture.getImagePath() + "/profile.jpg").build();
 
-        return Response.ok(value).build();
+        Picture profilePicture = user.getProfilePicture();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+
+        if (profilePicture != null) {
+            builder.add("image", profilePicture.getImagePath() + "/profile.jpg");
+        } else {
+            LOG.log(Level.INFO, username + " has not set a profile picture");
+            LOG.log(Level.INFO, generateRelativePath().toString());
+            builder.add("image", generateRelativePath().toString() + "/default.jpg");
+        }
+
+        return Response.ok(builder.build()).build();
     }
 
     @POST
@@ -310,7 +319,7 @@ public class MediaResource {
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
         LOG.warning("Uploading profile picture");
-        
+
         // Get session
         String username = sessionHandler.getSessionID();
         LOG.warning("Got session: " + username);
@@ -362,7 +371,7 @@ public class MediaResource {
         return Response.ok(relativePath + "/" + "profile.jpg").build();
 
     }
-        
+
     public java.nio.file.Path generateRelativePath() {
         java.nio.file.Path contextPath, localPath, relativePath;
 
