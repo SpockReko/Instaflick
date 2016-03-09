@@ -98,7 +98,7 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
                 console.log(data);
                 console.log("Success!");
                 $scope.data = data;
-                console.log("id" + data[0].id);
+                //console.log("id" + data[0].id);
             });
         } else {
 
