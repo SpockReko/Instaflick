@@ -245,7 +245,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
         $scope.postComment = function(){
             testCommentData = [];
             $scope.comments = testCommentData;
-            PictureProxy.addComment($scope.formData.picture,$scope.formData.comment);
+            PictureProxy.addComment($scope.commentinfo.picture,$scope.commentinfo.comment);
         };
     }]);
 

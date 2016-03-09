@@ -23,6 +23,7 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -336,11 +337,8 @@ public class MediaResource {
     }
     @POST
     @Path("/comment")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response postComment(@QueryParam("pictureid") long pictureId, @QueryParam("comment") String comment) {
-        instaFlick.getMediaHandler().comment(pictureId, comment);
-        System.out.println(pictureId);
-        System.out.println(comment);
+    public Response postComment(@QueryParam("picture") Long picture, @QueryParam("comment") String comment) {
+        instaFlick.getMediaHandler().comment(picture, comment);
         return Response.ok().build();
     }
 
