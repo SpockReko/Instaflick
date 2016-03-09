@@ -89,6 +89,7 @@ public class MediaResource {
         String username = sessionHandler.getSessionID();
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
+        LOG.warning("Got user: " + user.getUsername());
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         Album album = ac.getAlbum(user, albumName);
         if (album != null) {
@@ -96,7 +97,9 @@ public class MediaResource {
         } else {
             album = new Album(albumName, user);
             ac.create(album);
-            return Response.ok(album).build();
+            user.addAlbum(album);
+            ur.update(user);
+            return Response.ok().build();
         }
     }
 
@@ -106,8 +109,7 @@ public class MediaResource {
         String username = sessionHandler.getSessionID();
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
-        List<Album> albums = ac.getAlbums(user);
+        List<Album> albums = user.getAlbums();
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Album a : albums) {
@@ -142,16 +144,23 @@ public class MediaResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfileImages(@QueryParam(value = "username") String username) {
-        PictureCatalogue pc = instaFlick.getPictureCatalogue();
-        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         UserRegistry ur = instaFlick.getUserRegistry();
-
         InstaFlickUser user = ur.find(username);
         LOG.warning(user.getUsername());
-        //List<Picture> pictures = user.getPictures(); // Doesn't work
-        List<Picture> pictures = pc.findPicturesByUser(user);
+        
+        List<Picture> pictures = user.getPictures();
+        List<Album> albums = user.getAlbums();
 
-        List<Album> albums = ac.getAlbums(user);
+        List<List<Picture>> albumPictures = new ArrayList();
+        
+        LOG.log(Level.INFO, "List of albums created by " + username + ":");
+        for (Album a : albums) {
+            LOG.log(Level.INFO, "Album name: " + a.getName());
+            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+            albumPictures.add(a.getPictures());
+        }
+ 
+/*            
         List<List<Long>> albumPictureIds = new ArrayList();
 
         LOG.log(Level.INFO, "List of albums created by " + username + ":");
@@ -171,7 +180,7 @@ public class MediaResource {
                 albumPictures.get(i).add(pc.findPictureById(ids.get(j)));
             }
         }
-
+*/
         List<Picture> noDuplicates = new ArrayList();
 
         for (Picture p : pictures) {
@@ -239,13 +248,15 @@ public class MediaResource {
         java.nio.file.Path relativePath = generateRelativePath(cleanUsername);
 
         // Find the user
-        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
-
+        UserRegistry ur = instaFlick.getUserRegistry();
+        InstaFlickUser user = ur.find(username);
+        LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
-
+        ur.update(user);
+        
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 

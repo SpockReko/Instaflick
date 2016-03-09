@@ -34,8 +34,12 @@ public class Album implements Serializable {
     @Setter
     @OneToOne
     private InstaFlickUser owner;
+    @Getter
+    @Setter
     @OneToMany
     private List<InstaFlickUser> followers;
+    @Getter
+    @Setter
     @OneToMany
     private List<Picture> pictures;
 
