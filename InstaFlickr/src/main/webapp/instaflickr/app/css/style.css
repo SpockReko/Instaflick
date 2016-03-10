@@ -54,6 +54,10 @@ body {
     margin-bottom: 16px;
 }
 
+.fill-cell {
+    width: 50%;
+}
+
 .form-signin .form-control {
     position: relative;
     height: auto;

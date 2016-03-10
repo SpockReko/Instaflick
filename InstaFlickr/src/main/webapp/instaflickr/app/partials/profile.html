@@ -27,13 +27,14 @@
             </a>
             <a class="thumbnail" href="#/album/{{profileData.username}}/{{element.albumName}}" ng-switch-when="album">
                 <table class="album-preview">
-                    <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 == 0">
+                    <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 === 0">
                         <td>
                             <img class="img-responsive" src="{{image.path}}">
                         </td>
                         <td ng-if="$index + 1 < element.pictureList.length">
                             <img class="img-responsive" src="{{element.pictureList[$index + 1].path}}">
                         </td>
+                        <td class="fill-cell" ng-if="$index + 1 === element.pictureList.length"></td>
                     </tr>
                 </table>
             </a>
