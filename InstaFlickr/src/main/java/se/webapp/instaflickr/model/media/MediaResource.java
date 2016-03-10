@@ -19,7 +19,6 @@ import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,6 +36,7 @@ import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.SessionHandler;
 import se.webapp.instaflickr.model.UserRegistry;
 import se.webapp.instaflickr.model.UserResource;
+import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -180,13 +180,20 @@ public class MediaResource {
     }
 
     @POST
-    @Path("/comment")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response postComment(@QueryParam("pictureid") long pictureId, @QueryParam("comment") String comment) {
-        instaFlick.getMediaHandler().comment(pictureId, comment);
-        System.out.println(pictureId);
-        System.out.println(comment);
-        return Response.ok().build();
+    @Path("comment")
+    public Response postComment(@QueryParam("picture") long pictureId, @QueryParam("comment") String comment) {
+        InstaFlickUser usr = instaFlick.getUserRegistry().find(sessionHandler.getSessionID());
+        if (usr == null){
+            return Response.notModified("Could not find user!").build();
+        }
+        List<Picture> pics = instaFlick.getPictureCatalogue().findPicturesById(pictureId);        
+        if (pics.isEmpty()){
+            return Response.notModified("Could not find picture!").build();
+        }
+        
+        pics.get(0).postComment(usr,comment);
+        return Response.accepted().build();
+        
     }
 
 }

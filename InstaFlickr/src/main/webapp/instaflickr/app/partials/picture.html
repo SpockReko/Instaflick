@@ -27,9 +27,11 @@
             <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
         </div>
         <form>
-            <input readonly hidden name="pictureid" value="{{image.id}}">
-            <div class="col-xs-6 form-group">
-                <textarea class="form-control picture-comment-input" name="comment" rows="2" placeholder="Say something nice!" ng-model="formData.comment"></textarea>
+            <div class="form-group">
+                <input readonly hidden name="pictureid" ng-model="formData.picture" value="{{image.id}}">
+                <div class="col-xs-6">
+                    <textarea class="form-control picture-comment-input" rows="2" placeholder="Say something nice!" ng-model="formData.comment"></textarea>
+                </div>
             </div>
             <div class="col-xs-3">
                 <button type="submit" class="btn btn-primary" ng-click="postComment()">Comment</button>
