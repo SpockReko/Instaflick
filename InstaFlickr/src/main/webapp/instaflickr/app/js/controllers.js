@@ -2,18 +2,57 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
-// Log in controller
+instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegistryProxy', '$window',
+    function ($scope, $location, UserRegistryProxy, $window) {
 
+        console.log("Checking if logged in");
+
+        UserRegistryProxy.isLoggedIn()
+                .success(
+                        function (data) {
+                            if (data['loggedIn']) {
+                                console.log("You are logged in");
+                                $scope.loggedIn = " Sign Out";
+                            }
+                            else {
+                                console.log("You are not logged in");
+                                $scope.loggedIn = " Sign In";
+                            }
+                        }
+                )
+                .error(function (data, status) {
+                    console.log("Error in isLoggedIn IndexCtrl status: " + status);
+                });
+
+        $scope.logInOut = function () {
+            UserRegistryProxy.logout()
+                    .success(
+                            function () {
+                                console.log("Successfully logged out!");
+                                $scope.loggedIn = false;
+                                $window.location.reload();
+                            }
+                    )
+                    .error(function (data, status) {
+                        console.log("Error in save RegisterCtrl status: " + status);
+                    });
+        }
+    }
+]);
+
+// Log in controller
 instaFlickControllers.controller('LoginCtrl',
-        ['$scope', '$location', 'UserRegistryProxy',
-            function ($scope, $location, UserRegistryProxy) {
+        ['$scope', '$location', 'UserRegistryProxy', '$window',
+            function ($scope, $location, UserRegistryProxy, $window) {
 
                 $scope.login = function () {
                     console.log("User trying to login LoginCtrl: " + $scope.user.username + " " + $scope.user.password);
                     UserRegistryProxy.login($scope.user.username, $scope.user.password)
                             .success(function () {
                                 console.log("Success!");
-                                $location.path('/profile');
+                                $scope.loggedIn = true;
+                                $window.location.reload();
+                                //$location.path('/profile');
                             }).error(function (data, status) {
                         if (status === 409) {
                             $scope.user.msg = "Username is not registered";
@@ -26,9 +65,8 @@ instaFlickControllers.controller('LoginCtrl',
                 };
             }
         ]);
-
+        
 // Register user controller
-
 instaFlickControllers.controller('RegisterCtrl',
         ['$scope', '$location', 'UserRegistryProxy',
             function ($scope, $location, UserRegistryProxy) {
@@ -38,6 +76,7 @@ instaFlickControllers.controller('RegisterCtrl',
                     UserRegistryProxy.create($scope.user.username, $scope.user.password, $scope.user.repeatPassword)
                             .success(function () {
                                 console.log("Success!");
+                                $scope.loggedIn = true;
                                 $location.path('/setupProfile');
                             }).error(function (data, status) {
                         if (status === 409) {
@@ -49,24 +88,20 @@ instaFlickControllers.controller('RegisterCtrl',
                         }
                     });
                 };
-
                 $scope.goBack = function () {
                     window.history.back();
                 }
             }
         ]);
-
+        
 // SetupProfile user controller
 instaFlickControllers.controller('SetupProfileCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'UserRegistryProxy',
             function ($scope, $location, $timeout, Upload, UserRegistryProxy) {
 
                 getSession($location, UserRegistryProxy);
-
-
                 $scope.setupProfile = function (image) {
                     console.log("Setting up user profile in RegisterCtrl: " + $scope.user.username + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
-
                     UserRegistryProxy.setupProfle($scope.user.username, $scope.user.fname, $scope.user.lname, $scope.user.description)
                             .success(function () {
                                 console.log("Success!");
@@ -78,7 +113,6 @@ instaFlickControllers.controller('SetupProfileCtrl',
                         url: 'http://localhost:8080/InstaFlickr/webresources/media/profile-image',
                         data: {file: image}
                     });
-
                     image.upload.then(function (response) {
                         $timeout(function () {
                             image.result = response.data;
@@ -93,13 +127,12 @@ instaFlickControllers.controller('SetupProfileCtrl',
                         image.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
                     });
                 };
-
                 $scope.goBack = function () {
                     window.history.back();
                 }
             }
         ]);
-
+        
 // Profile controller
 instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
@@ -124,77 +157,8 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
                         }
                     });
         }
-        var testData = [
-            {
-                "_id": 1,
-                "type": "image"
-            },
-            {
-                "_id": 2,
-                "type": "image"
-            },
-            {
-                "_id": 3,
-                "type": "album",
-                "alb": [
-                    {
-                        "_id": 4,
-                        "type": "image"
-                    },
-                    {
-                        "_id": 5,
-                        "type": "image"
-                    },
-                    {
-                        "_id": 6,
-                        "type": "image"
-                    }
-                ]
-            },
-            {
-                "_id": 7,
-                "type": "image"
-            },
-            {
-                "_id": 8,
-                "type": "image"
-            },
-            {
-                "_id": 9,
-                "type": "image"
-            },
-            {
-                "_id": 10,
-                "type": "album",
-                "alb": [
-                    {
-                        "_id": 11,
-                        "type": "image"
-                    },
-                    {
-                        "_id": 12,
-                        "type": "image"
-                    }
-                ]
-            },
-            {
-                "_id": 13,
-                "type": "image"
-            },
-            {
-                "_id": 14,
-                "type": "image"
-            },
-            {
-                "_id": 15,
-                "type": "image"
-            }
-        ];
-
-        console.log(testData);
-
-        $scope.testData = testData;
-    }]);
+    }
+]);
 
 instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy',
     function ($scope, $stateParams, MediaProxy) {
@@ -202,51 +166,16 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
         MediaProxy.getImage($stateParams.id).success(function (data) {
             console.log("Success!");
             console.log(data);
-
             $scope.image = data;
         });
-
-        var testPictureData = {
-            "_id": 1,
-            "path": "http://lorempixel.com/600/300/fashion/",
-            "likes": 18,
-            "description": "This is a cool fashion image!",
-            "date": "2016-03-09"
-        };
-
-
-
-        var testCommentData = [
-            {
-                "_id": 1,
-                "text": "This is a comment",
-                "likes": 41,
-                "date": "2016-03-11"
-            },
-            {
-                "_id": 2,
-                "text": "This is another comment",
-                "likes": 0,
-                "date": "2016-03-10"
-            },
-            {
-                "_id": 3,
-                "text": "This is the third comment.",
-                "likes": 2,
-                "date": "2016-03-09"
-            }
-        ];
-
-        $scope.comments = testCommentData;
-
-    }]);
+    }
+]);
 
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
             function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy, $state) {
 
                 getSession($location, UserRegistryProxy);
-
                 MediaProxy.getAlbums()
                         .success(function (data) {
                             console.log("Success! " + data[0].albumName);
@@ -260,7 +189,6 @@ instaFlickControllers.controller('UploadCtrl',
                 $scope.returnPath = function () {
                     $scope.imagePath = "media/image1.png";
                 };
-
                 $scope.createAlbum = function () {
                     $scope.msg = "";
                     console.log("Creating album: " + $scope.album.name);
@@ -277,7 +205,6 @@ instaFlickControllers.controller('UploadCtrl',
                                 }
                             })
                 };
-
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
                     console.log(file);
@@ -311,7 +238,6 @@ function uploadPicture($scope, $timeout, Upload, image, albumName) {
         url: 'http://localhost:8080/InstaFlickr/webresources/media',
         data: {file: image, albumName: albumName}
     });
-
     image.upload.then(function (response) {
         $timeout(function () {
             image.result = response.data;

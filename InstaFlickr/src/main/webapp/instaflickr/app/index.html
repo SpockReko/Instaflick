@@ -14,7 +14,7 @@
         <script src="js/controllers.js"></script>
         <script src="js/services.js"></script>
     </head>
-    <body>
+    <body ng-controller="IndexCtrl">
         <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -34,10 +34,13 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-                        <li><a href="#/login"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
+                        <li><a href="#" ng-click="logInOut()"><span class="glyphicon glyphicon-log-in"></span>{{loggedIn}}</a></li>
+                        <!--<li ng-show="{{loggedIn}}"><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-in"></span> Sign Out {{loggedIn}}</a></li>-->
+                        <!--<li ng-show="{{loggedOut}}"><a href="#/login"><span class="glyphicon glyphicon-log-in"></span> Sign In {{loggedOut}}</a></li>-->
                         <li><a href="#/register"><span class="glyphicon glyphicon-log-in"></span> Register</a></li>
                     </ul>
                 </div>
+                Debugg: loggedOut: {{loggedOut}} logged in: {{loggedIn}}
             </div>
         </nav>
 

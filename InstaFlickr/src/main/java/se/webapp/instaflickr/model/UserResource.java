@@ -67,6 +67,23 @@ public class UserResource {
     }
     
     @GET
+    @Path(value = "logout")
+    public Response logout() {
+        LOG.warning("Logging out");
+        session.setSession(false);
+        session.setSessionID(null);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path(value = "loggedIn")
+    public Response isLoggedIn() {
+        LOG.warning("Checking session");
+        JsonObject value = Json.createObjectBuilder().add("loggedIn", session.getSession()).build();        
+        return Response.ok(value).build();
+    }
+    
+    @GET
     public Response login(  @QueryParam(value = "username") String username, 
                             @QueryParam(value = "password") String password) {
         LOG.warning("User trying to log in: " + username + " " + password);

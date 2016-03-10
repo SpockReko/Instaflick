@@ -35,9 +35,17 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("login UserRegistryProxy: " + username + " " + password)
                 return $http.get(url + "?username=" + username + "&password=" + password);
             },
+            logout: function() {
+                console.log("Logging out in UserRegistryProxy")
+                return $http.get(url + "/logout");
+            },
             getSession: function() {
                 console.log("Getting session in UserRegistryProxy")
                 return $http.get(url + "/session");
+            },
+            isLoggedIn: function() {
+                console.log("Checking session in UserRegistryProxy")
+                return $http.get(url + "/loggedIn");
             }
         };
     }
