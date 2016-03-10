@@ -21,6 +21,10 @@ body {
     height: 100%;
 }
 
+.album-preview-wrapper {
+    display: table;
+}
+
 #single-image {
     max-height: 600px;
     margin-bottom: 16px;
@@ -45,9 +49,6 @@ textarea {
 }
 .comment-row-input {
     margin-bottom: 8px;
-}
-body {
-    background-color: #eee;
 }
 
 #album-header {
