@@ -206,39 +206,11 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             $scope.image = data;
         });
 
-        var testPictureData = {
-            "_id": 1,
-            "path": "http://lorempixel.com/600/300/fashion/",
-            "likes": 18,
-            "description": "This is a cool fashion image!",
-            "date": "2016-03-09"
-        };
-
-
-
-        var testCommentData = [
-            {
-                "_id": 1,
-                "text": "This is a comment",
-                "likes": 41,
-                "date": "2016-03-11"
-            },
-            {
-                "_id": 2,
-                "text": "This is another comment",
-                "likes": 0,
-                "date": "2016-03-10"
-            },
-            {
-                "_id": 3,
-                "text": "This is the third comment.",
-                "likes": 2,
-                "date": "2016-03-09"
-            }
-        ];
-
-        $scope.comments = testCommentData;
-
+        MediaProxy.getLike($stateParams.id).success(function(like) {
+            console.log("Success!");
+            console.log(like);
+            $scope.image.likes = like;
+        });
     }]);
 
 instaFlickControllers.controller('UploadCtrl',

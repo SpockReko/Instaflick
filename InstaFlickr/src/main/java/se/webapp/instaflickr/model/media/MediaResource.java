@@ -48,6 +48,7 @@ import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.SessionHandler;
 import se.webapp.instaflickr.model.UserRegistry;
 import se.webapp.instaflickr.model.UserResource;
+import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -141,6 +142,20 @@ public class MediaResource {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("likes")
+    public Response getNrOfLikes(
+            @QueryParam("pictureID") Long pictureID) {
+        
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Likes likes = pc.find(pictureID).getLikes();
+        JsonObject data = Json.createObjectBuilder()
+                .add("nrOflikes", likes.nrOfLikes())
+                .build(); 
+        
+        return Response.ok(data).build();
+    }
+    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfileImages(@QueryParam(value = "username") String username) {
