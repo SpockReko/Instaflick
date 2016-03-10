@@ -175,6 +175,7 @@ public class MediaResource {
         for (Album a : albums) {
             LOG.log(Level.INFO, "Album name: " + a.getName());
             LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+
             albumPictures.add(a.getPictures());
         }
 
@@ -210,16 +211,17 @@ public class MediaResource {
             albumBuilder.add("type", "album");
 
             JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
-            for (Picture p : pList) {
+
+            for (int i = 0; i < pList.size() && i < 4; i++) {
                 innerBuilder.add(Json.createObjectBuilder()
-                        .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                        .add("id", p.getId()));
+                        .add("path", pList.get(i).getImagePath() + "/" + pList.get(i).getId() + "/thumbnail.jpg")
+                        .add("id", pList.get(i).getId()));
             }
 
             albumBuilder.add("pictureList", innerBuilder);
 
             builder.add(albumBuilder);
-            
+
             index++;
         }
 
