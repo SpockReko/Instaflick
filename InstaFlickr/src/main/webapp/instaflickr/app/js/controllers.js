@@ -109,14 +109,14 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         if ($stateParams.username) {
             getUserProfile($stateParams.username, UserRegistryProxy, $scope);
             getProfilePicture($stateParams.username, MediaProxy, $scope)
-            getProfileImages($stateParams.username, MediaProxy, $scope)
+            getProfileImagesSorted($stateParams.username, MediaProxy, $scope)
         } else {
             UserRegistryProxy.getSession()
                     .success(function (json) {
                         console.log("Get profile images: " + json['username']);
                         getUserProfile(json['username'], UserRegistryProxy, $scope);
                         getProfilePicture(json['username'], MediaProxy, $scope)
-                        getProfileImages(json['username'], MediaProxy, $scope)
+                        getProfileImagesSorted(json['username'], MediaProxy, $scope)
                     })
                     .error(function (data, status) {
                         if (status === 406) {
@@ -365,5 +365,27 @@ function getProfilePicture(userName, MediaProxy, $scope) {
         console.log(data);
         console.log("Success!");
         $scope.profilePicture = data['image'];
+    });
+}
+
+function getProfileImagesSorted(userName, MediaProxy, $scope) {
+    console.log("Get profile images sorted: " + userName);
+    MediaProxy.getProfileImages(userName).success(function (data) {
+        console.log(data);
+        console.log("Success!");
+
+        $scope.getOrderedData = function () {
+            return data.sort(compare);
+        };
+
+        var compare = function (a, b) {
+            if (parseInt(a.time) > parseInt(b.time))
+                return -1;
+            if (parseInt(a.time) < parseInt(b.time))
+                return 1;
+            return 0;
+        };
+
+        $scope.data = $scope.getOrderedData();
     });
 }

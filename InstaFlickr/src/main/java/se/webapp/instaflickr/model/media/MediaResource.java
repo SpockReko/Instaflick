@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -201,7 +202,8 @@ public class MediaResource {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
                     .add("id", p.getId())
-                    .add("type", "image"));
+                    .add("type", "image")
+                    .add("time", p.getUploaded().getTimeInMillis()));
         }
 
         int index = 0;
@@ -209,6 +211,7 @@ public class MediaResource {
             JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
             albumBuilder.add("albumName", albums.get(index).getName());
             albumBuilder.add("type", "album");
+            albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
 
             JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
 

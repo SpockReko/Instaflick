@@ -54,8 +54,8 @@ body {
     margin-bottom: 16px;
 }
 
-.fill-cell {
-    width: 50%;
+.fill-img {
+    visibility: hidden;
 }
 
 .form-signin .form-control {
