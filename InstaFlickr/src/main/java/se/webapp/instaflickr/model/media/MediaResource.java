@@ -132,18 +132,31 @@ public class MediaResource {
             @QueryParam(value = "pictureID") Long pictureID) {
         String username = sessionHandler.getSessionID();
         LOG.warning("Got session: " + username);
-        /*
-        UserRegistry ur = instaFlick.getUserRegistry();
-        InstaFlickUser user = ur.find(username);
-        LOG.warning("Got user: " + user.getUsername());
-        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
-        Album album = ac.getAlbum(user, albumName);
-        LOG.warning("Got album: " + album.getName());
-        /*PictureCatalogue pc = instaFlick.getPictureCatalogue();
-        Picture picture = pc.find(pictureID);
-        album.addPicture(picture);
-        ac.update(album); */
+
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("album-pictures")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAlbumPictures(@QueryParam(value = "username") String username,
+            @QueryParam(value = "albumName") String albumName) {
+
+        UserRegistry ur = instaFlick.getUserRegistry();
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        InstaFlickUser user = ur.find(username);
+
+        Album album = ac.getAlbum(user, albumName);
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+
+        for (Picture p : album.getPictures()) {
+            builder.add(Json.createObjectBuilder()
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("id", p.getId()));
+        }
+
+        return Response.ok(builder.build()).build();
     }
 
     @GET
@@ -186,7 +199,8 @@ public class MediaResource {
         for (Picture p : noDuplicates) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId()).add("type", "image"));
+                    .add("id", p.getId())
+                    .add("type", "image"));
         }
 
         int index = 0;
@@ -205,6 +219,8 @@ public class MediaResource {
             albumBuilder.add("pictureList", innerBuilder);
 
             builder.add(albumBuilder);
+            
+            index++;
         }
 
         return Response.ok(builder.build()).build();

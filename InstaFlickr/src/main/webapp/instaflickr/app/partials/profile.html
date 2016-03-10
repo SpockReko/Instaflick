@@ -25,7 +25,7 @@
             <a class="thumbnail" href="#/picture/{{element.id}}" ng-switch-when="image">
                 <img class="img-responsive" src="{{element.path}}">
             </a>
-            <a class="thumbnail" href="#/{{username}}/{{albumname}}" ng-switch-when="album">
+            <a class="thumbnail" href="#/album/{{profileData.username}}/{{element.albumName}}" ng-switch-when="album">
                 <table class="album-preview">
                     <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 == 0">
                         <td>

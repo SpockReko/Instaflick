@@ -69,6 +69,10 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Getting albums in MediaProxy")
                 return $http.get(url + "/albums");
             },
+            getAlbumPictures: function(username, albumName) {
+                console.log("getAlbumPictures");
+                return $http.get(url + "/album-pictures?username=" + username + "&albumName=" + albumName);
+            },
             createAlbum: function(albumName) {
                 console.log("Creating album in MediaProxy: " + albumName)
                 var data = $.param({

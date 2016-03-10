@@ -1,2 +1,14 @@
-Album
-This is where to show the contents of an album.
+<div id="album-header">
+    <h1>{{albumName}}</h1>
+    <h3>@{{owner}}</h3>
+</div>
+
+<div class="row">
+    <div ng-repeat="picture in album">
+        <div class="col-lg-3 col-md-4 col-xs-6">
+            <a class="thumbnail" href="#/picture/{{picture.id}}">
+                <img class="img-responsive" src="{{picture.path}}">
+            </a>
+        </div>
+    </div>
+</div>

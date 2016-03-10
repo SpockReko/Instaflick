@@ -243,6 +243,19 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
 
     }]);
 
+instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
+    function ($scope, $stateParams, MediaProxy) {
+        console.log("AlbumCtrl");
+
+        $scope.albumName = $stateParams.albumname;
+        $scope.owner = $stateParams.username;
+
+        MediaProxy.getAlbumPictures($stateParams.username, $stateParams.albumname).success(function (data) {
+            $scope.album = data;
+        });
+    }]);
+
+
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
             function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy, $state) {

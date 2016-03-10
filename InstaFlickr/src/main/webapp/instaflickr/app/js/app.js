@@ -56,6 +56,11 @@ instaflickr.config(function ($stateProvider, $urlRouterProvider) {
                 templateUrl: 'partials/upload.html',
                 controller: 'UploadCtrl'
             })
+            .state('album', {
+                url: '/album/:username/:albumname',
+                templateUrl: 'partials/album.html',
+                controller: 'AlbumCtrl'
+            })
             .state('home', {
                 url: '/login',
                 templateUrl: 'partials/login.html'
