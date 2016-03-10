@@ -14,7 +14,7 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
         return {
             create: function(username, password, repeatPassword) {
                 console.log("create in UserRegistryProxy: " + username 
-                        + " " + password + " " + repeatPassword)
+                        + " " + password + " " + repeatPassword);
                 var data = $.param({
                     username: username,
                     password: password,
@@ -24,7 +24,7 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
             },
             setupProfle: function(email, fname, lname, description) {
                 console.log("Setting up profile in UserRegistryProxy: " 
-                        + email + " " + fname + " " + lname + " " + description)
+                        + email + " " + fname + " " + lname + " " + description);
                 return $http.get(url + "/setup?" + "email=" + email 
                                                  + "&fname=" + fname 
                                                  + "&lname=" + lname 
@@ -32,19 +32,19 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
 
             },
             login: function(username, password) {
-                console.log("login UserRegistryProxy: " + username + " " + password)
+                console.log("login UserRegistryProxy: " + username + " " + password);
                 return $http.get(url + "?username=" + username + "&password=" + password);
             },
             logout: function() {
-                console.log("Logging out in UserRegistryProxy")
+                console.log("Logging out in UserRegistryProxy");
                 return $http.get(url + "/logout");
             },
             getSession: function() {
-                console.log("Getting session in UserRegistryProxy")
+                console.log("Getting session in UserRegistryProxy");
                 return $http.get(url + "/session");
             },
             isLoggedIn: function() {
-                console.log("Checking session in UserRegistryProxy")
+                console.log("Checking session in UserRegistryProxy");
                 return $http.get(url + "/loggedIn");
             }
         };
@@ -70,18 +70,18 @@ mediaService.factory('MediaProxy', ['$http',
                 return $http.get(url + "?username=" + username);
             },
             getAlbums: function() {
-                console.log("Getting albums in MediaProxy")
+                console.log("Getting albums in MediaProxy");
                 return $http.get(url + "/albums");
             },
             createAlbum: function(albumName) {
-                console.log("Creating album in MediaProxy: " + albumName)
+                console.log("Creating album in MediaProxy: " + albumName);
                 var data = $.param({
                     albumName: albumName
                 });
                 return $http.post(url + '/album?' + data);            
             },
             addPictureToAlbum: function(pictureID, albumName) {
-                console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName) 
+                console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName); 
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
             }
         };
