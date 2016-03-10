@@ -29,6 +29,7 @@ public class MediaHandler extends AbstractDAO<AbstractMedia,Long> {
     }
     
     public boolean comment(Long mediaId, String comment){
+        
         return false;
     }
 

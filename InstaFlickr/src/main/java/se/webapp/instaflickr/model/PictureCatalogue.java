@@ -50,5 +50,12 @@ public class PictureCatalogue extends AbstractDAO<Picture, Long> {
     public Picture findPictureByPath(String path) {
         Picture picture = em.createQuery("SELECT p FROM Picture p WHERE p.path = '" + path + "'", Picture.class).getSingleResult();
         return picture;
+    }    public List<Picture> findPicturesById(long id) {
+        
+        List<Picture> picture = em.createQuery("SELECT p FROM Picture p WHERE p.id = '" + id + "'", Picture.class).getResultList();
+        
+        return picture;
     }
+    
+    
 }

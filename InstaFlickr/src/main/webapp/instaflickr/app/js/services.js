@@ -106,13 +106,16 @@ mediaService.factory('MediaProxy', ['$http',
 mediaService.factory('PictureProxy', ['$http',
     function ($http) {
 
-        var url = 'http://localhost:8080/InstaFlickr/webresources/media/comment';
+        var url = 'http://localhost:8080/InstaFlickr/webresources/media';
 
 
         return {
             addComment: function (picture, acomment) {
                 console.log("addComment in PictureProxy");
-                return $http.post(url, {"pictureid": picture, "comment": acomment});
+                if (picture && acomment) {
+                    var data = $.param({comment: acomment, picture: picture});
+                    return $http.post(url + "/comment?" + data);
+                }
             }
         };
     }
