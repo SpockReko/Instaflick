@@ -13,10 +13,10 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                             if (data['loggedIn']) {
                                 console.log("You are logged in");
                                 $scope.loggedIn = " Sign Out";
-                            }
-                            else {
+                            } else {
                                 console.log("You are not logged in");
                                 $scope.loggedIn = " Sign In";
+                                $location.path('/signin');
                             }
                         }
                 )
@@ -25,18 +25,24 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                 });
 
         $scope.logInOut = function () {
-            UserRegistryProxy.logout()
-                    .success(
-                            function () {
-                                console.log("Successfully logged out!");
-                                $scope.loggedIn = false;
-                                $window.location.reload();
-                            }
-                    )
-                    .error(function (data, status) {
-                        console.log("Error in save RegisterCtrl status: " + status);
-                    });
-        }
+            if ($scope.loggedIn === " Sign In") {
+                console.log("Sign in");
+                $location.path('/login');
+            }else if ($scope.loggedIn === " Sign Out") {
+                console.log("Sign out");
+                UserRegistryProxy.logout()
+                        .success(
+                                function () {
+                                    console.log("Successfully logged out!");
+                                    $location.path('/home');
+                                    $window.location.reload();
+                                }
+                        )
+                        .error(function (data, status) {
+                            console.log("Error in save RegisterCtrl status: " + status);
+                        });
+            }
+        };
     }
 ]);
 
@@ -52,7 +58,6 @@ instaFlickControllers.controller('LoginCtrl',
                                 console.log("Success!");
                                 $scope.loggedIn = true;
                                 $window.location.reload();
-                                //$location.path('/profile');
                             }).error(function (data, status) {
                         if (status === 409) {
                             $scope.user.msg = "Username is not registered";
@@ -65,7 +70,7 @@ instaFlickControllers.controller('LoginCtrl',
                 };
             }
         ]);
-        
+
 // Register user controller
 instaFlickControllers.controller('RegisterCtrl',
         ['$scope', '$location', 'UserRegistryProxy',
@@ -93,7 +98,7 @@ instaFlickControllers.controller('RegisterCtrl',
                 }
             }
         ]);
-        
+
 // SetupProfile user controller
 instaFlickControllers.controller('SetupProfileCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'UserRegistryProxy',
@@ -132,7 +137,7 @@ instaFlickControllers.controller('SetupProfileCtrl',
                 }
             }
         ]);
-        
+
 // Profile controller
 instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
