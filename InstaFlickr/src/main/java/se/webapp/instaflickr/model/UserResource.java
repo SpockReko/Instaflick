@@ -46,7 +46,7 @@ public class UserResource {
         LOG.log(Level.INFO, "getUserProfile(): " + username);
         
         InstaFlickUser user = instaFlick.getUserRegistry().find(username);
-        
+        LOG.log(Level.INFO, "got user: " + user.getUsername());
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         builder.add("username", user.getUsername());

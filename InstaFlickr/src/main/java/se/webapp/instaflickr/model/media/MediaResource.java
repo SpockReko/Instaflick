@@ -252,7 +252,9 @@ public class MediaResource {
         for (Picture p : allPictures) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId()).add("type", "image"));
+                    .add("id", p.getId())
+                    .add("type", "image")
+                    .add("time", p.getUploaded().getTimeInMillis()));
         }
 
         int index = 0;
@@ -260,17 +262,21 @@ public class MediaResource {
             JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
             albumBuilder.add("albumName", allAlbums.get(index).getName());
             albumBuilder.add("type", "album");
+            albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
 
             JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
-            for (Picture p : pList) {
+
+            for (int i = 0; i < pList.size() && i < 4; i++) {
                 innerBuilder.add(Json.createObjectBuilder()
-                        .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                        .add("id", p.getId()));
+                        .add("path", pList.get(i).getImagePath() + "/" + pList.get(i).getId() + "/thumbnail.jpg")
+                        .add("id", pList.get(i).getId()));
             }
 
             albumBuilder.add("pictureList", innerBuilder);
 
             builder.add(albumBuilder);
+
+            index++;
         }
 
         return Response.ok(builder.build()).build();
