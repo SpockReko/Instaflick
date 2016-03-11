@@ -2,6 +2,7 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
+<<<<<<< HEAD
 instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegistryProxy', '$window',
     function ($scope, $location, UserRegistryProxy, $window) {
 
@@ -43,6 +44,30 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                         });
             }
         };
+=======
+// Feed controller
+instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
+    function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
+
+        UserRegistryProxy.getSession()
+                .success(function () {
+                    MediaProxy.getAllMedia()
+                            .success(function (data) {
+                                console.log("Got all media " + data);
+                                sortMedia(data, $scope);
+                            })
+                            .error(function (data, status) {
+                                console.log("Error in getting all media in FeedCtrl: " + status);
+                            })
+                })
+                .error(function (data, status) {
+                    if (status === 406) {
+                        $location.path('/login');
+                    } else {
+                        console.log("Error in checking session in FeedCtrl: " + status);
+                    }
+                });
+>>>>>>> df70fc81d45190581868723bb638d80ec7cb8881
     }
 ]);
 
@@ -64,7 +89,7 @@ instaFlickControllers.controller('LoginCtrl',
                         } else if (status === 406) {
                             $scope.user.msg = "Incorrect password";
                         } else {
-                            console.log("Error in save RegisterCtrl status: " + status);
+                            console.log("Error in login LoginCtrl status: " + status);
                         }
                     });
                 };
@@ -143,17 +168,16 @@ instaFlickControllers.controller('SetupProfileCtrl',
 instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
 
-        $scope.description = "I like long walks on the beach..."
-
-        if ($stateParams.username) {
-            getProfilePicture($stateParams.username, MediaProxy, $scope)
-            getProfileImages($stateParams.username, MediaProxy, $scope)
+        console.log("Getting profile information in ProfileCtrl");
+        if ($stateParams.username !== undefined) {
+            console.log("Other users profile: " + $stateParams.username);
+            getProfile($stateParams.username, UserRegistryProxy, MediaProxy, $scope);
         } else {
+            console.log("Logged in users profile");
             UserRegistryProxy.getSession()
                     .success(function (json) {
-                        console.log("Get profile images: " + json['username']);
-                        getProfilePicture(json['username'], MediaProxy, $scope)
-                        getProfileImages(json['username'], MediaProxy, $scope)
+                        console.log("Got profile " + json['username']);
+                        getProfile(json['username'], UserRegistryProxy, MediaProxy, $scope);
                     })
                     .error(function (data, status) {
                         if (status === 406) {
@@ -174,8 +198,12 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             console.log(data);
             $scope.image = data;
         });
+<<<<<<< HEAD
     }
 ]);
+=======
+    }]);
+>>>>>>> df70fc81d45190581868723bb638d80ec7cb8881
 
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
@@ -223,6 +251,19 @@ instaFlickControllers.controller('UploadCtrl',
             }
         ]);
 
+instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
+    function ($scope, $stateParams, MediaProxy) {
+        console.log("AlbumCtrl");
+
+        $scope.albumName = $stateParams.albumname;
+        $scope.owner = $stateParams.username;
+
+        MediaProxy.getAlbumPictures($stateParams.username, $stateParams.albumname).success(function (data) {
+            $scope.album = data;
+        });
+    }
+]);
+
 // Helper functions
 function getSession($location, UserRegistryProxy) {
     UserRegistryProxy.getSession()
@@ -259,6 +300,28 @@ function uploadPicture($scope, $timeout, Upload, image, albumName) {
     });
 }
 
+function getProfile(username, UserRegistryProxy, MediaProxy, $scope) {
+    console.log("Getting profile: " + username);
+    getUserProfile(username, UserRegistryProxy, $scope);
+    getProfilePicture(username, MediaProxy, $scope)
+    MediaProxy.getProfileImages(username)
+            .success(function (data) {
+                console.log(data);
+                console.log("Success!");
+                console.log("Get profile images sorted");
+                sortMedia(data, $scope);
+            });
+}
+
+function getUserProfile(username, UserRegistryProxy, $scope) {
+    console.log("Get user profile: " + username);
+    UserRegistryProxy.getUserProfile(username).success(function (data) {
+        console.log(data);
+        console.log("Success! user profile");
+        $scope.profileData = data;
+    });
+}
+
 function getProfileImages(userName, MediaProxy, $scope) {
     console.log("Get profile images: " + userName);
     MediaProxy.getProfileImages(userName).success(function (data) {
@@ -274,4 +337,20 @@ function getProfilePicture(userName, MediaProxy, $scope) {
         console.log("Success!");
         $scope.profilePicture = data['image'];
     });
+}
+
+function sortMedia(media, $scope) {
+    $scope.getOrderedData = function () {
+        return media.sort(compare);
+    };
+
+    var compare = function (a, b) {
+        if (parseInt(a.time) > parseInt(b.time))
+            return -1;
+        if (parseInt(a.time) < parseInt(b.time))
+            return 1;
+        return 0;
+    };
+
+    $scope.data = $scope.getOrderedData();
 }

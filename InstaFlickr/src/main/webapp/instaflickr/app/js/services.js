@@ -43,9 +43,15 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("Getting session in UserRegistryProxy");
                 return $http.get(url + "/session");
             },
+<<<<<<< HEAD
             isLoggedIn: function() {
                 console.log("Checking session in UserRegistryProxy");
                 return $http.get(url + "/loggedIn");
+=======
+            getUserProfile: function(username) {
+                console.log("getUserProfile in UserRegistryProxy");
+                return $http.get(url + "/userprofile" + "?username=" + username);
+>>>>>>> df70fc81d45190581868723bb638d80ec7cb8881
             }
         };
     }
@@ -73,6 +79,10 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Getting albums in MediaProxy");
                 return $http.get(url + "/albums");
             },
+            getAlbumPictures: function(username, albumName) {
+                console.log("getAlbumPictures");
+                return $http.get(url + "/album-pictures?username=" + username + "&albumName=" + albumName);
+            },
             createAlbum: function(albumName) {
                 console.log("Creating album in MediaProxy: " + albumName);
                 var data = $.param({
@@ -83,6 +93,10 @@ mediaService.factory('MediaProxy', ['$http',
             addPictureToAlbum: function(pictureID, albumName) {
                 console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName); 
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
+            },
+            getAllMedia: function() {
+                console.log("Getting all media in MediaProxy") 
+                return $http.get(url + "/media");
             }
         };
     }
