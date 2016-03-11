@@ -26,51 +26,77 @@ public class Likes implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Setter @Getter @OneToMany
+    @Setter
+    @Getter
+    @OneToMany
     public List<InstaFlickUser> userList;
 
-    public Likes(){
+    public Likes() {
         userList = new LinkedList<InstaFlickUser>();
     }
-    
+
     /**
-     * Returns the number of likes, which is the same as the number of users
-     * in userList.
-     * 
+     * Returns the number of likes, which is the same as the number of users in
+     * userList.
+     *
      * @return number of likes
      */
     public int nrOfLikes() {
         return userList.size();
     }
-    
+
     /**
-     * Adds the user to the list of 'liking' users. If the user is already
-     * in the list, it cannot be added again.
-     * 
+     * Adds the user to the list of 'liking' users. If the user is already in
+     * the list, it cannot be added again.
+     *
      * @param user the user to be added to the list
      * @return true if user is added to list, false if not
      */
+    
+    // Lägger till användare till listan med hjälp av användrnamnet
     public boolean addLike(InstaFlickUser user) {
-        if (userList.contains(user)) {
-            return true;
+        boolean missing = true;
+        for (int i = 0; i < userList.size(); i++) {
+            if (userList.get(i).getUsername().equals(user)) {
+                missing = false;
+            }
         }
-        return userList.add(user);
+        if (missing) {
+            userList.add(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * Removes the specified user from the list of 'liking' users.
-     * 
+     *
      * @param user the user to be removed
      * @return true if user was removed, false if user was not in the list
      */
-    public boolean removeLike(InstaFlickUser user) {
-        return userList.remove(user);
-    }
     
+    // Tar bort till användare till listan med hjälp av användrnamnet
+    public boolean removeLike(InstaFlickUser user) {
+        boolean exist = true;
+        for (int i = 0; i < userList.size(); i++) {
+            if (userList.get(i).getUsername().equals(user)) {
+                exist = false;
+            }
+        }
+        if (exist) {
+            userList.remove(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void setUserList(List<InstaFlickUser> userList) {
         this.userList = userList;
-}
-    
+    }
+
 }

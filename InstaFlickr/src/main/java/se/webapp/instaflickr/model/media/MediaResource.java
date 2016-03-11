@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -41,6 +42,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.AlbumCatalogue;
 import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.LikesHandler;
 import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.SessionHandler;
 import se.webapp.instaflickr.model.UserRegistry;
@@ -73,14 +75,64 @@ public class MediaResource {
     @Path("picture")
     public Response getPicture(
             @QueryParam("pictureId") Long pictureId) {
+
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture picture = pc.find(pictureId);
+        Long likeId = picture.getLikesId();
+
+        Calendar calendar = picture.getUploaded();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        String TextMonth;
+
+        if (month < 10) {
+            TextMonth = "0" + month;
+        } else {
+            TextMonth = "" + month;
+        }
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String date = year + "-" + TextMonth + "-" + day;
+
+        int nrOfLikes = instaFlick.getLikesHandler().nrOfLike(likeId);
+        String nr = "" + nrOfLikes;
+
         JsonObject pictureData = Json.createObjectBuilder()
                 .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
+                .add("date", date)
+                .add("likes", nr)
                 .build();
+
         return Response.ok(pictureData).build();
     }
 
+    @GET
+    @Path("updateLike")
+    public Response updateLikes(@QueryParam(value = "username") String username,
+            @QueryParam(value = "pictureId") Long pictureId) {
+
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture picture = pc.find(pictureId);
+        Long likesId = picture.getLikesId();
+        LikesHandler likesHandler = instaFlick.getLikesHandler();
+        Likes likesObject = likesHandler.find(likesId);
+        List<InstaFlickUser> list = likesObject.getUserList();
+
+        Likes newLikesObject = updateLikes(list, username, likesObject);
+
+        likesHandler.update(newLikesObject);
+
+        String nr = "" + newLikesObject.nrOfLikes();
+
+        JsonObject updatedLikes = Json.createObjectBuilder()
+                .add("likes", nr)
+                .build();
+
+        return Response.ok(updatedLikes).build();
+    }
+
+    
     @POST
     @Path("album")
     public Response createAlbum(@QueryParam(value = "albumName") String albumName) {
@@ -141,20 +193,6 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
-    @GET
-    @Path("likes")
-    public Response getNrOfLikes(
-            @QueryParam("pictureID") Long pictureID) {
-        
-        PictureCatalogue pc = instaFlick.getPictureCatalogue();
-        Likes likes = pc.find(pictureID).getLikes();
-        JsonObject data = Json.createObjectBuilder()
-                .add("nrOflikes", likes.nrOfLikes())
-                .build(); 
-        
-        return Response.ok(data).build();
-    }
-    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfileImages(@QueryParam(value = "username") String username) {
@@ -244,7 +282,8 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(user, relativePath.toString());
+        Likes likes = createLikes();
+        Picture picture = new Picture(user, likes, relativePath.toString());
         pc.create(picture);
         user.addPicture(picture);
         ur.update(user);
@@ -325,7 +364,8 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(null, relativePath.toString());
+        Likes likes = createLikes();
+        Picture picture = new Picture(null, likes, relativePath.toString());
         pc.create(picture);
         user.setProfilePicture(picture);
         ur.update(user);
@@ -473,5 +513,35 @@ public class MediaResource {
             index++;
         }
         return builder;
+    }
+    
+    // Help Methods
+
+    private Likes updateLikes(List<InstaFlickUser> list, String username, Likes likesObject) {
+        
+        boolean userIsThere = false;
+        int index;
+        for (index = 0; index < list.size(); index++) {
+            InstaFlickUser newUser = list.get(index);
+            if (newUser.getUsername().equals(username)) {
+                userIsThere = true;
+            } else {
+                userIsThere = false;
+            }
+        }
+
+        if (userIsThere) {
+            likesObject.removeLike(list.get(index));
+        } else {
+            likesObject.addLike(list.get(index));
+        }
+
+        return likesObject;
+    }
+
+    private Likes createLikes() {
+        Likes likes = new Likes();
+        instaFlick.getLikesHandler().create(likes);
+        return likes;
     }
 }

@@ -92,17 +92,9 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName);
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
             },
-            getLike: function (pictureId) {
-                console.log("Get nrOflikes to picture in MediaProxy: ");
-                return $http.get(url + "/likes?pictureID=" + pictureId);
-            },
-            updateLike: function (user) {
-                console.log("Update picture in MediaProxy from User: " + user);
-                return null;
-            },
-            whoLikeIt: function (pictureId) {
-                console.log();
-                return null;
+            updateLike: function (username, pictureId) {
+                console.log("Update picture in MediaProxy from User: " + username);
+                return $http.get(url + "/updateLike?username=" + username + "&pictureId=" + pictureId);
             },
             getAllMedia: function () {
                 console.log("Getting all media in MediaProxy")

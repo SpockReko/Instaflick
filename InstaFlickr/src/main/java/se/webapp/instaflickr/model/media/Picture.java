@@ -6,12 +6,9 @@
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
@@ -57,6 +54,7 @@ public class Picture extends AbstractMedia implements Serializable {
     private Likes likes;
     
     public Picture() {
+        
     } // Används ej.
 
     public Picture(InstaFlickUser uploader, Likes likes) {
@@ -73,14 +71,10 @@ public class Picture extends AbstractMedia implements Serializable {
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
     }
-
-    public Picture(InstaFlickUser uploader, String path) {
-        this.uploader = uploader;
-        //this.likes = new Likes();
-        this.imagePath = path;
-        this.uploaded = Calendar.getInstance();
-        
-        this.comments = new LinkedList<Comment>();
+    
+    //Skickar LikesID. Kortar koden för den som kallar på denna.
+    public long getLikesId(){
+        return likes.getId();
     }
 
     @Override
