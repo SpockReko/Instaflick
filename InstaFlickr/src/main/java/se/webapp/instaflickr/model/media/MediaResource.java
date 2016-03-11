@@ -127,17 +127,6 @@ public class MediaResource {
     }
 
     @GET
-    @Path("add-to-album")
-    public Response addToAlbum(
-            @QueryParam("albumName") String albumName,
-            @QueryParam(value = "pictureID") Long pictureID) {
-        String username = sessionHandler.getSessionID();
-        LOG.warning("Got session: " + username);
-
-        return Response.ok().build();
-    }
-
-    @GET
     @Path("album-pictures")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAlbumPictures(@QueryParam(value = "username") String username,
@@ -170,63 +159,11 @@ public class MediaResource {
         List<Picture> pictures = user.getPictures();
         List<Album> albums = user.getAlbums();
 
-        List<List<Picture>> albumPictures = new ArrayList();
+        List<List<Picture>> albumPictures = listAlbumPictures(albums); // Turns the albums into a list of their pictures
 
-        LOG.log(Level.INFO, "List of albums created by " + username + ":");
-        for (Album a : albums) {
-            LOG.log(Level.INFO, "Album name: " + a.getName());
-            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+        pictures = removeDuplicates(pictures, albumPictures); // Removing pictures that exists in albums
 
-            albumPictures.add(a.getPictures());
-        }
-
-        List<Picture> noDuplicates = new ArrayList();
-
-        for (Picture p : pictures) {
-            boolean duplicate = false;
-            for (List<Picture> list : albumPictures) {
-                for (Picture q : list) {
-                    if (Objects.equals(q.getId(), p.getId())) {
-                        duplicate = true;
-                        LOG.log(Level.INFO, "Duplicate found. Id: " + p.getId());
-                    }
-                }
-            }
-            if (!duplicate) {
-                noDuplicates.add(p);
-            }
-        }
-
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Picture p : noDuplicates) {
-            builder.add(Json.createObjectBuilder()
-                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId())
-                    .add("type", "image")
-                    .add("time", p.getUploaded().getTimeInMillis()));
-        }
-
-        int index = 0;
-        for (List<Picture> pList : albumPictures) {
-            JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
-            albumBuilder.add("albumName", albums.get(index).getName());
-            albumBuilder.add("type", "album");
-            albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
-
-            JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
-
-            for (int i = 0; i < pList.size() && i < 4; i++) {
-                innerBuilder.add(Json.createObjectBuilder()
-                        .add("path", pList.get(i).getImagePath() + "/" + pList.get(i).getId() + "/thumbnail.jpg")
-                        .add("id", pList.get(i).getId()));
-            }
-
-            albumBuilder.add("pictureList", innerBuilder);
-
-            builder.add(albumBuilder);
-
-            index++;
-        }
+        JsonArrayBuilder builder = createPictureArray(pictures, albumPictures, albums);
 
         return Response.ok(builder.build()).build();
     }
@@ -243,41 +180,12 @@ public class MediaResource {
         List<Album> allAlbums = ac.findAll();
 
         List<List<Picture>> albumPictures = listAlbumPictures(allAlbums); // Turns the albums into a list of their pictures
-                
+
         allPictures = removeProfilePictures(allPictures); // Removing profile pictures
-        
+
         allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in albums
-        
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Picture p : allPictures) {
-            builder.add(Json.createObjectBuilder()
-                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId())
-                    .add("type", "image")
-                    .add("time", p.getUploaded().getTimeInMillis()));
-        }
 
-        int index = 0;
-        for (List<Picture> pList : albumPictures) {
-            JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
-            albumBuilder.add("albumName", allAlbums.get(index).getName());
-            albumBuilder.add("type", "album");
-            albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
-
-            JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
-
-            for (int i = 0; i < pList.size() && i < 4; i++) {
-                innerBuilder.add(Json.createObjectBuilder()
-                        .add("path", pList.get(i).getImagePath() + "/" + pList.get(i).getId() + "/thumbnail.jpg")
-                        .add("id", pList.get(i).getId()));
-            }
-
-            albumBuilder.add("pictureList", innerBuilder);
-
-            builder.add(albumBuilder);
-
-            index++;
-        }
+        JsonArrayBuilder builder = createPictureArray(allPictures, albumPictures, allAlbums);
 
         return Response.ok(builder.build()).build();
     }
@@ -509,19 +417,55 @@ public class MediaResource {
                     }
                 }
             }
-            if (!duplicate)
+            if (!duplicate) {
                 pictures.add(p);
+            }
         }
         return pictures;
     }
-    
+
     // Removes profile pictures
     public List<Picture> removeProfilePictures(List<Picture> pictures) {
         List<Picture> result = new ArrayList<>();
         for (Picture p : pictures) {
-            if (p.getUploader() != null)
+            if (p.getUploader() != null) {
                 result.add(p);
+            }
         }
         return result;
+    }
+
+    public JsonArrayBuilder createPictureArray(List<Picture> pictures, List<List<Picture>> albumPictures, List<Album> albums) {
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Picture p : pictures) {
+            builder.add(Json.createObjectBuilder()
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("id", p.getId())
+                    .add("type", "image")
+                    .add("time", p.getUploaded().getTimeInMillis()));
+        }
+
+        int index = 0;
+        for (List<Picture> pList : albumPictures) {
+            JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
+            albumBuilder.add("albumName", albums.get(index).getName());
+            albumBuilder.add("type", "album");
+            albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
+
+            JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
+
+            for (int i = 0; i < pList.size() && i < 4; i++) {
+                innerBuilder.add(Json.createObjectBuilder()
+                        .add("path", pList.get(i).getImagePath() + "/" + pList.get(i).getId() + "/thumbnail.jpg")
+                        .add("id", pList.get(i).getId()));
+            }
+
+            albumBuilder.add("pictureList", innerBuilder);
+
+            builder.add(albumBuilder);
+
+            index++;
+        }
+        return builder;
     }
 }

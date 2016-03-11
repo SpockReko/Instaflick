@@ -21,7 +21,7 @@ instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy
                     if (status === 406) {
                         $location.path('/login');
                     } else {
-                        console.log("Error in checking session in ProfileCtrl: " + status);
+                        console.log("Error in checking session in FeedCtrl: " + status);
                     }
                 });
     }
