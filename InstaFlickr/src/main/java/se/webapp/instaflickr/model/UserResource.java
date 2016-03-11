@@ -5,6 +5,7 @@
  */
 package se.webapp.instaflickr.model;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import javax.json.Json;
@@ -54,6 +55,23 @@ public class UserResource {
     
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
+    @GET
+    @Path("userprofile")
+    public Response getUserProfile(@QueryParam("username") String username) {
+        LOG.log(Level.INFO, "getUserProfile(): " + username);
+        
+        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
+        
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        
+        builder.add("username", user.getUsername());
+        builder.add("fname", user.getFname());
+        builder.add("lname", user.getLname());
+        builder.add("description", user.getDescription());
+        
+        return Response.ok(builder.build()).build();
+    }
+    
     @GET
     @Path(value = "session")
     public Response getSession() {

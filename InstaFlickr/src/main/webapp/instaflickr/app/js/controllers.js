@@ -128,8 +128,6 @@ instaFlickControllers.controller('SetupProfileCtrl',
 instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
 
-        $scope.description = "I like long walks on the beach..."
-
         if ($stateParams.username) {
             getProfilePicture($stateParams.username, MediaProxy, $scope)
             getProfileImages($stateParams.username, MediaProxy, $scope)
@@ -211,6 +209,19 @@ instaFlickControllers.controller('UploadCtrl',
             }
         ]);
 
+instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
+    function ($scope, $stateParams, MediaProxy) {
+        console.log("AlbumCtrl");
+
+        $scope.albumName = $stateParams.albumname;
+        $scope.owner = $stateParams.username;
+
+        MediaProxy.getAlbumPictures($stateParams.username, $stateParams.albumname).success(function (data) {
+            $scope.album = data;
+        });
+    }
+]);
+
 // Helper functions
 function getSession($location, UserRegistryProxy) {
     UserRegistryProxy.getSession()
@@ -248,6 +259,15 @@ function uploadPicture($scope, $timeout, Upload, image, albumName) {
     });
 }
 
+function getUserProfile(username, UserRegistryProxy, $scope) {
+    console.log("Get user profile: " + username);
+    UserRegistryProxy.getUserProfile(username).success(function (data) {
+        console.log(data);
+        console.log("Success! user profile");
+        $scope.profileData = data;
+    });
+}
+
 function getProfileImages(userName, MediaProxy, $scope) {
     console.log("Get profile images: " + userName);
     MediaProxy.getProfileImages(userName).success(function (data) {
@@ -262,5 +282,27 @@ function getProfilePicture(userName, MediaProxy, $scope) {
         console.log(data);
         console.log("Success!");
         $scope.profilePicture = data['image'];
+    });
+}
+
+function getProfileImagesSorted(userName, MediaProxy, $scope) {
+    console.log("Get profile images sorted: " + userName);
+    MediaProxy.getProfileImages(userName).success(function (data) {
+        console.log(data);
+        console.log("Success!");
+
+        $scope.getOrderedData = function () {
+            return data.sort(compare);
+        };
+
+        var compare = function (a, b) {
+            if (parseInt(a.time) > parseInt(b.time))
+                return -1;
+            if (parseInt(a.time) < parseInt(b.time))
+                return 1;
+            return 0;
+        };
+
+        $scope.data = $scope.getOrderedData();
     });
 }

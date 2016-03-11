@@ -5,18 +5,23 @@
  */
 package se.webapp.instaflickr.model.media;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -38,6 +43,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -127,18 +133,31 @@ public class MediaResource {
             @QueryParam(value = "pictureID") Long pictureID) {
         String username = sessionHandler.getSessionID();
         LOG.warning("Got session: " + username);
-        /*
-        UserRegistry ur = instaFlick.getUserRegistry();
-        InstaFlickUser user = ur.find(username);
-        LOG.warning("Got user: " + user.getUsername());
-        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
-        Album album = ac.getAlbum(user, albumName);
-        LOG.warning("Got album: " + album.getName());
-        /*PictureCatalogue pc = instaFlick.getPictureCatalogue();
-        Picture picture = pc.find(pictureID);
-        album.addPicture(picture);
-        ac.update(album); */
+
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("album-pictures")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAlbumPictures(@QueryParam(value = "username") String username,
+            @QueryParam(value = "albumName") String albumName) {
+
+        UserRegistry ur = instaFlick.getUserRegistry();
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        InstaFlickUser user = ur.find(username);
+
+        Album album = ac.getAlbum(user, albumName);
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+
+        for (Picture p : album.getPictures()) {
+            builder.add(Json.createObjectBuilder()
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("id", p.getId()));
+        }
+
+        return Response.ok(builder.build()).build();
     }
 
     @GET
@@ -157,30 +176,10 @@ public class MediaResource {
         for (Album a : albums) {
             LOG.log(Level.INFO, "Album name: " + a.getName());
             LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+
             albumPictures.add(a.getPictures());
         }
 
-        /*            
-        List<List<Long>> albumPictureIds = new ArrayList();
-
-        LOG.log(Level.INFO, "List of albums created by " + username + ":");
-        for (Album a : albums) {
-            LOG.log(Level.INFO, "Album name: " + a.getName());
-            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
-            albumPictureIds.add(ac.getPictureIds(user, a.getName()));
-        }
-
-        List<List<Picture>> albumPictures = new ArrayList();
-
-        for (int i = 0; i < albumPictureIds.size(); i++) {
-            List<Long> ids = albumPictureIds.get(i);
-
-            albumPictures.add(new ArrayList());
-            for (int j = 0; j < 4 && j < ids.size(); j++) {
-                albumPictures.get(i).add(pc.findPictureById(ids.get(j)));
-            }
-        }
-         */
         List<Picture> noDuplicates = new ArrayList();
 
         for (Picture p : pictures) {
@@ -202,7 +201,9 @@ public class MediaResource {
         for (Picture p : noDuplicates) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId()).add("type", "image"));
+                    .add("id", p.getId())
+                    .add("type", "image")
+                    .add("time", p.getUploaded().getTimeInMillis()));
         }
 
         int index = 0;
@@ -210,17 +211,21 @@ public class MediaResource {
             JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
             albumBuilder.add("albumName", albums.get(index).getName());
             albumBuilder.add("type", "album");
+            albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
 
             JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
-            for (Picture p : pList) {
+
+            for (int i = 0; i < pList.size() && i < 4; i++) {
                 innerBuilder.add(Json.createObjectBuilder()
-                        .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                        .add("id", p.getId()));
+                        .add("path", pList.get(i).getImagePath() + "/" + pList.get(i).getId() + "/thumbnail.jpg")
+                        .add("id", pList.get(i).getId()));
             }
 
             albumBuilder.add("pictureList", innerBuilder);
 
             builder.add(albumBuilder);
+
+            index++;
         }
 
         return Response.ok(builder.build()).build();
@@ -280,9 +285,17 @@ public class MediaResource {
         LOG.warning(user.getUsername());
 
         Picture profilePicture = user.getProfilePicture();
-        JsonObject value = Json.createObjectBuilder().add("image", profilePicture.getImagePath() + "/profile.jpg").build();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        return Response.ok(value).build();
+        if (profilePicture != null) {
+            builder.add("image", profilePicture.getImagePath() + "/profile.jpg");
+        } else {
+            LOG.log(Level.INFO, username + " has not set a profile picture");
+            LOG.log(Level.INFO, generateRelativePath().toString());
+            builder.add("image", generateRelativePath().toString() + "/default.jpg");
+        }
+
+        return Response.ok(builder.build()).build();
     }
 
     @POST
@@ -313,7 +326,7 @@ public class MediaResource {
         // Add new picture to the database
         Picture picture = new Picture(user, relativePath.toString());
         pc.create(picture);
-        user.addPicture(picture); // Doesn't work
+        user.addPicture(picture);
         ur.update(user);
 
         // Save the pictures as: pictureId
@@ -341,9 +354,18 @@ public class MediaResource {
 
             // Generate thumbnail
             Thumbnails.of(file)
+                    .crop(Positions.CENTER)
                     .size(200, 200)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "thumbnail"));
+
+            try {
+                Files.delete(file.toPath());
+            } catch (NoSuchFileException x) {
+                System.err.format("%s: no such" + " file or directory%n", file.toPath());
+            } catch (IOException x) {
+                System.err.println(x);
+            }
 
             if (!albumName.isEmpty()) {
                 LOG.warning("Adding picture to album: " + albumName);

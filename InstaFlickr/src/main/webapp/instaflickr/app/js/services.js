@@ -38,6 +38,10 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
             getSession: function() {
                 console.log("Getting session in UserRegistryProxy")
                 return $http.get(url + "/session");
+            },
+            getUserProfile: function(username) {
+                console.log("getUserProfile in UserRegistryProxy");
+                return $http.get(url + "/userprofile" + "?username=" + username);
             }
         };
     }
@@ -64,6 +68,10 @@ mediaService.factory('MediaProxy', ['$http',
             getAlbums: function() {
                 console.log("Getting albums in MediaProxy")
                 return $http.get(url + "/albums");
+            },
+            getAlbumPictures: function(username, albumName) {
+                console.log("getAlbumPictures");
+                return $http.get(url + "/album-pictures?username=" + username + "&albumName=" + albumName);
             },
             createAlbum: function(albumName) {
                 console.log("Creating album in MediaProxy: " + albumName)
