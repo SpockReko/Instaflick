@@ -1,13 +1,10 @@
 'use strict';
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
-
-<<<<<<< HEAD
 instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegistryProxy', '$window',
     function ($scope, $location, UserRegistryProxy, $window) {
 
         console.log("Checking if logged in");
-
         UserRegistryProxy.isLoggedIn()
                 .success(
                         function (data) {
@@ -24,12 +21,11 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                 .error(function (data, status) {
                     console.log("Error in isLoggedIn IndexCtrl status: " + status);
                 });
-
         $scope.signInOut = function () {
             if ($scope.signedIn === " Sign In") {
                 console.log("Sign in");
                 $location.path('/login');
-            }else if ($scope.signedIn === " Sign Out") {
+            } else if ($scope.signedIn === " Sign Out") {
                 console.log("Sign out");
                 UserRegistryProxy.logout()
                         .success(
@@ -44,7 +40,10 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                         });
             }
         };
-=======
+    }]);
+
+
+
 // Feed controller
 instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
@@ -67,10 +66,8 @@ instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy
                         console.log("Error in checking session in FeedCtrl: " + status);
                     }
                 });
->>>>>>> df70fc81d45190581868723bb638d80ec7cb8881
     }
 ]);
-
 // Log in controller
 instaFlickControllers.controller('LoginCtrl',
         ['$scope', '$location', 'UserRegistryProxy', '$window',
@@ -95,7 +92,6 @@ instaFlickControllers.controller('LoginCtrl',
                 };
             }
         ]);
-
 // Register user controller
 instaFlickControllers.controller('RegisterCtrl',
         ['$scope', '$location', 'UserRegistryProxy',
@@ -123,7 +119,6 @@ instaFlickControllers.controller('RegisterCtrl',
                 };
             }
         ]);
-
 // SetupProfile user controller
 instaFlickControllers.controller('SetupProfileCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'UserRegistryProxy', '$window',
@@ -163,7 +158,6 @@ instaFlickControllers.controller('SetupProfileCtrl',
                 }
             }
         ]);
-
 // Profile controller
 instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
@@ -189,7 +183,6 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         }
     }
 ]);
-
 instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy',
     function ($scope, $stateParams, MediaProxy) {
 
@@ -198,12 +191,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             console.log(data);
             $scope.image = data;
         });
-<<<<<<< HEAD
-    }
-]);
-=======
     }]);
->>>>>>> df70fc81d45190581868723bb638d80ec7cb8881
 
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
@@ -250,20 +238,16 @@ instaFlickControllers.controller('UploadCtrl',
                 }
             }
         ]);
-
 instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
     function ($scope, $stateParams, MediaProxy) {
         console.log("AlbumCtrl");
-
         $scope.albumName = $stateParams.albumname;
         $scope.owner = $stateParams.username;
-
         MediaProxy.getAlbumPictures($stateParams.username, $stateParams.albumname).success(function (data) {
             $scope.album = data;
         });
     }
 ]);
-
 // Helper functions
 function getSession($location, UserRegistryProxy) {
     UserRegistryProxy.getSession()
@@ -343,7 +327,6 @@ function sortMedia(media, $scope) {
     $scope.getOrderedData = function () {
         return media.sort(compare);
     };
-
     var compare = function (a, b) {
         if (parseInt(a.time) > parseInt(b.time))
             return -1;
@@ -351,6 +334,6 @@ function sortMedia(media, $scope) {
             return 1;
         return 0;
     };
-
     $scope.data = $scope.getOrderedData();
 }
+    

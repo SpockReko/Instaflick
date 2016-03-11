@@ -43,15 +43,15 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("Getting session in UserRegistryProxy");
                 return $http.get(url + "/session");
             },
-<<<<<<< HEAD
+
             isLoggedIn: function() {
                 console.log("Checking session in UserRegistryProxy");
                 return $http.get(url + "/loggedIn");
-=======
+                },
             getUserProfile: function(username) {
                 console.log("getUserProfile in UserRegistryProxy");
                 return $http.get(url + "/userprofile" + "?username=" + username);
->>>>>>> df70fc81d45190581868723bb638d80ec7cb8881
+
             }
         };
     }
