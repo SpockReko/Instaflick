@@ -60,7 +60,7 @@ instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy
                             })
                             .error(function (data, status) {
                                 console.log("Error in getting all media in FeedCtrl: " + status);
-                            })
+                            });
                 })
                 .error(function (data, status) {
                     if (status === 406) {
@@ -158,7 +158,7 @@ instaFlickControllers.controller('SetupProfileCtrl',
                 };
                 $scope.goBack = function () {
                     window.history.back();
-                }
+                };
             }
         ]);
 // Profile controller
@@ -208,38 +208,23 @@ var testPictureData = {
     "date": "2016-03-09"
 };
 
-var testCommentData = [
-    {
-        "_id": 1,
-        "text": "This is a comment",
-        "likes": 41,
-        "date": "2016-03-11"
-    },
-    {
-        "_id": 2,
-        "text": "This is another comment",
-        "likes": 0,
-        "date": "2016-03-10"
-    },
-    {
-        "_id": 3,
-        "text": "This is the third comment.",
-        "likes": 2,
-        "date": "2016-03-09"
-    }
-];
-
 instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
     function ($scope, PictureProxy) {
         $scope.image = testPictureData;
-        $scope.comments = testCommentData;
 
+        $scope.updateComments = function () {
+            PictureProxy.getComments($scope.image._id)
+                    .success(function (data) {
+                        console.log("Got comments! " + data);
+                        $scope.comments = data;
+                    }).
+                    error(function (error) {
+                        console.log("Could not get comments! " + error);
+                    });
+        };
 
         $scope.postComment = function () {
-            testCommentData = [];
-            $scope.comments = testCommentData;
             PictureProxy.addComment($scope.formData.picture, $scope.formData.comment);
-
         };
     }]);
 
@@ -255,7 +240,7 @@ instaFlickControllers.controller('UploadCtrl',
                         })
                         .error(function (data, error) {
                             console.log("Error in getAlbum in UploadCtrl status: " + status);
-                        })
+                        });
 
 
                 $scope.returnPath = function () {
@@ -275,7 +260,7 @@ instaFlickControllers.controller('UploadCtrl',
                                 } else {
                                     console.log("Error in createAlbum in UploadCtrl status: " + status);
                                 }
-                            })
+                            });
                 };
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
@@ -285,7 +270,7 @@ instaFlickControllers.controller('UploadCtrl',
                         albumName = $scope.selectedAlbum;
                     }
                     uploadPicture($scope, $timeout, Upload, file, albumName);
-                }
+                };
             }
         ]);
 instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
@@ -337,7 +322,7 @@ function uploadPicture($scope, $timeout, Upload, image, albumName) {
 function getProfile(username, UserRegistryProxy, MediaProxy, $scope) {
     console.log("Getting profile: " + username);
     getUserProfile(username, UserRegistryProxy, $scope);
-    getProfilePicture(username, MediaProxy, $scope)
+    getProfilePicture(username, MediaProxy, $scope);
     MediaProxy.getProfileImages(username)
             .success(function (data) {
                 console.log(data);

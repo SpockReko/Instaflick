@@ -120,6 +120,12 @@ mediaService.factory('PictureProxy', ['$http',
                     var data = $.param({comment: acomment, picture: picture});
                     return $http.post(url + "/comment?" + data);
                 }
+            },
+            getComments: function (picture) {
+                console.log("getComments in Pictureproxy");
+                var data = $.param({picture: picture});
+                return $http.get(url + "/comments?" + data);
+
             }
         };
     }
