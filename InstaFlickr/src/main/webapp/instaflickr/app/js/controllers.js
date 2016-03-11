@@ -199,6 +199,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
 
 
 
+
 var testPictureData = {
     "_id": 1,
     "path": "http://lorempixel.com/600/300/fashion/",
@@ -238,6 +239,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
             testCommentData = [];
             $scope.comments = testCommentData;
             PictureProxy.addComment($scope.formData.picture, $scope.formData.comment);
+
         };
     }]);
 

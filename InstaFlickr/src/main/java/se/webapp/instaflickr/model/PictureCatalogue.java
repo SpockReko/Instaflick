@@ -11,7 +11,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.persistence.AbstractDAO;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -50,12 +49,6 @@ public class PictureCatalogue extends AbstractDAO<Picture, Long> {
     public Picture findPictureByPath(String path) {
         Picture picture = em.createQuery("SELECT p FROM Picture p WHERE p.path = '" + path + "'", Picture.class).getSingleResult();
         return picture;
-    }    public List<Picture> findPicturesById(long id) {
-        
-        List<Picture> picture = em.createQuery("SELECT p FROM Picture p WHERE p.id = '" + id + "'", Picture.class).getResultList();
-        
-        return picture;
     }
-    
-    
+
 }

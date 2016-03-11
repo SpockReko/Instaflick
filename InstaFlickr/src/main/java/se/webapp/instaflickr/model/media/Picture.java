@@ -49,6 +49,7 @@ public class Picture extends AbstractMedia implements Serializable {
     @Setter
     private Likes likes;
 
+
     public Picture() {
     } // Används ej.
 
@@ -57,6 +58,7 @@ public class Picture extends AbstractMedia implements Serializable {
         this.likes = likes;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
+
 
     }
 
@@ -88,5 +90,6 @@ public class Picture extends AbstractMedia implements Serializable {
         Comment newComment = new Comment(user, comment, new Likes());
         comments.add(newComment);
     }
+
 
 }
