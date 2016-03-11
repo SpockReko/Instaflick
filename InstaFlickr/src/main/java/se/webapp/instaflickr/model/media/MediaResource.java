@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -174,6 +175,27 @@ public class MediaResource {
 
         allPictures = removeProfilePictures(allPictures); // Removing profile pictures
 
+        allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in albums
+
+        JsonArrayBuilder builder = createPictureArray(allPictures, albumPictures, allAlbums);
+
+        return Response.ok(builder.build()).build();
+    }
+
+    @GET
+    @Path("feed")
+    public Response getFeed(@QueryParam(value = "username") String username) {
+        LOG.log(Level.INFO, "Getting feed for " + username);
+
+        UserRegistry ur = instaFlick.getUserRegistry();
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+        InstaFlickUser user = ur.find(username);
+
+        List<Picture> allPictures = pc.findAll();
+        List<Album> allAlbums = ac.findAll();
+        List<List<Picture>> albumPictures = listAlbumPictures(allAlbums);
+        allPictures = removeProfilePictures(allPictures); // Removing profile pictures
         allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in albums
 
         JsonArrayBuilder builder = createPictureArray(allPictures, albumPictures, allAlbums);
@@ -428,18 +450,21 @@ public class MediaResource {
 
     public JsonArrayBuilder createPictureArray(List<Picture> pictures, List<List<Picture>> albumPictures, List<Album> albums) {
         JsonArrayBuilder builder = Json.createArrayBuilder();
+        
         for (Picture p : pictures) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
                     .add("id", p.getId())
                     .add("type", "image")
-                    .add("time", p.getUploaded().getTimeInMillis()));
+                    .add("time", p.getUploaded().getTimeInMillis())
+                    .add("uploader", p.getUploader().getUsername()));
         }
 
         int index = 0;
         for (List<Picture> pList : albumPictures) {
             JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
             albumBuilder.add("albumName", albums.get(index).getName());
+            albumBuilder.add("uploader", albums.get(index).getOwner().getUsername());
             albumBuilder.add("type", "album");
             albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
 

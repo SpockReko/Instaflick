@@ -43,13 +43,11 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("Getting session in UserRegistryProxy");
                 return $http.get(url + "/session");
             },
-
-            isLoggedIn: function() {
+            isLoggedIn: function () {
                 console.log("Checking session in UserRegistryProxy");
                 return $http.get(url + "/loggedIn");
-                },
-                
-            getUserProfile: function(username) {
+            },
+            getUserProfile: function (username) {
                 console.log("getUserProfile in UserRegistryProxy");
                 return $http.get(url + "/userprofile" + "?username=" + username);
             }
@@ -97,7 +95,12 @@ mediaService.factory('MediaProxy', ['$http',
             getAllMedia: function () {
                 console.log("Getting all media in MediaProxy")
                 return $http.get(url + "/media");
+            },
+            getFeed: function (username) {
+                console.log("Getting feed for " + username)
+                return $http.get(url + "/feed?username=" + username);
             }
+
         };
     }
 ]);

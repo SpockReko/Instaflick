@@ -52,10 +52,11 @@ instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
 
         UserRegistryProxy.getSession()
-                .success(function () {
-                    MediaProxy.getAllMedia()
+                .success(function (json) {
+                    MediaProxy.getFeed(json['username'])
                             .success(function (data) {
                                 console.log("Got all media " + data);
+                                console.log(data);
                                 sortMedia(data, $scope);
                             })
                             .error(function (data, status) {

@@ -1,4 +1,4 @@
-<center><h1>News Feed</h1></center>
+<center><h1>Feed</h1></center>
 
 <div class="row">
     <div ng-repeat="element in data| orderBy:'element.time' track by $index" ng-switch="element.type">
@@ -8,28 +8,31 @@
         <div ng-if="$index % 4 === 0" class="clearfix visible-lg-block"></div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <a class="thumbnail" href="#/picture/{{element.id}}" ng-switch-when="image">
-                <img class="img-responsive" src="{{element.path}}">
-            </a>
-            <a class="thumbnail album-preview-wrapper center-block" href="#/album/{{profileData.username}}/{{element.albumName}}" ng-switch-when="album">
-                <table class="album-preview">
-                    <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 === 0">
-                        <td>
-                            <img class="img-responsive" src="{{image.path}}">
-                        </td>
-                        <td ng-if="$index + 1 < element.pictureList.length">
-                            <img class="img-responsive" src="{{element.pictureList[$index + 1].path}}">
-                        </td>
-                    </tr>
-
-                    <!--
-                    <tr ng-if="element.pictureList.length < 3">
-                        <td><img class="img-responsive fill-img" src="http://placehold.it/200x200"></td>
-                        <td><img class="img-responsive fill-img" src="http://placehold.it/200x200"></td>
-                    </tr>
-                    -->
-                </table>
-            </a>
+            <div class="feed-box">
+                <a class="thumbnail" href="#/picture/{{element.id}}" ng-switch-when="image">
+                    <img class="img-responsive" src="{{element.path}}">
+                </a>
+                <a class="thumbnail album-preview-wrapper center-block" href="#/album/{{element.uploader}}/{{element.albumName}}" ng-switch-when="album">
+                    <table class="album-preview">
+                        <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 === 0">
+                            <td>
+                                <img class="img-responsive" src="{{image.path}}">
+                            </td>
+                            <td ng-if="$index + 1 < element.pictureList.length">
+                                <img class="img-responsive" src="{{element.pictureList[$index + 1].path}}">
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+                <div class="row picture-info">
+                    <div class="col-xs-6">
+                        <a href="#/profile/{{element.uploader}}">@{{element.uploader}}</a>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="nr-of-likes"><span class="glyphicon glyphicon-heart"></span> (12)</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

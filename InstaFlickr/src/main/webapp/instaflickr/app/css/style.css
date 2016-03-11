@@ -7,6 +7,29 @@ body {
     padding-bottom: 16px;
 }
 
+.feed-box {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.feed-box > .thumbnail {
+    border: 0px;
+    margin-bottom: 0px;
+}
+
+.picture-info {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.nr-of-likes {
+    text-align: right;
+}
+
 .center-block {
     display: block;
     margin-left: auto;
