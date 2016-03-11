@@ -190,15 +190,34 @@ public class MediaResource {
         UserRegistry ur = instaFlick.getUserRegistry();
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+
         InstaFlickUser user = ur.find(username);
 
         List<Picture> allPictures = pc.findAll();
         List<Album> allAlbums = ac.findAll();
-        List<List<Picture>> albumPictures = listAlbumPictures(allAlbums);
-        allPictures = removeProfilePictures(allPictures); // Removing profile pictures
-        allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in albums
 
-        JsonArrayBuilder builder = createPictureArray(allPictures, albumPictures, allAlbums);
+        // Remove pictures that user has created
+        List<Picture> filteredPictures = new ArrayList();
+        for (Picture p : allPictures) {
+            if (p.getUploader() != null && !p.getUploader().getUsername().equals(user.getUsername())) {
+                filteredPictures.add(p);
+            }
+        }
+
+        // Remove albums that user has created
+        List<Album> filteredAlbums = new ArrayList();
+        for (Album a : allAlbums) {
+            if (!a.getOwner().getUsername().equals(user.getUsername())) {
+                filteredAlbums.add(a);
+            }
+        }
+
+        List<List<Picture>> albumPictures = listAlbumPictures(filteredAlbums);
+
+        allPictures = removeProfilePictures(filteredPictures); // Removing profile pictures
+        allPictures = removeDuplicates(filteredPictures, albumPictures); // Removing pictures that exists in albums
+
+        JsonArrayBuilder builder = createPictureArray(allPictures, albumPictures, filteredAlbums);
 
         return Response.ok(builder.build()).build();
     }
@@ -353,6 +372,7 @@ public class MediaResource {
 
             // Generate thumbnail
             Thumbnails.of(file)
+                    .crop(Positions.CENTER)
                     .size(200, 200)
                     .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "profile"));
@@ -450,7 +470,7 @@ public class MediaResource {
 
     public JsonArrayBuilder createPictureArray(List<Picture> pictures, List<List<Picture>> albumPictures, List<Album> albums) {
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        
+
         for (Picture p : pictures) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")

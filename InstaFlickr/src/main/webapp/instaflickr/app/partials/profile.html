@@ -39,14 +39,10 @@
                         <td ng-if="$index + 1 < element.pictureList.length">
                             <img class="img-responsive" src="{{element.pictureList[$index + 1].path}}">
                         </td>
+                        <td ng-if="element.pictureList.length === 1">
+                            <img class="img-responsive" src="img/filler-image.jpg">
+                        </td>
                     </tr>
-
-                    <!--
-                    <tr ng-if="element.pictureList.length < 3">
-                        <td><img class="img-responsive fill-img" src="http://placehold.it/200x200"></td>
-                        <td><img class="img-responsive fill-img" src="http://placehold.it/200x200"></td>
-                    </tr>
-                    -->
                 </table>
             </a>
         </div>
