@@ -116,10 +116,9 @@ mediaService.factory('PictureProxy', ['$http',
         return {
             addComment: function (picture, acomment) {
                 console.log("addComment in PictureProxy");
-                if (picture && acomment) {
-                    var data = $.param({comment: acomment, picture: picture});
-                    return $http.post(url + "/comment?" + data);
-                }
+                var data = $.param({comment: acomment, picture: picture});
+                return $http.post(url + "/comment?" + data);
+
             },
             getComments: function (picture) {
                 console.log("getComments in Pictureproxy");
