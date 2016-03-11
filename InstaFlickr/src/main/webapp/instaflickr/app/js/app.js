@@ -57,7 +57,8 @@ instaflickr.config(function ($stateProvider, $urlRouterProvider) {
                 controller: 'UploadCtrl'
             })
             .state('home', {
-                url: '/login',
-                templateUrl: 'partials/login.html'
+                url: '/',
+                templateUrl: 'partials/feed.html',
+                controller: 'FeedCtrl'
             });
 });

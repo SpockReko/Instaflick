@@ -75,6 +75,10 @@ mediaService.factory('MediaProxy', ['$http',
             addPictureToAlbum: function(pictureID, albumName) {
                 console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName) 
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
+            },
+            getAllMedia: function() {
+                console.log("Getting all media in MediaProxy") 
+                return $http.get(url + "/media");
             }
         };
     }

@@ -2,8 +2,33 @@
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
 
-// Log in controller
+// Feed controller
+instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
+    function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
 
+
+        UserRegistryProxy.getSession()
+                .success(function () {
+                    MediaProxy.getAllMedia()
+                            .success(function (data) {
+                                console.log("Got all media " + data);
+                                $scope.data = data;
+                            })
+                            .error(function (data, status) {
+                                console.log("Error in getting all media in FeedCtrl: " + status);
+                            })
+                })
+                .error(function (data, status) {
+                    if (status === 406) {
+                        $location.path('/login');
+                    } else {
+                        console.log("Error in checking session in ProfileCtrl: " + status);
+                    }
+                });
+    }
+]);
+
+// Log in controller
 instaFlickControllers.controller('LoginCtrl',
         ['$scope', '$location', 'UserRegistryProxy',
             function ($scope, $location, UserRegistryProxy) {
@@ -28,7 +53,6 @@ instaFlickControllers.controller('LoginCtrl',
         ]);
 
 // Register user controller
-
 instaFlickControllers.controller('RegisterCtrl',
         ['$scope', '$location', 'UserRegistryProxy',
             function ($scope, $location, UserRegistryProxy) {
@@ -124,77 +148,8 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
                         }
                     });
         }
-        var testData = [
-            {
-                "_id": 1,
-                "type": "image"
-            },
-            {
-                "_id": 2,
-                "type": "image"
-            },
-            {
-                "_id": 3,
-                "type": "album",
-                "alb": [
-                    {
-                        "_id": 4,
-                        "type": "image"
-                    },
-                    {
-                        "_id": 5,
-                        "type": "image"
-                    },
-                    {
-                        "_id": 6,
-                        "type": "image"
-                    }
-                ]
-            },
-            {
-                "_id": 7,
-                "type": "image"
-            },
-            {
-                "_id": 8,
-                "type": "image"
-            },
-            {
-                "_id": 9,
-                "type": "image"
-            },
-            {
-                "_id": 10,
-                "type": "album",
-                "alb": [
-                    {
-                        "_id": 11,
-                        "type": "image"
-                    },
-                    {
-                        "_id": 12,
-                        "type": "image"
-                    }
-                ]
-            },
-            {
-                "_id": 13,
-                "type": "image"
-            },
-            {
-                "_id": 14,
-                "type": "image"
-            },
-            {
-                "_id": 15,
-                "type": "image"
-            }
-        ];
-
-        console.log(testData);
-
-        $scope.testData = testData;
-    }]);
+    }
+]);
 
 instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy',
     function ($scope, $stateParams, MediaProxy) {
@@ -205,40 +160,6 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
 
             $scope.image = data;
         });
-
-        var testPictureData = {
-            "_id": 1,
-            "path": "http://lorempixel.com/600/300/fashion/",
-            "likes": 18,
-            "description": "This is a cool fashion image!",
-            "date": "2016-03-09"
-        };
-
-
-
-        var testCommentData = [
-            {
-                "_id": 1,
-                "text": "This is a comment",
-                "likes": 41,
-                "date": "2016-03-11"
-            },
-            {
-                "_id": 2,
-                "text": "This is another comment",
-                "likes": 0,
-                "date": "2016-03-10"
-            },
-            {
-                "_id": 3,
-                "text": "This is the third comment.",
-                "likes": 2,
-                "date": "2016-03-09"
-            }
-        ];
-
-        $scope.comments = testCommentData;
-
     }]);
 
 instaFlickControllers.controller('UploadCtrl',

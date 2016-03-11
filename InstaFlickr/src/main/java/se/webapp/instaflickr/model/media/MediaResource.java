@@ -147,20 +147,20 @@ public class MediaResource {
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
         LOG.warning(user.getUsername());
-        
+
         List<Picture> pictures = user.getPictures();
         List<Album> albums = user.getAlbums();
 
         List<List<Picture>> albumPictures = new ArrayList();
-        
+
         LOG.log(Level.INFO, "List of albums created by " + username + ":");
         for (Album a : albums) {
             LOG.log(Level.INFO, "Album name: " + a.getName());
             LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
             albumPictures.add(a.getPictures());
         }
- 
-/*            
+
+        /*            
         List<List<Long>> albumPictureIds = new ArrayList();
 
         LOG.log(Level.INFO, "List of albums created by " + username + ":");
@@ -180,7 +180,7 @@ public class MediaResource {
                 albumPictures.get(i).add(pc.findPictureById(ids.get(j)));
             }
         }
-*/
+         */
         List<Picture> noDuplicates = new ArrayList();
 
         for (Picture p : pictures) {
@@ -225,6 +225,52 @@ public class MediaResource {
 
         return Response.ok(builder.build()).build();
     }
+
+    @GET
+    @Path("media")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllMedia() {
+        LOG.log(Level.INFO, "Getting all media in MediaResource");
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
+
+        List<Picture> allPictures = pc.findAll();
+        List<Album> allAlbums = ac.findAll();
+
+        List<List<Picture>> albumPictures = listAlbumPictures(allAlbums); // Turns the albums into a list of their pictures
+                
+        allPictures = removeProfilePictures(allPictures); // Removing profile pictures
+        
+        allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in albums
+        
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Picture p : allPictures) {
+            builder.add(Json.createObjectBuilder()
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("id", p.getId()).add("type", "image"));
+        }
+
+        int index = 0;
+        for (List<Picture> pList : albumPictures) {
+            JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
+            albumBuilder.add("albumName", allAlbums.get(index).getName());
+            albumBuilder.add("type", "album");
+
+            JsonArrayBuilder innerBuilder = Json.createArrayBuilder();
+            for (Picture p : pList) {
+                innerBuilder.add(Json.createObjectBuilder()
+                        .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                        .add("id", p.getId()));
+            }
+
+            albumBuilder.add("pictureList", innerBuilder);
+
+            builder.add(albumBuilder);
+        }
+
+        return Response.ok(builder.build()).build();
+    }
+
     @GET
     @Path("profile-image")
     @Produces({MediaType.APPLICATION_JSON})
@@ -232,7 +278,7 @@ public class MediaResource {
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
         LOG.warning(user.getUsername());
-        
+
         Picture profilePicture = user.getProfilePicture();
         JsonObject value = Json.createObjectBuilder().add("image", profilePicture.getImagePath() + "/profile.jpg").build();
 
@@ -269,7 +315,7 @@ public class MediaResource {
         pc.create(picture);
         user.addPicture(picture); // Doesn't work
         ur.update(user);
-        
+
         // Save the pictures as: pictureId
         imageId = String.valueOf(picture.getId());
 
@@ -317,7 +363,7 @@ public class MediaResource {
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
         LOG.warning("Uploading profile picture");
-        
+
         // Get session
         String username = sessionHandler.getSessionID();
         LOG.warning("Got session: " + username);
@@ -369,7 +415,8 @@ public class MediaResource {
         return Response.ok(relativePath + "/" + "profile.jpg").build();
 
     }
-        
+
+    //Helper functions
     public java.nio.file.Path generateRelativePath() {
         java.nio.file.Path contextPath, localPath, relativePath;
 
@@ -408,5 +455,45 @@ public class MediaResource {
         album.addPicture(picture);
         ac.update(album);
         return true;
+    }
+
+    // Turns the albums in the list into lists of their picutres
+    public List<List<Picture>> listAlbumPictures(List<Album> albums) {
+        List<List<Picture>> albumPictures = new ArrayList();
+        for (Album a : albums) {
+            LOG.log(Level.INFO, "Album name: " + a.getName());
+            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+            albumPictures.add(a.getPictures());
+        }
+        return albumPictures;
+    }
+
+    // Creates a list with the picutres that does not exist in albumPictures.
+    public List<Picture> removeDuplicates(List<Picture> allPictures, List<List<Picture>> albumPictures) {
+        List<Picture> pictures = new ArrayList<>();
+        for (Picture p : allPictures) {
+            Boolean duplicate = false;
+            for (List<Picture> list : albumPictures) {
+                for (Picture q : list) {
+                    if (Objects.equals(q.getId(), p.getId())) {
+                        LOG.log(Level.INFO, "Duplicate found. Id: " + p.getId());
+                        duplicate = true;
+                    }
+                }
+            }
+            if (!duplicate)
+                pictures.add(p);
+        }
+        return pictures;
+    }
+    
+    // Removes profile pictures
+    public List<Picture> removeProfilePictures(List<Picture> pictures) {
+        List<Picture> result = new ArrayList<>();
+        for (Picture p : pictures) {
+            if (p.getUploader() != null)
+                result.add(p);
+        }
+        return result;
     }
 }

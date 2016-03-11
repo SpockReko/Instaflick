@@ -1,2 +1,23 @@
-Feed
-This is where all content from followed people is supposed to be shown.
+<center><h1>News Feed</h1></center>
+
+<div class="row">
+    <div ng-repeat="element in data track by $index" ng-switch on="element.type">
+        <div class="col-lg-3 col-md-4 col-xs-6">
+            <a class="thumbnail" href="#/picture/{{element.id}}" ng-switch-when="image">
+                <img class="img-responsive" src="{{element.path}}">
+            </a>
+            <a class="thumbnail" href="#" ng-switch-when="album">
+                <table class="album-preview">
+                    <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 == 0">
+                        <td>
+                            <img class="img-responsive" src="{{image.path}}">
+                        </td>
+                        <td ng-if="$index + 1 < element.pictureList.length">
+                            <img class="img-responsive" src="{{element.pictureList[$index+1].path}}">
+                        </td>
+                    </tr>
+                </table>
+            </a>
+        </div>
+    </div>
+</div>
