@@ -211,7 +211,6 @@ var testPictureData = {
 instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
     function ($scope, PictureProxy) {
         $scope.image = testPictureData;
-
         $scope.updateComments = function () {
             PictureProxy.getComments($scope.image._id)
                     .success(function (data) {
@@ -226,6 +225,9 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
         $scope.postComment = function () {
             PictureProxy.addComment($scope.image._id, $scope.formData.comment);
         };
+
+        updateComments();
+        
     }]);
 
 instaFlickControllers.controller('UploadCtrl',
