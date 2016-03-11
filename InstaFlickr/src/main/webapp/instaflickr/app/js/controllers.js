@@ -45,7 +45,7 @@ instaFlickControllers.controller('LoginCtrl',
                         } else if (status === 406) {
                             $scope.user.msg = "Incorrect password";
                         } else {
-                            console.log("Error in save RegisterCtrl status: " + status);
+                            console.log("Error in login LoginCtrl status: " + status);
                         }
                     });
                 };
