@@ -43,6 +43,9 @@ public class Picture extends AbstractMedia implements Serializable {
     private String imagePath;
     @Getter
     @Setter
+    private String description;
+    @Getter
+    @Setter
     private List<Comment> comments;
     @Getter
     @Setter
@@ -55,7 +58,7 @@ public class Picture extends AbstractMedia implements Serializable {
     @Getter
     @Setter
     private Likes likes;
-    
+
     public Picture() {
     } // Används ej.
 
@@ -64,6 +67,7 @@ public class Picture extends AbstractMedia implements Serializable {
         this.likes = likes;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
+        this.description = "";
     }
 
     public Picture(InstaFlickUser uploader, Likes likes, String path) {
@@ -72,6 +76,7 @@ public class Picture extends AbstractMedia implements Serializable {
         this.imagePath = path;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
+        this.description = "";
     }
 
     public Picture(InstaFlickUser uploader, String path) {
@@ -79,8 +84,21 @@ public class Picture extends AbstractMedia implements Serializable {
         //this.likes = new Likes();
         this.imagePath = path;
         this.uploaded = Calendar.getInstance();
-        
         this.comments = new LinkedList<Comment>();
+        this.description = "";
+    }
+
+    public Picture(InstaFlickUser uploader, String path, String description) {
+        this.uploader = uploader;
+        this.imagePath = path;
+        this.uploaded = Calendar.getInstance();
+        this.comments = new LinkedList<Comment>();
+
+        if (description == null) {
+            this.description = "";
+        } else {
+            this.description = description;
+        }
     }
 
     @Override

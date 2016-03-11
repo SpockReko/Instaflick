@@ -249,7 +249,8 @@ public class MediaResource {
     public Response uploadImage(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData,
-            @FormDataParam("albumName") String albumName) throws Exception {
+            @FormDataParam("albumName") String albumName,
+            @FormDataParam("description") String description) throws Exception {
 
         // Get session
         String username = sessionHandler.getSessionID();
@@ -270,7 +271,7 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(user, relativePath.toString());
+        Picture picture = new Picture(user, relativePath.toString(), description);
         pc.create(picture);
         user.addPicture(picture);
         ur.update(user);

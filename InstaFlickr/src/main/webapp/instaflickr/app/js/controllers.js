@@ -212,11 +212,7 @@ instaFlickControllers.controller('UploadCtrl',
                         .error(function (data, error) {
                             console.log("Error in getAlbum in UploadCtrl status: " + status);
                         })
-
-
-                $scope.returnPath = function () {
-                    $scope.imagePath = "media/image1.png";
-                };
+                
                 $scope.createAlbum = function () {
                     $scope.msg = "";
                     console.log("Creating album: " + $scope.album.name);
@@ -233,6 +229,7 @@ instaFlickControllers.controller('UploadCtrl',
                                 }
                             })
                 };
+                
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
                     console.log(file);
@@ -240,10 +237,12 @@ instaFlickControllers.controller('UploadCtrl',
                     if ($scope.selectedAlbum !== undefined) {
                         albumName = $scope.selectedAlbum;
                     }
-                    uploadPicture($scope, $timeout, Upload, file, albumName);
-                }
+                    uploadPicture($scope, $timeout, Upload, file, albumName, $scope.inputDescription);
+                };
+                
             }
         ]);
+        
 instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
     function ($scope, $stateParams, MediaProxy) {
         console.log("AlbumCtrl");
@@ -270,10 +269,10 @@ function getSession($location, UserRegistryProxy) {
             });
 }
 
-function uploadPicture($scope, $timeout, Upload, image, albumName) {
+function uploadPicture($scope, $timeout, Upload, image, albumName, description) {
     image.upload = Upload.upload({
         url: 'http://localhost:8080/InstaFlickr/webresources/media',
-        data: {file: image, albumName: albumName}
+        data: {file: image, albumName: albumName, description: description}
     });
     image.upload.then(function (response) {
         $timeout(function () {

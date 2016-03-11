@@ -7,6 +7,11 @@ body {
     margin-bottom: 16px;
 }
 
+#upload-preview {
+    max-height: 400px;
+    max-width: 500px;
+}
+
 .feed-box {
     margin-bottom: 20px;
     border: 1px solid #ddd;
@@ -57,7 +62,7 @@ body {
     width: 100%;
 }
 
-textarea {
+.picture-comment-input {
     resize: none;
 }
 
@@ -102,4 +107,24 @@ textarea {
 .form-signin input[type="password"] {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }

@@ -4,33 +4,42 @@
 
     <h2> Upload a picture </h2>
     <form name="uploadForm">
-        <div class="form-group">
-            <label for="inputImage" class="sr-only">Upload image</label>
-            <input id="inputImage" class="form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required>
-        </div>
-        <!--
-                <div class="form-group">
-                    <img class="thumbnail" ng-show="uploadForm.file.$valid" ngf-thumbnail="picFile">
-                    <button class="btn btn-danger btn-xs" ng-click="picFile = null" ng-show="picFile">
-                        <i class="glyphicon glyphicon-remove"></i> Remove
-                    </button>
-                </div>
-        -->
-        <div class="form-group">
-            <select ng-model="selectedAlbum">
-                <option value=""> Select Album </option>
-                <option ng-repeat="element in albums track by $index" value="{{element.albumName}}">{{element.albumName}}</option>
-            </select>
-        </div>
-        <button class="btn btn-success" ng-disabled="!uploadForm.$valid" ng-click="uploadPic(picFile)">
-            <i class="glyphicon glyphicon-ok"></i> Upload
-        </button>
 
+        <div class="form-group">
+            <img id="upload-preview" ng-show="uploadForm.file.$valid" ngf-thumbnail="picFile">
+        </div>
+
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="inputImage" class="sr-only">Upload image</label>
+                <input id="inputImage" class="form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" ng-model="selectedAlbum">
+                    <option value=""> Select Album </option>
+                    <option ng-repeat="element in albums track by $index" value="{{element.albumName}}">{{element.albumName}}</option>
+                </select>
+            </div>
+        </div>
+        <br>
+        <div ng-show="picFile">
+            <textarea id="input-description" class="form-control" ng-model="inputDescription" placeholder="Write a description (optional)"></textarea>
+            <br>
+            <div class="btn-group">
+                <button class="btn btn-success" ng-disabled="!uploadForm.$valid" ng-click="uploadPic(picFile)">
+                    <i class="glyphicon glyphicon-ok"></i> Upload
+                </button>
+                <button class="btn btn-danger" ng-click="picFile = null">
+                    <i class="glyphicon glyphicon-remove"></i> Remove
+                </button>
+            </div>
+        </div>
         <div class="alert alert-danger" ng-show="errorMsg">Upload Error!</div>
         <div class="alert alert-success" ng-show="picFile.result">Upload Successful.</div>
+
     </form>
-    <img src="{{upImg}}">
-    <!--<p>Debug: {{upImg}}</p>-->
+
 </div>
 <div>
     <hr color="black">
@@ -43,9 +52,5 @@
         <button class="btn btn-success" ng-disabled="!albumForm.$valid" ng-click="createAlbum()">
             <i class="glyphicon glyphicon-ok"></i> Create album
         </button>
-
     </form>
-
-
-
 </div>
