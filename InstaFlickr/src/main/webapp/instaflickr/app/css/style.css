@@ -21,8 +21,8 @@ body {
     height: 100%;
 }
 
-.img-responsive{
-    width: 100%;
+.album-preview-wrapper {
+    display: table;
 }
 
 #natural-image {
@@ -33,6 +33,10 @@ body {
 #single-image {
     max-height: 600px;
     margin-bottom: 16px;
+}
+
+.thumbnail .img-responsive {
+    width: 100%;
 }
 
 textarea {
@@ -51,28 +55,33 @@ textarea {
 .comment-row-input {
     margin-bottom: 8px;
 }
-body {
-  background-color: #eee;
+
+#album-header {
+    margin-bottom: 16px;
+}
+
+.fill-img {
+    visibility: hidden;
 }
 
 .form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
 }
 .form-signin .form-control:focus {
-  z-index: 2;
+    z-index: 2;
 }
 .form-email input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 .form-signin input[type="password"] {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

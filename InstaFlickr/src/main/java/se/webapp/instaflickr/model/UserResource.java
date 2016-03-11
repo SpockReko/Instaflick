@@ -6,31 +6,17 @@
 package se.webapp.instaflickr.model;
 
 import java.net.URI;
-import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -55,6 +41,23 @@ public class UserResource {
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @GET
+    @Path("userprofile")
+    public Response getUserProfile(@QueryParam("username") String username) {
+        LOG.log(Level.INFO, "getUserProfile(): " + username);
+        
+        InstaFlickUser user = instaFlick.getUserRegistry().find(username);
+        LOG.log(Level.INFO, "got user: " + user.getUsername());
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        
+        builder.add("username", user.getUsername());
+        builder.add("fname", user.getFname());
+        builder.add("lname", user.getLname());
+        builder.add("description", user.getDescription());
+        
+        return Response.ok(builder.build()).build();
+    }
+    
+    @GET
     @Path(value = "session")
     public Response getSession() {
         LOG.warning("Getting the session");
@@ -63,6 +66,23 @@ public class UserResource {
             
         String username = session.getSessionID();
         JsonObject value = Json.createObjectBuilder().add("username", username).build();
+        return Response.ok(value).build();
+    }
+    
+    @GET
+    @Path(value = "logout")
+    public Response logout() {
+        LOG.warning("Logging out");
+        session.setSession(false);
+        session.setSessionID(null);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path(value = "loggedIn")
+    public Response isLoggedIn() {
+        LOG.warning("Checking session");
+        JsonObject value = Json.createObjectBuilder().add("loggedIn", session.getSession()).build();        
         return Response.ok(value).build();
     }
     
