@@ -13,6 +13,7 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                             if (data['loggedIn']) {
                                 console.log("You are logged in");
                                 $scope.signedIn = " Sign Out";
+                                $location.path('/');
                             } else {
                                 console.log("You are not logged in");
                                 $scope.signedIn = " Sign In";
