@@ -12,8 +12,8 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
         var url = 'http://localhost:8080/InstaFlickr/webresources/reg';
 
         return {
-            create: function(username, password, repeatPassword) {
-                console.log("create in UserRegistryProxy: " + username 
+            create: function (username, password, repeatPassword) {
+                console.log("create in UserRegistryProxy: " + username
                         + " " + password + " " + repeatPassword);
                 var data = $.param({
                     username: username,
@@ -22,24 +22,24 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 });
                 return $http.post(url + '?' + data);
             },
-            setupProfle: function(email, fname, lname, description) {
-                console.log("Setting up profile in UserRegistryProxy: " 
+            setupProfle: function (email, fname, lname, description) {
+                console.log("Setting up profile in UserRegistryProxy: "
                         + email + " " + fname + " " + lname + " " + description);
-                return $http.get(url + "/setup?" + "email=" + email 
-                                                 + "&fname=" + fname 
-                                                 + "&lname=" + lname 
-                                                 + "&description=" + description);
+                return $http.get(url + "/setup?" + "email=" + email
+                        + "&fname=" + fname
+                        + "&lname=" + lname
+                        + "&description=" + description);
 
             },
-            login: function(username, password) {
+            login: function (username, password) {
                 console.log("login UserRegistryProxy: " + username + " " + password);
                 return $http.get(url + "?username=" + username + "&password=" + password);
             },
-            logout: function() {
+            logout: function () {
                 console.log("Logging out in UserRegistryProxy");
                 return $http.get(url + "/logout");
             },
-            getSession: function() {
+            getSession: function () {
                 console.log("Getting session in UserRegistryProxy");
                 return $http.get(url + "/session");
             },
@@ -48,10 +48,10 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("Checking session in UserRegistryProxy");
                 return $http.get(url + "/loggedIn");
                 },
+                
             getUserProfile: function(username) {
                 console.log("getUserProfile in UserRegistryProxy");
                 return $http.get(url + "/userprofile" + "?username=" + username);
-
             }
         };
     }
@@ -67,35 +67,35 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Get image in MediaProxy");
                 return $http.get(url + "/picture" + "?pictureId=" + pictureId);
             },
-            getProfilePicture: function(username) {
+            getProfilePicture: function (username) {
                 console.log("getProfilePicture in MediaProxy");
                 return $http.get(url + "/profile-image" + "?username=" + username);
             },
-            getProfileImages: function(username) {
+            getProfileImages: function (username) {
                 console.log("getProfileImages in MediaProxy");
                 return $http.get(url + "?username=" + username);
             },
-            getAlbums: function() {
+            getAlbums: function () {
                 console.log("Getting albums in MediaProxy");
                 return $http.get(url + "/albums");
             },
-            getAlbumPictures: function(username, albumName) {
+            getAlbumPictures: function (username, albumName) {
                 console.log("getAlbumPictures");
                 return $http.get(url + "/album-pictures?username=" + username + "&albumName=" + albumName);
             },
-            createAlbum: function(albumName) {
+            createAlbum: function (albumName) {
                 console.log("Creating album in MediaProxy: " + albumName);
                 var data = $.param({
                     albumName: albumName
                 });
-                return $http.post(url + '/album?' + data);            
+                return $http.post(url + '/album?' + data);
             },
-            addPictureToAlbum: function(pictureID, albumName) {
-                console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName); 
+            addPictureToAlbum: function (pictureID, albumName) {
+                console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName);
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
             },
-            getAllMedia: function() {
-                console.log("Getting all media in MediaProxy") 
+            getAllMedia: function () {
+                console.log("Getting all media in MediaProxy")
                 return $http.get(url + "/media");
             }
         };

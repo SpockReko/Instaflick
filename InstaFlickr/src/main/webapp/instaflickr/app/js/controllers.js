@@ -1,6 +1,7 @@
 'use strict';
 
 var instaFlickControllers = angular.module('InstaFlickControllers', []);
+
 instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegistryProxy', '$window',
     function ($scope, $location, UserRegistryProxy, $window) {
 
@@ -11,6 +12,7 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                             if (data['loggedIn']) {
                                 console.log("You are logged in");
                                 $scope.signedIn = " Sign Out";
+                                $location.path('/');
                             } else {
                                 console.log("You are not logged in");
                                 $scope.signedIn = " Sign In";
@@ -41,6 +43,7 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
             }
         };
     }]);
+
 
 
 
@@ -191,7 +194,9 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             console.log(data);
             $scope.image = data;
         });
+
     }]);
+
 
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
