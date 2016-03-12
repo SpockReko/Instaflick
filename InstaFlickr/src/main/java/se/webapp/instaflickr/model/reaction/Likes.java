@@ -57,18 +57,7 @@ public class Likes implements Serializable {
     
     // Lägger till användare till listan med hjälp av användrnamnet
     public boolean addLike(String user) {
-        boolean missing = true;
-        for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).equals(user)) {
-                missing = false;
-            }
-        }
-        if (missing) {
-            userList.add(user);
-            return true;
-        } else {
-            return false;
-        }
+        return userList.add(user);
     }
 
     /**
@@ -80,18 +69,8 @@ public class Likes implements Serializable {
     
     // Tar bort till användare till listan med hjälp av användrnamnet
     public boolean removeLike(String user) {
-        boolean exist = true;
-        for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).equals(user)) {
-                exist = false;
-            }
-        }
-        if (exist) {
-            userList.remove(user);
-            return true;
-        } else {
-            return false;
-        }
+        return userList.remove(user);
+        
     }
 
     public void setUserList(List<String> userList) {

@@ -119,11 +119,19 @@ public class MediaResource {
         Likes likesObject = likesHandler.find(likesId);
         List<String> list = likesObject.getUserList();
 
-        Likes newLikesObject = updateLikes(list, username, likesObject);
+        Boolean userIsThere = updateLikes(list, username, likesObject);
+        System.out.println("userIsThere: " + userIsThere);
+        if (userIsThere) {
+            boolean test = likesObject.removeLike(username);
+            System.out.println("userIsThere: " + test);
+        } else {
+            boolean test = likesObject.addLike(username);
+            System.out.println("userIsThere: " + test);
+        }
+        
+        likesHandler.update(likesObject);
 
-        likesHandler.update(newLikesObject);
-
-        String nr = "" + newLikesObject.nrOfLikes();
+        String nr = "" + likesObject.nrOfLikes();
 
         JsonObject updatedLikes = Json.createObjectBuilder()
                 .add("likes", nr)
@@ -517,7 +525,7 @@ public class MediaResource {
     
     // Help Methods
 
-    private Likes updateLikes(List<String> list, String username, Likes likesObject) {
+    private boolean updateLikes(List<String> list, String username, Likes likesObject) {
         
         boolean userIsThere = false;
         int index;
@@ -525,18 +533,10 @@ public class MediaResource {
             String newUser = list.get(index);
             if (newUser.equals(username)) {
                 userIsThere = true;
-            } else {
-                userIsThere = false;
             }
         }
 
-        if (userIsThere) {
-            likesObject.removeLike(username);
-        } else {
-            likesObject.addLike(username);
-        }
-
-        return likesObject;
+        return userIsThere;
     }
 
     private Likes createLikes() {
