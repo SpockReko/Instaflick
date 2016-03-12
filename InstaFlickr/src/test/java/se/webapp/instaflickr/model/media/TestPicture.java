@@ -46,14 +46,12 @@ public class TestPicture extends AbstractTest {
     @Inject
     InstaFlickUser user;
     
-    @Inject
-    Picture pic;
     
     @Test
     public void test_SetandGet_ImagePath_Of_Picture() throws Exception{
         String ImagePath = "some Path";
         user = createUser("James");
-        pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user, new Likes());
         pic.setImagePath(ImagePath);
         String givenPath = pic.getImagePath();
         assertTrue(givenPath.equals(ImagePath));
@@ -63,7 +61,7 @@ public class TestPicture extends AbstractTest {
     public void test_Post_Comments_On_Picture() throws Exception{
         String email = "James";
         user = createUser(email);
-        pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user, new Likes());
         String text = "added comment";
         pic.postComment(user, text);
         boolean test = false;
@@ -80,7 +78,7 @@ public class TestPicture extends AbstractTest {
     @Test
     public void test_SetandGet_Uploaded_Picture() throws Exception{
         user = new InstaFlickUser("James");
-        pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user, new Likes());
         Calendar nowCal = Calendar.getInstance();
         nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         Calendar cal = pic.getUploaded();
@@ -90,7 +88,7 @@ public class TestPicture extends AbstractTest {
     @Test
     public void test_Get_Uploader_Of_Picture() throws Exception{
         user = new InstaFlickUser("James", "1");
-        pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user, new Likes());
         InstaFlickUser givenUser = pic.getOwner();
         assertTrue(givenUser.equals(user));
     }

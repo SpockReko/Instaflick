@@ -34,11 +34,6 @@ import se.webapp.instaflickr.model.reaction.Likes;
 @RunWith(Arquillian.class)
 public class TestUser extends AbstractTest {
 
-    @Inject
-    InstaFlick instaFlick;
-    
-    @Inject
-    InstaFlickUser newUser;
     
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
@@ -49,10 +44,19 @@ public class TestUser extends AbstractTest {
     public void preparePersistenceTest() throws Exception {
         clearAll();
     }
+    
+    @Test
+    public void alwaysTrue() {
+        assertTrue(true);
+    }
+    
+    @Inject
+    InstaFlick instaFlick;
+    
 
     @Test
     public void test_SetAndGet_Username() throws Exception {
-        newUser = createUser("Jane");
+        InstaFlickUser newUser = createUser("Jane");
         newUser.setFname("James");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("Jane");
@@ -61,7 +65,7 @@ public class TestUser extends AbstractTest {
 
     @Test
     public void test_Update_User() throws Exception {
-        newUser = createUser("james.email@domain.se");
+        InstaFlickUser newUser = createUser("james.email@domain.se");
         instaFlick.getUserRegistry().create(newUser);
         newUser.setUsername("the jamester");
         instaFlick.getUserRegistry().update(newUser);
@@ -71,20 +75,17 @@ public class TestUser extends AbstractTest {
 
     @Test
     public void test_SetAndGet_Password() throws Exception {
-        newUser = createUser("James");
+        InstaFlickUser newUser = createUser("James");
         newUser.setPassword("StrongPassword");
         instaFlick.getUserRegistry().create(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getPassword().equals(newUser.getPassword()));
     }
-
-    @Inject
-    Picture pic;
     
     @Test
     public void test_SetAndGet_ProfilePicture() throws Exception {
-        newUser = createUser("James");
-        pic = new Picture(newUser, new Likes());
+        InstaFlickUser newUser = createUser("James");
+        Picture pic = new Picture(newUser, new Likes());
         newUser.setProfilePicture(pic);
         Picture givenPic = newUser.getProfilePicture();
         assertTrue(givenPic.equals(pic));
@@ -92,8 +93,8 @@ public class TestUser extends AbstractTest {
 
     @Test
     public void test_SetAndGet_Picture() throws Exception {
-        newUser = createUser("James");
-        pic = new Picture(newUser, new Likes());
+        InstaFlickUser newUser = createUser("James");
+        Picture pic = new Picture(newUser, new Likes());
         newUser.addPicture(pic);
         List<Picture> picList = newUser.getPictures();
         boolean test = false;
