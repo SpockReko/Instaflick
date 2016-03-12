@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <div class="row" id="profile-box">
 
     <div class="col-lg-3 col-md-4 col-xs-6" id="profile-picture">
@@ -52,59 +52,5 @@
             </a>
         </div>
     </div>
-=======
-<div class="row" id="profile-box">
 
-    <div class="col-lg-3 col-md-4 col-xs-6" id="profile-picture">
-        <img class="img-circle center-block img-responsive" src="{{profilePicture}}">
-    </div>
-
-    <div class="col-lg-9 col-md-8 col-xs-6" id="info-box">
-
-        <div id="person-name-header">
-            <h3>{{ profileData.fname}} {{profileData.lname}}</h3>
-        </div>
-        <div id="user-name-header">
-            <h4>@{{profileData.username}}</h4>
-        </div>
-
-        <div ng-model="description">
-            <p>{{ profileData.description}}</p>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div ng-repeat="element in data| orderBy:'element.time' track by $index" ng-switch="element.type">
-
-        <div ng-if="$index % 2 === 0" class="clearfix visible-sm-block"></div>
-        <div ng-if="$index % 3 === 0" class="clearfix visible-md-block"></div>
-        <div ng-if="$index % 4 === 0" class="clearfix visible-lg-block"></div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <a class="thumbnail" href="#/picture/{{element.id}}" ng-switch-when="image">
-                <img class="img-responsive" src="{{element.path}}">
-            </a>
-            <a class="thumbnail album-preview-wrapper center-block" href="#/album/{{profileData.username}}/{{element.albumName}}" ng-switch-when="album">
-                <table class="album-preview">
-                    <tr ng-repeat="image in element.pictureList track by $index" ng-if="$index % 2 === 0">
-                        <td>
-                            <img class="img-responsive" src="{{image.path}}">
-                        </td>
-                        <td ng-if="$index + 1 < element.pictureList.length">
-                            <img class="img-responsive" src="{{element.pictureList[$index + 1].path}}">
-                        </td>
-                    </tr>
-
-                    <!--
-                    <tr ng-if="element.pictureList.length < 3">
-                        <td><img class="img-responsive fill-img" src="http://placehold.it/200x200"></td>
-                        <td><img class="img-responsive fill-img" src="http://placehold.it/200x200"></td>
-                    </tr>
-                    -->
-                </table>
-            </a>
-        </div>
-    </div>
->>>>>>> like
 </div>
