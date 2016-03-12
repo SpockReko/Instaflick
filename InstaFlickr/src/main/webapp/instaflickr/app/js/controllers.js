@@ -273,9 +273,24 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
                 });
             });
         };
+
+        $scope.updateComments = function () {
+            MediaProxy.getComments($stateParams.id)
+                    .success(function (data) {
+                        console.log("Got comments! " + data);
+                        $scope.comments = data;
+                    }).
+                    error(function (error) {
+                        console.log("Could not get comments! " + error);
+                    });
+        };
+        
+        $scope.postComment = function () {
+            MediaProxy.addComment($stateParams.id, $scope.formData.comment);
+        };
+        
     }
 ]);
-
 
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',

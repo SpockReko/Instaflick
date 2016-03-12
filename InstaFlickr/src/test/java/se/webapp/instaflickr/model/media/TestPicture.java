@@ -59,7 +59,7 @@ public class TestPicture extends AbstractTest {
         user = createUser(email);
         Picture pic = new Picture(user);
         String text = "added comment";
-        pic.postComment(user, text);
+        pic.comment(user, text);
         boolean test = false;
         for (int i = 0; i < pic.getComments().size(); i++) {
             Comment index = pic.getComments().get(i);

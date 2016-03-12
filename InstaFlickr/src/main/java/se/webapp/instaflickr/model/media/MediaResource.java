@@ -529,18 +529,26 @@ public class MediaResource {
     @Path("comment")
     public Response postComment(@QueryParam("picture") long pictureId,
             @QueryParam("comment") String comment) {
+        LOG.log(Level.INFO, "postComment");
         InstaFlickUser usr = instaFlick.getUserRegistry().find(sessionHandler.getSessionID());
         if (usr == null) {
+            LOG.log(Level.SEVERE, "Could not find user " + sessionHandler.getSessionID());
             return Response.notModified("Could not find user!").build();
         }
+        LOG.log(Level.INFO, "Found user " + usr.getUsername());
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture pic = pc.findPictureById(pictureId);
+        LOG.log(Level.INFO, "Found user " + usr.getUsername());
         if (pic == null) {
+            LOG.log(Level.SEVERE, "Could not find picture " + pictureId);
             return Response.notModified("Could not find picture!").build();
         }
+        LOG.log(Level.INFO, "Found picture " + pic.getImagePath());
 
         pic = pic.comment(usr, comment);
         pc.update(pic);
+        LOG.log(Level.INFO, "Added comment \"" + comment + "\" by user " + usr.getUsername());
+
         return Response.accepted().build();
 
     }

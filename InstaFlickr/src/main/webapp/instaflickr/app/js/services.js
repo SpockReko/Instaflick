@@ -113,29 +113,18 @@ mediaService.factory('MediaProxy', ['$http',
             getFeed: function (username) {
                 console.log("Getting feed for " + username)
                 return $http.get(url + "/feed?username=" + username);
-            }
-        };
-    }
-]);
-mediaService.factory('PictureProxy', ['$http',
-    function ($http) {
-
-        var url = 'http://localhost:8080/InstaFlickr/webresources/media';
-
-
-        return {
+            },
             addComment: function (picture, acomment) {
                 console.log("addComment in PictureProxy");
                 var data = $.param({comment: acomment, picture: picture});
                 return $http.post(url + "/comment?" + data);
-
             },
             getComments: function (picture) {
                 console.log("getComments in Pictureproxy");
                 var data = $.param({picture: picture});
                 return $http.get(url + "/comments?" + data);
             }
-
         };
     }
 ]);
+
