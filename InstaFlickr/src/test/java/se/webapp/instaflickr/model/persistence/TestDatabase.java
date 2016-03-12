@@ -48,12 +48,6 @@ public class TestDatabase extends AbstractTest{
     public void preparePersistenceTest() throws Exception {
         clearAll();
     }
-
-    //Test for to see if the test application works
-    @Test
-    public void alwaysTrue() {
-        assertTrue(true);
-    }
     
     @Inject
     InstaFlick instaFlick;

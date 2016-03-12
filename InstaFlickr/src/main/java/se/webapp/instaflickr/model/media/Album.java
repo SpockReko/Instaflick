@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,7 +35,7 @@ public class Album implements Serializable {
     @Id
     @Getter
     @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.DETACH)
     private InstaFlickUser owner;
     @Getter
     @Setter

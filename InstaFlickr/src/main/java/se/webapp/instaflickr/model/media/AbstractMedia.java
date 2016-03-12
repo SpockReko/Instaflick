@@ -7,6 +7,7 @@ package se.webapp.instaflickr.model.media;
 
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,7 +35,7 @@ public abstract class AbstractMedia {
     private Long id;
     @Getter
     @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     protected Likes likes;
     @Getter
     @Setter
@@ -46,7 +47,7 @@ public abstract class AbstractMedia {
     protected Calendar uploaded;
     @Getter
     @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.DETACH)
     protected InstaFlickUser owner;
     
 

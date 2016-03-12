@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -47,15 +48,15 @@ public class InstaFlickUser implements Serializable {
     private String description;
     @Getter
     @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true )
     private Picture profilePicture;
     @Getter
     @Setter
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true )
     private List<Picture> pictures;
     @Getter
     @Setter
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true )
     private List<Album> albums;    
     
       private static final Logger LOG = Logger.getLogger(UserResource.class.getName());

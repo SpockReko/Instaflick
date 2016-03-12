@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
@@ -50,11 +51,8 @@ public class Picture extends AbstractMedia implements Serializable {
     private Calendar uploaded;
     @Getter
     @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.DETACH)
     private InstaFlickUser uploader;
-    @Getter
-    @Setter
-    private Likes likes;
     
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 

@@ -53,10 +53,17 @@ public class AbstractTest {
     public void clearAll() throws Exception {  
         utx.begin();  
         em.joinTransaction();
-        em.createQuery("delete from Likes").executeUpdate();
-        em.createQuery("delete from Comment").executeUpdate();
+        //em.createNativeQuery("truncate table InstaFlickUser_Picture").executeUpdate();
+        //em.createNativeQuery("truncate table Picture").executeUpdate();
+        //em.createNativeQuery("truncate table Likes").executeUpdate();
+        //em.createNativeQuery("truncate table Album").executeUpdate();
+        //em.createNativeQuery("truncate table InstaFlickUser").executeUpdate();
+        em.createQuery("delete from InstaFlickUser_Picture").executeUpdate();
         em.createQuery("delete from Picture").executeUpdate();
+        em.createQuery("delete from Likes").executeUpdate();
         em.createQuery("delete from InstaFlickUser").executeUpdate();
+        em.createQuery("delete from Album").executeUpdate();
+        em.createQuery("delete from Comment").executeUpdate();
         utx.commit();
     }
     
