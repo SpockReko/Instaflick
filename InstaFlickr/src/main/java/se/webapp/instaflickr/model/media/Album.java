@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.UserResource;
+import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**

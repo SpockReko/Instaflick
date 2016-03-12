@@ -17,7 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 

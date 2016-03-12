@@ -26,9 +26,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
-import se.webapp.instaflickr.model.UserRegistry;
 
 /**
  * Testing the persistence layer

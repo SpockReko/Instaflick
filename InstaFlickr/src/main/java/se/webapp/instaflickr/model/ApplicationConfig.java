@@ -32,8 +32,8 @@ public class ApplicationConfig extends Application {
      * out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(se.webapp.instaflickr.model.UserResource.class);
         resources.add(se.webapp.instaflickr.model.media.MediaResource.class);
+        resources.add(se.webapp.instaflickr.model.user.UserResource.class);
     }
 
 }

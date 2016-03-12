@@ -16,9 +16,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.persistence.InstaFlick;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
-import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
