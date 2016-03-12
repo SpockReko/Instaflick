@@ -129,12 +129,12 @@ instaFlickControllers.controller('SetupProfileCtrl',
 
                 getSession($location, UserRegistryProxy);
                 $scope.setupProfile = function (image) {
-                    console.log("Setting up user profile in RegisterCtrl: " + $scope.user.username + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
-                    UserRegistryProxy.setupProfle($scope.user.username, $scope.user.fname, $scope.user.lname, $scope.user.description)
+                    console.log("Setting up user profile in RegisterCtrl: " + $scope.user.email + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
+                    UserRegistryProxy.setupProfle($scope.user.email, $scope.user.fname, $scope.user.lname, $scope.user.description)
                             .success(function () {
                                 console.log("Success!");
-                                $location.path('/profile');
-                                $window.location.reload();
+                                $location.path('/');
+                                //$window.location.reload();
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
