@@ -30,13 +30,13 @@ public class InstaFlickUser implements Serializable {
     private String email = "";
     @Getter
     @Setter
-    private String fname;
+    private String fname = "";
     @Getter
     @Setter
-    private String lname;
+    private String lname = "";
     @Getter
     @Setter
-    private String description;
+    private String description = "";
     @Getter
     @Setter
     @OneToOne
