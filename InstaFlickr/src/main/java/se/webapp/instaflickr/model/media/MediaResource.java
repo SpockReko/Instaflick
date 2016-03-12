@@ -538,7 +538,7 @@ public class MediaResource {
             return Response.notModified("Could not find picture!").build();
         }
 
-        pic.postComment(usr, comment);
+        pic.comment(usr, comment);
         return Response.accepted().build();
 
     }

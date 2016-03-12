@@ -9,6 +9,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PersistenceContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +21,15 @@ import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 @Entity
-public class Picture extends AbstractMedia implements Serializable {
+public class Picture implements Serializable {
 
     @PersistenceContext
     static EntityManager em;
 
+    @Id
+    @Getter
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Getter
     @Setter
     private String imagePath;
@@ -29,11 +38,16 @@ public class Picture extends AbstractMedia implements Serializable {
     private String description;
     @Getter
     @Setter
+    @OneToMany
     private List<Comment> comments;
     @Getter
     @Setter
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar uploaded;
+    @Getter
+    @Setter
+    @OneToOne
+    InstaFlickUser owner;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
@@ -50,7 +64,7 @@ public class Picture extends AbstractMedia implements Serializable {
         this.owner = owner;
         this.imagePath = null;
         this.uploaded = Calendar.getInstance();
-        this.comments = new LinkedList<Comment>();
+        this.comments = new LinkedList<>();
         this.description = "";
     }
 
@@ -58,7 +72,7 @@ public class Picture extends AbstractMedia implements Serializable {
         this.owner = owner;
         this.imagePath = path;
         this.uploaded = Calendar.getInstance();
-        this.comments = new LinkedList<Comment>();
+        this.comments = new LinkedList<>();
 
         if (description == null) {
             this.description = "";
@@ -67,10 +81,8 @@ public class Picture extends AbstractMedia implements Serializable {
         }
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+    public void comment(InstaFlickUser usr, String comment) {
+        this.comments.add(new Comment(usr, comment));
     }
 
 }

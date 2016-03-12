@@ -32,10 +32,4 @@ public class InstaFlick {
         return albumCatalogue;
     }
 
-    @EJB
-    private MediaHandler mediaHandler;
-
-    public MediaHandler getMediaHandler() {
-        return mediaHandler;
-    }
 }
