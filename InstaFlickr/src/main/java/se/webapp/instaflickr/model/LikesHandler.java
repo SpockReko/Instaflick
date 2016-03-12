@@ -35,8 +35,8 @@ public class LikesHandler extends AbstractDAO<Likes, Long> {
         return em;
     }
     
-        // Försökte mig på att updatera med hjälp av Querys till databasen.
-   /* public int updateLikes(InstaFlickUser user, Likes likes){
+  /*      // Försökte mig på att updatera med hjälp av Querys till databasen.
+    public int updateLikes(String user, Likes likes){
         int max = em.createQuery("INSERT INTO BASE.LIKES_INSTAFLICKUSER VALUES (value1,value2)")
                             .setParameter("value1", likes)
                             .setParameter("value2", user)

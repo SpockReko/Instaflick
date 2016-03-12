@@ -117,7 +117,7 @@ public class MediaResource {
         Long likesId = picture.getLikesId();
         LikesHandler likesHandler = instaFlick.getLikesHandler();
         Likes likesObject = likesHandler.find(likesId);
-        List<InstaFlickUser> list = likesObject.getUserList();
+        List<String> list = likesObject.getUserList();
 
         Likes newLikesObject = updateLikes(list, username, likesObject);
 
@@ -517,13 +517,13 @@ public class MediaResource {
     
     // Help Methods
 
-    private Likes updateLikes(List<InstaFlickUser> list, String username, Likes likesObject) {
+    private Likes updateLikes(List<String> list, String username, Likes likesObject) {
         
         boolean userIsThere = false;
         int index;
         for (index = 0; index < list.size(); index++) {
-            InstaFlickUser newUser = list.get(index);
-            if (newUser.getUsername().equals(username)) {
+            String newUser = list.get(index);
+            if (newUser.equals(username)) {
                 userIsThere = true;
             } else {
                 userIsThere = false;
@@ -531,9 +531,9 @@ public class MediaResource {
         }
 
         if (userIsThere) {
-            likesObject.removeLike(list.get(index));
+            likesObject.removeLike(username);
         } else {
-            likesObject.addLike(list.get(index));
+            likesObject.addLike(username);
         }
 
         return likesObject;

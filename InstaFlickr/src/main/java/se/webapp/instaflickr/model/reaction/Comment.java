@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import lombok.Getter;
 import lombok.Setter;
+import se.webapp.instaflickr.model.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -42,8 +44,15 @@ public class Comment implements Serializable {
     @Setter @Getter @OneToOne
     private Likes like;
     
-    public Comment(){ 
+    private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
+
     
+    public Comment(){ 
+        LOG.warning("*******************************************************");
+        LOG.warning("DO NOT USE THIS CONSTRUCTOR! Comment(),");
+        LOG.warning("Use Comment(InstaflickUser, String, Likes)");
+        LOG.warning("*******************************************************");
+
     }
     
     public Comment(String commentText){

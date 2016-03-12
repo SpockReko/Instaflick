@@ -31,11 +31,10 @@ public class Likes implements Serializable {
     private Long id;
     @Setter
     @Getter
-    @OneToMany
-    public List<InstaFlickUser> userList;
+    public List<String> userList;
 
     public Likes() {
-        userList = new LinkedList<InstaFlickUser>();
+        userList = new LinkedList<String>();
     }
 
     /**
@@ -57,10 +56,10 @@ public class Likes implements Serializable {
      */
     
     // Lägger till användare till listan med hjälp av användrnamnet
-    public boolean addLike(InstaFlickUser user) {
+    public boolean addLike(String user) {
         boolean missing = true;
         for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).getUsername().equals(user)) {
+            if (userList.get(i).equals(user)) {
                 missing = false;
             }
         }
@@ -80,10 +79,10 @@ public class Likes implements Serializable {
      */
     
     // Tar bort till användare till listan med hjälp av användrnamnet
-    public boolean removeLike(InstaFlickUser user) {
+    public boolean removeLike(String user) {
         boolean exist = true;
         for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).getUsername().equals(user)) {
+            if (userList.get(i).equals(user)) {
                 exist = false;
             }
         }
@@ -95,7 +94,7 @@ public class Likes implements Serializable {
         }
     }
 
-    public void setUserList(List<InstaFlickUser> userList) {
+    public void setUserList(List<String> userList) {
         this.userList = userList;
     }
 

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
+import se.webapp.instaflickr.model.UserResource;
 import se.webapp.instaflickr.model.reaction.Comment;
 import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -53,8 +55,15 @@ public class Picture extends AbstractMedia implements Serializable {
     @Setter
     private Likes likes;
     
+    private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
+
+    // Används ej.
     public Picture() {
-        
+        LOG.warning("*******************************************************");
+        LOG.warning("DO NOT USE THIS CONSTRUCTOR! Picture(),");
+        LOG.warning("Use Picture(InstaflickUser, Likes) or ");
+        LOG.warning("Use Picture(InstaflickUser, Likes, String) or ");
+        LOG.warning("*******************************************************");
     } // Används ej.
 
     public Picture(InstaFlickUser uploader, Likes likes) {
