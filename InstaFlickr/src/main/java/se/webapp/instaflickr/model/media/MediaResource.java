@@ -344,7 +344,7 @@ public class MediaResource {
                 "src/main/webapp/instaflickr/app/media");
         relativePath = contextPath.getParent().getParent().relativize(localPath);
         relativePath = relativePath.subpath(5, relativePath.getNameCount());
-
+       
         return relativePath;
     }
 
@@ -460,16 +460,22 @@ public class MediaResource {
     @Path("comment")
     public Response postComment(@QueryParam("picture") long pictureId,
             @QueryParam("comment") String comment) {
+        LOG.log(Level.INFO ,"postComment");
         InstaFlickUser usr = instaFlick.getUserRegistry().find(sessionHandler.getSessionID());
         if (usr == null) {
+            LOG.log(Level.SEVERE,"Could not find user " + sessionHandler.getSessionID());
             return Response.notModified("Could not find user!").build();
         }
+        LOG.log(Level.INFO, "Found user " + usr.getUsername() );
         Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
         if (pic == null) {
+            LOG.log(Level.SEVERE,"Could not find picture " + pictureId);
             return Response.notModified("Could not find picture!").build();
         }
 
+        LOG.log(Level.INFO, "Found picture " + pic.getImagePath());
         pic.postComment(usr, comment);
+        LOG.log(Level.INFO, "Added comment \""  + comment + "\" by user " + usr.getUsername() );
         return Response.accepted().build();
 
     }

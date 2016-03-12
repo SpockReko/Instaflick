@@ -186,15 +186,31 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         }
     }
 ]);
-instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy',
-    function ($scope, $stateParams, MediaProxy) {
 
+instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'PictureProxy', 'MediaProxy',
+    function ($scope, $stateParams, PictureProxy, MediaProxy) {
+        
         MediaProxy.getImage($stateParams.id).success(function (data) {
             console.log("Success!");
+            console.log($stateParams)
             console.log(data);
             $scope.image = data;
         });
 
+        $scope.updateComments = function () {
+            PictureProxy.getComments($stateParams.id)
+                    .success(function (data) {
+                        console.log("Got comments! " + data);
+                        $scope.comments = data;
+                    }).
+                    error(function (error) {
+                        console.log("Could not get comments! " + error);
+                    });
+        };
+        
+        $scope.postComment = function () {
+            PictureProxy.addComment($stateParams.id, $scope.formData.comment);
+        };
     }]);
 
 
