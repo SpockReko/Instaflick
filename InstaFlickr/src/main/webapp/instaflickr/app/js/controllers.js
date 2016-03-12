@@ -134,6 +134,7 @@ instaFlickControllers.controller('SetupProfileCtrl',
                                 $location.path('/');
                                 //$window.location.reload();
 
+
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
