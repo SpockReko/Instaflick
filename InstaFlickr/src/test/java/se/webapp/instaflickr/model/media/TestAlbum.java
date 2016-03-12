@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
-import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -60,8 +59,8 @@ public class TestAlbum extends AbstractTest {
         InstaFlickUser user = new InstaFlickUser("James");
         InstaFlickUser user2 = new InstaFlickUser("Frank");
         album = new Album("Photo On Dogs <3", user);
-        Picture pic = new Picture(user, new Likes() );
-        Picture pic2 = new Picture(user2, new Likes() );
+        Picture pic = new Picture(user );
+        Picture pic2 = new Picture(user2 );
         album.addPicture(pic);
         album.addPicture(pic2);
         assertTrue(album.removePicture(pic) );

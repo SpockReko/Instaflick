@@ -6,15 +6,12 @@
 package se.webapp.instaflickr.model.reaction;
 
 import se.webapp.instaflickr.model.media.Comment;
-import java.time.Instant;
 import java.util.Calendar;
-import java.util.Date;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
 import org.jboss.arquillian.junit.Arquillian;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -51,7 +48,7 @@ public class TestComment extends AbstractTest {
     @Test
     public void test_SetandGet_User_InComment() throws Exception{
         InstaFlickUser newUser = new InstaFlickUser("James");
-        Comment comment = new Comment(null,null,null);
+        Comment comment = new Comment(null,null);
         comment.setUser(newUser);
         InstaFlickUser givenUser = comment.getUser();
         assertTrue(givenUser.getEmail().equals(newUser.getEmail()));
@@ -70,7 +67,7 @@ public class TestComment extends AbstractTest {
     public void test_Get_Created_Comment() throws Exception{
         InstaFlickUser user = new InstaFlickUser("James");
         String text = "Hello World";
-        Comment comment = new Comment(user, text, new Likes());
+        Comment comment = new Comment(user, text);
         Calendar nowCal = Calendar.getInstance();
         nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         Calendar cal = comment.getCreated( );
@@ -78,18 +75,10 @@ public class TestComment extends AbstractTest {
         assertTrue(cal.compareTo(nowCal) <= 0);
     }
     
-    @Test
-    public void test_SetandGet_Like_Comment() throws Exception{
-        Comment comment = new Comment();
-        Likes newLikes = new Likes();
-        comment.setLike(newLikes);
-        Likes givenLikes = comment.getLike();
-        assertTrue(givenLikes.equals(newLikes));
-    }
 
     @Test
     public void test_EditComment() throws Exception{
-        Comment comment = new Comment(createUser("James"), "First text", new Likes());
+        Comment comment = new Comment(createUser("James"), "First text");
         String editText = "editText";
         comment.editComment(editText);
         assertTrue(editText.equals(comment.getCommentText()));

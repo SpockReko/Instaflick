@@ -11,13 +11,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +19,6 @@ import org.junit.runner.RunWith;
 import se.webapp.instaflickr.model.persistence.InstaFlick;
 import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
-import se.webapp.instaflickr.model.reaction.Likes;
 
 /**
  *
@@ -85,7 +78,7 @@ public class TestUser extends AbstractTest {
     @Test
     public void test_SetAndGet_ProfilePicture() throws Exception {
         InstaFlickUser newUser = createUser("James");
-        Picture pic = new Picture(newUser, new Likes());
+        Picture pic = new Picture(newUser);
         newUser.setProfilePicture(pic);
         Picture givenPic = newUser.getProfilePicture();
         assertTrue(givenPic.equals(pic));
@@ -94,7 +87,7 @@ public class TestUser extends AbstractTest {
     @Test
     public void test_SetAndGet_Picture() throws Exception {
         InstaFlickUser newUser = createUser("James");
-        Picture pic = new Picture(newUser, new Likes());
+        Picture pic = new Picture(newUser);
         newUser.addPicture(pic);
         List<Picture> picList = newUser.getPictures();
         boolean test = false;

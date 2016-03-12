@@ -3,7 +3,6 @@
   <persistence-unit name="jpa_InstaBase_PU" transaction-type="JTA">
     <jta-data-source>jdbc/InstaBase</jta-data-source>
     <class>se.webapp.instaflickr.model.user.InstaFlickUser</class>
-    <class>se.webapp.instaflickr.model.reaction.Likes</class>
     <class>se.webapp.instaflickr.model.media.Picture</class>
     <class>se.webapp.instaflickr.model.media.Album</class>
     <class>se.webapp.instaflickr.model.media.Comment</class>

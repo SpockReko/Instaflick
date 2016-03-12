@@ -11,7 +11,6 @@ import se.webapp.instaflickr.model.media.TestAlbum;
 import se.webapp.instaflickr.model.media.TestPicture;
 import se.webapp.instaflickr.model.persistence.TestDatabase;
 import se.webapp.instaflickr.model.reaction.TestComment;
-import se.webapp.instaflickr.model.reaction.TestLike;
 import se.webapp.instaflickr.model.user.TestUser;
 
 /**
@@ -23,7 +22,6 @@ import se.webapp.instaflickr.model.user.TestUser;
     TestDatabase.class,
     TestUser.class,
     TestPicture.class,
-    TestLike.class,
     TestComment.class,
     TestAlbum.class
 })

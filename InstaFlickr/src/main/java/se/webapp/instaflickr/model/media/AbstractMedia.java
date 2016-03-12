@@ -17,7 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -31,10 +30,6 @@ public abstract class AbstractMedia {
     @Getter
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Getter
-    @Setter
-    @OneToOne
-    protected Likes likes;
     @Getter
     @Setter
     @OneToMany
@@ -51,8 +46,8 @@ public abstract class AbstractMedia {
 
     protected abstract EntityManager getEntityManager();
 
-    public boolean postComment(InstaFlickUser user, String mgs, Likes like) {
-        Comment comment = new Comment(user, mgs, like);
+    public boolean postComment(InstaFlickUser user, String mgs) {
+        Comment comment = new Comment(user, mgs);
         comments.add(comment);
         getEntityManager().persist(comment);
         return true;
@@ -66,18 +61,5 @@ public abstract class AbstractMedia {
             return true;
         }
         return false;
-    }
-
-    public boolean likeIt(String user) {
-        likes.addLike(user);
-        getEntityManager().merge(likes);
-        return true;
-    }
-
-    
-    public boolean unLikeIt(String user) {
-        likes.removeLike(user);
-        getEntityManager().merge(likes);
-        return true;
     }
 }
