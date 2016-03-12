@@ -191,8 +191,10 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
 
         MediaProxy.getImage($stateParams.id).success(function (data) {
             console.log("Success with getImage!");
+            console.log(data);
             $scope.image = data;
             $scope.id = $stateParams.id;
+            console.log($scope);
         });
         $scope.updateLikes = function () {
             UserRegistryProxy.getSession().success(function (data) {
@@ -208,24 +210,6 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
         };
     }
 ]);
-instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
-    function ($scope, PictureProxy) {
-        $scope.image = testPictureData;
-        $scope.updateComments = function () {
-            PictureProxy.getComments($scope.image._id)
-                    .success(function (data) {
-                        console.log("Got comments! " + data);
-                        $scope.comments = data;
-                    }).
-                    error(function (error) {
-                        console.log("Could not get comments! " + error);
-                    });
-        };
-        $scope.postComment = function () {
-            PictureProxy.addComment($scope.image._id, $scope.formData.comment);
-        };
-        updateComments();
-    }]);
 
 
 instaFlickControllers.controller('UploadCtrl',
