@@ -81,8 +81,9 @@ public class Picture implements Serializable {
         }
     }
 
-    public void comment(InstaFlickUser usr, String comment) {
+    public Picture comment(InstaFlickUser usr, String comment) {
         this.comments.add(new Comment(usr, comment));
+        return this;
     }
 
 }

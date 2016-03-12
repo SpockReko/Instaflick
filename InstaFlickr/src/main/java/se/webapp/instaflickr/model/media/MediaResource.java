@@ -533,12 +533,14 @@ public class MediaResource {
         if (usr == null) {
             return Response.notModified("Could not find user!").build();
         }
-        Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture pic = pc.findPictureById(pictureId);
         if (pic == null) {
             return Response.notModified("Could not find picture!").build();
         }
 
-        pic.comment(usr, comment);
+        pic = pic.comment(usr, comment);
+        pc.update(pic);
         return Response.accepted().build();
 
     }
