@@ -27,5 +27,5 @@ import se.webapp.instaflickr.model.user.TestUser;
 })
 
 public class TestSuite {
-    
+
 }

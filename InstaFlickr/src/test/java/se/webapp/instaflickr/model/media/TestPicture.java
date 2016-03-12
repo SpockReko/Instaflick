@@ -26,10 +26,10 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  */
 @RunWith(Arquillian.class)
 public class TestPicture extends AbstractTest {
-    
+
     @Inject
     InstaFlick instaFlick;
-    
+
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
@@ -40,13 +40,11 @@ public class TestPicture extends AbstractTest {
         clearAll();
     }
 
-        
     @Inject
     InstaFlickUser user;
-    
-    
+
     @Test
-    public void test_SetandGet_ImagePath_Of_Picture() throws Exception{
+    public void test_SetandGet_ImagePath_Of_Picture() throws Exception {
         String ImagePath = "some Path";
         user = createUser("James");
         Picture pic = new Picture(user);
@@ -54,9 +52,9 @@ public class TestPicture extends AbstractTest {
         String givenPath = pic.getImagePath();
         assertTrue(givenPath.equals(ImagePath));
     }
-    
+
     @Test
-    public void test_Post_Comments_On_Picture() throws Exception{
+    public void test_Post_Comments_On_Picture() throws Exception {
         String email = "James";
         user = createUser(email);
         Picture pic = new Picture(user);
@@ -65,8 +63,8 @@ public class TestPicture extends AbstractTest {
         boolean test = false;
         for (int i = 0; i < pic.getComments().size(); i++) {
             Comment index = pic.getComments().get(i);
-            if(index.getCommentText().equals(text) 
-                    && index.getUser().getEmail().equals(email)){
+            if (index.getCommentText().equals(text)
+                    && index.getUser().getEmail().equals(email)) {
                 test = true;
             }
         }
@@ -74,21 +72,21 @@ public class TestPicture extends AbstractTest {
     }
 
     @Test
-    public void test_SetandGet_Uploaded_Picture() throws Exception{
+    public void test_SetandGet_Uploaded_Picture() throws Exception {
         user = new InstaFlickUser("James");
         Picture pic = new Picture(user);
         Calendar nowCal = Calendar.getInstance();
-        nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
+        nowCal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         Calendar cal = pic.getUploaded();
         assertTrue(cal.compareTo(nowCal) <= 0);
     }
 
     @Test
-    public void test_Get_Uploader_Of_Picture() throws Exception{
+    public void test_Get_Uploader_Of_Picture() throws Exception {
         user = new InstaFlickUser("James", "1");
         Picture pic = new Picture(user);
         InstaFlickUser givenUser = pic.getOwner();
         assertTrue(givenUser.equals(user));
     }
-   
+
 }

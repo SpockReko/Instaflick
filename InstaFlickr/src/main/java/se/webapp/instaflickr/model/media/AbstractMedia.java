@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import java.util.Calendar;
@@ -19,10 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Pontus
- */
 @MappedSuperclass
 public abstract class AbstractMedia {
 
@@ -42,7 +33,6 @@ public abstract class AbstractMedia {
     @Setter
     @OneToOne
     protected InstaFlickUser owner;
-    
 
     protected abstract EntityManager getEntityManager();
 

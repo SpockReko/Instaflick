@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model;
 
 import java.io.IOException;
@@ -14,12 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author TH
- */
 public class MainServlet extends HttpServlet {
-    
+
     @PersistenceContext(unitName = "jpa_InstaBase_PU")
     private EntityManager em;
 
@@ -40,7 +31,7 @@ public class MainServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet MainServlet</title>");            
+            out.println("<title>Servlet MainServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet MainServlet at " + request.getContextPath() + "</h1>");

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.persistence;
 
 import java.util.ArrayList;
@@ -31,7 +26,7 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
 
     @Override
     public void create(T t) {
-       getEntityManager().persist(t);
+        getEntityManager().persist(t);
     }
 
     @Override
@@ -52,7 +47,7 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
 
     @Override
     public List<T> findAll() {
-       return get(true, -1, -1);
+        return get(true, -1, -1);
     }
 
     @Override
@@ -72,12 +67,12 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
         found.addAll(q.getResultList());
         return found;
     }
-        
+
     @Override
     public int count() {
-        EntityManager em = getEntityManager(); 
+        EntityManager em = getEntityManager();
         Long n = em.createQuery("select count(t) from " + clazz.getSimpleName() + " t", Long.class)
                 .getSingleResult();
         return n.intValue();
-    } 
+    }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
@@ -10,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -20,10 +13,6 @@ import lombok.Setter;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Pontus
- */
 @Entity
 public class Album implements Serializable {
 
@@ -44,7 +33,7 @@ public class Album implements Serializable {
     @Setter
     @OneToMany
     private List<Picture> pictures;
-    
+
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     public Album() {
@@ -52,7 +41,7 @@ public class Album implements Serializable {
         LOG.warning("DO NOT USE THIS CONSTRUCTOR! Album(),");
         LOG.warning("Use Album(string,InstaflickUser) Instead,");
         LOG.warning("*******************************************************");
-        
+
     } // Används ej
 
     public Album(String albumName, InstaFlickUser owner) {

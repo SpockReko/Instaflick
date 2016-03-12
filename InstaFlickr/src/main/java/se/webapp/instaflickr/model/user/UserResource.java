@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.user;
 
 import se.webapp.instaflickr.model.persistence.InstaFlick;
@@ -21,13 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import se.webapp.instaflickr.model.user.InstaFlickUser;
-import se.webapp.instaflickr.model.user.UserWrapper;
 
-/**
- *
- * @author Henry Ottervad
- */
 @Path("reg")
 public class UserResource {
 

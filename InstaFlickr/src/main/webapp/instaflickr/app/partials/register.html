@@ -1,9 +1,9 @@
 <form name="register" class="form-signin col-xs-offset-3 col-xs-6">
     <div class="form-group">
         <h2 class="form-signin-heading">Registration</h2>
-        
+
         <div>{{msg}}</div>
-        
+
         <label for="inputUsername" class="sr-only">Username</label>
         <input id="inputUsername" class="form-control" placeholder="Username" 
                required autofocus type="text" ng-model="user.username">
@@ -17,11 +17,11 @@
                required type="password" ng-model="user.repeatPassword">
 
     </div>
-       
+
     <div class="btn-group" role="group">
-        
+
         <button class="btn btn-primary" ng-disabled="!register.$valid" type="submit" ng-click="save()">Register</button>
         <button class="btn btn-default" ng-click="goBack()">Cancel</button> 
-        
+
     </div>
 </form>

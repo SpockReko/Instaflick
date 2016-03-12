@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
@@ -20,10 +15,6 @@ import lombok.Setter;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Pontus
- */
 @Entity
 public class Picture extends AbstractMedia implements Serializable {
 

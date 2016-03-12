@@ -1,7 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties. To change this
- * template file, choose Tools | Templates and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import com.sun.messaging.jmq.io.Status;
@@ -10,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -49,10 +44,6 @@ import se.webapp.instaflickr.model.persistence.UserRegistry;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Henry
- */
 @Path("media")
 public class MediaResource {
 
@@ -92,7 +83,6 @@ public class MediaResource {
 
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String date = year + "-" + TextMonth + "-" + day;
-
 
         JsonObject pictureData = Json.createObjectBuilder()
                 .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
@@ -378,7 +368,7 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(null,relativePath.toString(), null);
+        Picture picture = new Picture(null, relativePath.toString(), null);
         pc.create(picture);
         user.setProfilePicture(picture);
         ur.update(user);
@@ -506,7 +496,7 @@ public class MediaResource {
                     .add("type", "image")
                     .add("time", p.getUploaded().getTimeInMillis())
                     .add("uploader", p.getOwner().getUsername()));
-            
+
             p.getOwner();
         }
 
@@ -565,7 +555,5 @@ public class MediaResource {
         }
 
     }
-
-
 
 }

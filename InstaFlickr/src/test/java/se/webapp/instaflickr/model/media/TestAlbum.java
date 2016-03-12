@@ -24,14 +24,12 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  */
 @RunWith(Arquillian.class)
 public class TestAlbum extends AbstractTest {
-    
-        
 
     @Inject
     Album album;
 
     final int ONE = 1;
-    
+
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
@@ -42,29 +40,28 @@ public class TestAlbum extends AbstractTest {
         clearAll();
     }
 
-    
     @Test
-    public void test_Methods_For_followers(){
+    public void test_Methods_For_followers() {
         InstaFlickUser user = new InstaFlickUser("Frank");
         InstaFlickUser user2 = new InstaFlickUser("James");
         album = new Album("Photo On Cats <3", user);
         album.addFollower(user);
         album.addFollower(user2);
-        assertTrue( album.removeFollower(user) );        
-        assertTrue( album.nrOfFollowers() == ONE);
+        assertTrue(album.removeFollower(user));
+        assertTrue(album.nrOfFollowers() == ONE);
     }
-    
+
     @Test
-    public void test_Metods_For_Pictures(){
+    public void test_Metods_For_Pictures() {
         InstaFlickUser user = new InstaFlickUser("James");
         InstaFlickUser user2 = new InstaFlickUser("Frank");
         album = new Album("Photo On Dogs <3", user);
-        Picture pic = new Picture(user );
-        Picture pic2 = new Picture(user2 );
+        Picture pic = new Picture(user);
+        Picture pic2 = new Picture(user2);
         album.addPicture(pic);
         album.addPicture(pic2);
-        assertTrue(album.removePicture(pic) );
+        assertTrue(album.removePicture(pic));
         assertTrue(album.nrOfPictures() == ONE);
     }
-    
+
 }

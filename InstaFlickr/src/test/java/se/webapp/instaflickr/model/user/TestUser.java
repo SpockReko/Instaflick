@@ -27,7 +27,6 @@ import se.webapp.instaflickr.model.persistence.AbstractTest;
 @RunWith(Arquillian.class)
 public class TestUser extends AbstractTest {
 
-    
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
@@ -37,15 +36,14 @@ public class TestUser extends AbstractTest {
     public void preparePersistenceTest() throws Exception {
         clearAll();
     }
-    
+
     @Test
     public void alwaysTrue() {
         assertTrue(true);
     }
-    
+
     @Inject
     InstaFlick instaFlick;
-    
 
     @Test
     public void test_SetAndGet_Username() throws Exception {
@@ -74,7 +72,7 @@ public class TestUser extends AbstractTest {
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("James");
         assertTrue(givenUser.getPassword().equals(newUser.getPassword()));
     }
-    
+
     @Test
     public void test_SetAndGet_ProfilePicture() throws Exception {
         InstaFlickUser newUser = createUser("James");
@@ -91,9 +89,10 @@ public class TestUser extends AbstractTest {
         newUser.addPicture(pic);
         List<Picture> picList = newUser.getPictures();
         boolean test = false;
-        for(int i=0 ; i < picList.size() ; i++ ){
-            if(picList.get(i).equals(pic))
+        for (int i = 0; i < picList.size(); i++) {
+            if (picList.get(i).equals(pic)) {
                 test = true;
+            }
         }
         assertTrue(test);
     }
