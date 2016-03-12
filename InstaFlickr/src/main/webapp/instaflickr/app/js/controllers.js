@@ -355,3 +355,4 @@ function sortMedia(media, $scope) {
     $scope.data = $scope.getOrderedData();
 }
 
+

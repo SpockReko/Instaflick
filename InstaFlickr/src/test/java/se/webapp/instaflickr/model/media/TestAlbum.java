@@ -10,13 +10,11 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
 import org.jboss.arquillian.junit.Arquillian;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
 import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
@@ -28,17 +26,7 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @RunWith(Arquillian.class)
 public class TestAlbum extends AbstractTest {
     
-    @Inject
-    InstaFlickUser user;
-
-    @Inject
-    InstaFlickUser user2;
-
-    @Inject
-    Picture pic;
-
-    @Inject
-    Picture pic2;
+        
 
     @Inject
     Album album;
@@ -58,8 +46,8 @@ public class TestAlbum extends AbstractTest {
     
     @Test
     public void test_Methods_For_followers(){
-        user = new InstaFlickUser("Frank");
-        user2 = new InstaFlickUser("James");
+        InstaFlickUser user = new InstaFlickUser("Frank");
+        InstaFlickUser user2 = new InstaFlickUser("James");
         album = new Album("Photo On Cats <3", user);
         album.addFollower(user);
         album.addFollower(user2);
@@ -69,10 +57,11 @@ public class TestAlbum extends AbstractTest {
     
     @Test
     public void test_Metods_For_Pictures(){
-        user = new InstaFlickUser("James");
+        InstaFlickUser user = new InstaFlickUser("James");
+        InstaFlickUser user2 = new InstaFlickUser("Frank");
         album = new Album("Photo On Dogs <3", user);
-        pic = new Picture(user, new Likes() );
-        pic2 = new Picture(user2, new Likes() );
+        Picture pic = new Picture(user, new Likes() );
+        Picture pic2 = new Picture(user2, new Likes() );
         album.addPicture(pic);
         album.addPicture(pic2);
         assertTrue(album.removePicture(pic) );
