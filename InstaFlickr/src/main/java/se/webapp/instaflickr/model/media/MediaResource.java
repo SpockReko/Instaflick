@@ -1,10 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package se.webapp.instaflickr.model.media;
 
+import com.sun.messaging.jmq.io.Status;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -42,10 +43,12 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import se.webapp.instaflickr.model.AlbumCatalogue;
 import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.LikesHandler;
 import se.webapp.instaflickr.model.PictureCatalogue;
 import se.webapp.instaflickr.model.SessionHandler;
 import se.webapp.instaflickr.model.UserRegistry;
 import se.webapp.instaflickr.model.UserResource;
+import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -73,11 +76,36 @@ public class MediaResource {
     @Path("picture")
     public Response getPicture(
             @QueryParam("pictureId") Long pictureId) {
+
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture picture = pc.find(pictureId);
+        Long likeId = picture.getLikesId();
+
+        Calendar calendar = picture.getUploaded();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        String TextMonth;
+
+        if (month < 10) {
+            TextMonth = "0" + month;
+        } else {
+            TextMonth = "" + month;
+        }
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String date = year + "-" + TextMonth + "-" + day;
+
+        int nrOfLikes = instaFlick.getLikesHandler().nrOfLike(likeId);
+        String nr = "" + nrOfLikes;
+
         JsonObject pictureData = Json.createObjectBuilder()
                 .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
+                .add("date", date)
+                .add("likes", nr)
+                .add("description", picture.getDescription())
                 .build();
+
         return Response.ok(pictureData).build();
     }
 
@@ -111,8 +139,7 @@ public class MediaResource {
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Album a : albums) {
-            builder.add(Json.createObjectBuilder()
-                    .add("albumName", a.getName()));
+            builder.add(Json.createObjectBuilder().add("albumName", a.getName()));
         }
 
         return Response.ok(builder.build()).build();
@@ -134,8 +161,8 @@ public class MediaResource {
 
         for (Picture p : album.getPictures()) {
             builder.add(Json.createObjectBuilder()
-                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
-                    .add("id", p.getId()));
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg").add("id", p.getId()));
+
         }
 
         return Response.ok(builder.build()).build();
@@ -151,7 +178,8 @@ public class MediaResource {
         List<Picture> pictures = user.getPictures();
         List<Album> albums = user.getAlbums();
 
-        List<List<Picture>> albumPictures = listAlbumPictures(albums); // Turns the albums into a list of their pictures
+        List<List<Picture>> albumPictures = listAlbumPictures(albums); // Turns the albums into a list
+        // of their pictures
 
         pictures = removeDuplicates(pictures, albumPictures); // Removing pictures that exists in albums
 
@@ -160,6 +188,7 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
+    //********* GETALLMEDIA
     @GET
     @Path("media")
     @Produces({MediaType.APPLICATION_JSON})
@@ -171,17 +200,19 @@ public class MediaResource {
         List<Picture> allPictures = pc.findAll();
         List<Album> allAlbums = ac.findAll();
 
-        List<List<Picture>> albumPictures = listAlbumPictures(allAlbums); // Turns the albums into a list of their pictures
+        List<List<Picture>> albumPictures = listAlbumPictures(allAlbums); // Turns the albums into a
+        // list of their pictures
 
         allPictures = removeProfilePictures(allPictures); // Removing profile pictures
 
-        allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in albums
-
+        allPictures = removeDuplicates(allPictures, albumPictures); // Removing pictures that exists in
+        // 
         JsonArrayBuilder builder = createPictureArray(allPictures, albumPictures, allAlbums);
 
         return Response.ok(builder.build()).build();
     }
 
+    // ************ GETFEED                                                          
     @GET
     @Path("feed")
     public Response getFeed(@QueryParam(value = "username") String username) {
@@ -199,7 +230,7 @@ public class MediaResource {
         // Remove pictures that user has created
         List<Picture> filteredPictures = new ArrayList();
         for (Picture p : allPictures) {
-            if (p.getUploader() != null && !p.getUploader().getUsername().equals(user.getUsername())) {
+            if (p.getOwner() != null && !p.getOwner().getUsername().equals(user.getUsername())) {
                 filteredPictures.add(p);
             }
         }
@@ -222,6 +253,7 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
+    // GETPROFILEPICTURE
     @GET
     @Path("profile-image")
     @Produces({MediaType.APPLICATION_JSON})
@@ -244,6 +276,7 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
+    // UPLOADIMAGE
     @POST
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadImage(
@@ -271,7 +304,7 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(user, relativePath.toString(), description);
+        Picture picture = new Picture(user, createLikes(), relativePath.toString(), description);
         pc.create(picture);
         user.addPicture(picture);
         ur.update(user);
@@ -328,8 +361,7 @@ public class MediaResource {
     @POST
     @Path("profile-image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response uploadProfileImage(
-            @FormDataParam("file") InputStream fileInputStream,
+    public Response uploadProfileImage(@FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
         LOG.warning("Uploading profile picture");
 
@@ -352,7 +384,7 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(null, relativePath.toString());
+        Picture picture = new Picture(null, createLikes(), relativePath.toString(), null);
         pc.create(picture);
         user.setProfilePicture(picture);
         ur.update(user);
@@ -372,10 +404,7 @@ public class MediaResource {
             out.close();
 
             // Generate thumbnail
-            Thumbnails.of(file)
-                    .crop(Positions.CENTER)
-                    .size(200, 200)
-                    .outputFormat("jpg")
+            Thumbnails.of(file).size(200, 200).outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "profile"));
 
         } catch (IOException e) {
@@ -385,13 +414,14 @@ public class MediaResource {
         return Response.ok(relativePath + "/" + "profile.jpg").build();
 
     }
+    // Helper functions
 
-    //Helper functions
     public java.nio.file.Path generateRelativePath() {
         java.nio.file.Path contextPath, localPath, relativePath;
 
         contextPath = Paths.get(context.getRealPath("/"));
-        localPath = Paths.get(contextPath.getParent().getParent().toString(), "src/main/webapp/instaflickr/app/media");
+        localPath = Paths.get(contextPath.getParent().getParent().toString(),
+                "src/main/webapp/instaflickr/app/media");
         relativePath = contextPath.getParent().getParent().relativize(localPath);
         relativePath = relativePath.subpath(5, relativePath.getNameCount());
 
@@ -402,7 +432,8 @@ public class MediaResource {
         java.nio.file.Path contextPath, localPath, relativePath;
 
         contextPath = Paths.get(context.getRealPath("/"));
-        localPath = Paths.get(contextPath.getParent().getParent().toString(), "src/main/webapp/instaflickr/app/media");
+        localPath = Paths.get(contextPath.getParent().getParent().toString(),
+                "src/main/webapp/instaflickr/app/media");
         relativePath = contextPath.getParent().getParent().relativize(localPath);
         relativePath = relativePath.subpath(5, relativePath.getNameCount());
 
@@ -413,7 +444,8 @@ public class MediaResource {
         java.nio.file.Path contextPath, localPath;
 
         contextPath = Paths.get(context.getRealPath("/"));
-        localPath = Paths.get(contextPath.getParent().getParent().toString(), "src/main/webapp/instaflickr/app/media");
+        localPath = Paths.get(contextPath.getParent().getParent().toString(),
+                "src/main/webapp/instaflickr/app/media");
 
         return Paths.get(localPath.toString(), userId);
     }
@@ -439,7 +471,8 @@ public class MediaResource {
     }
 
     // Creates a list with the picutres that does not exist in albumPictures.
-    public List<Picture> removeDuplicates(List<Picture> allPictures, List<List<Picture>> albumPictures) {
+    public List<Picture> removeDuplicates(List<Picture> allPictures,
+            List<List<Picture>> albumPictures) {
         List<Picture> pictures = new ArrayList<>();
         for (Picture p : allPictures) {
             Boolean duplicate = false;
@@ -462,7 +495,7 @@ public class MediaResource {
     public List<Picture> removeProfilePictures(List<Picture> pictures) {
         List<Picture> result = new ArrayList<>();
         for (Picture p : pictures) {
-            if (p.getUploader() != null) {
+            if (p.getOwner() != null) {
                 result.add(p);
             }
         }
@@ -478,7 +511,9 @@ public class MediaResource {
                     .add("id", p.getId())
                     .add("type", "image")
                     .add("time", p.getUploaded().getTimeInMillis())
-                    .add("uploader", p.getUploader().getUsername()));
+                    .add("uploader", p.getOwner().getUsername()));
+            
+            p.getOwner();
         }
 
         int index = 0;
@@ -505,4 +540,90 @@ public class MediaResource {
         }
         return builder;
     }
+
+    @POST
+    @Path("comment")
+    public Response postComment(@QueryParam("picture") long pictureId,
+            @QueryParam("comment") String comment) {
+        InstaFlickUser usr = instaFlick.getUserRegistry().find(sessionHandler.getSessionID());
+        if (usr == null) {
+            return Response.notModified("Could not find user!").build();
+        }
+        Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
+        if (pic == null) {
+            return Response.notModified("Could not find picture!").build();
+        }
+
+        pic.postComment(usr, comment);
+        return Response.accepted().build();
+
+    }
+
+    @GET
+    @Path("comments")
+    public Response getComments(@QueryParam("picture") long pictureId) {
+
+        Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
+        if (pic == null) {
+            return Response.status(Status.UNAVAILABLE).build();
+        } else {
+            return Response.ok(pic.getComments()).build();
+        }
+
+    }
+
+    @GET
+    @Path("updateLike")
+    public Response updateLikes(@QueryParam(value = "username") String username,
+            @QueryParam(value = "pictureId") Long pictureId) {
+
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture picture = pc.find(pictureId);
+        Long likesId = picture.getLikesId();
+        LikesHandler likesHandler = instaFlick.getLikesHandler();
+        Likes likesObject = likesHandler.find(likesId);
+        List<String> list = likesObject.getUserList();
+
+        Boolean userIsThere = updateLikes(list, username, likesObject);
+
+        if (userIsThere) {
+            boolean test = likesObject.removeLike(username);
+
+        } else {
+            boolean test = likesObject.addLike(username);
+
+        }
+
+        likesHandler.update(likesObject);
+
+        String nr = "" + likesObject.nrOfLikes();
+
+        JsonObject updatedLikes = Json.createObjectBuilder()
+                .add("likes", nr)
+                .build();
+
+        return Response.ok(updatedLikes).build();
+    }
+
+    // Help Methods
+    private boolean updateLikes(List<String> list, String username, Likes likesObject) {
+
+        boolean userIsThere = false;
+        int index;
+        for (index = 0; index < list.size(); index++) {
+            String newUser = list.get(index);
+            if (newUser.equals(username)) {
+                userIsThere = true;
+            }
+        }
+
+        return userIsThere;
+    }
+
+    private Likes createLikes() {
+        Likes likes = new Likes();
+        instaFlick.getLikesHandler().create(likes);
+        return likes;
+    }
+
 }

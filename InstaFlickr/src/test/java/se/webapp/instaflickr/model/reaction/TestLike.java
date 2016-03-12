@@ -57,8 +57,10 @@ public class TestLike extends AbstractTest {
     public void test_Add_and_nrOfLikes_Like() throws Exception{
         user = new InstaFlickUser("Frank");
         user2 = new InstaFlickUser("James");
-        likes.addLike(user);
-        likes.addLike(user2);
+        String name = user.getUsername();
+        String name2 = user2.getUsername();
+        likes.addLike(name);
+        likes.addLike(name2);
         int number_Of_Likes = likes.nrOfLikes();
         int two = 2;
         assertTrue(number_Of_Likes == two);
@@ -68,11 +70,15 @@ public class TestLike extends AbstractTest {
     public void test_Remove_Like() throws Exception{
         user = new InstaFlickUser("Frank");
         user2 = new InstaFlickUser("James");
+        String name = user.getUsername();
+        String name2 = user2.getUsername();
         likes = new Likes();
-        likes.addLike(user);
-        likes.addLike(user2);
-        likes.removeLike(user);
-        assertTrue(likes.nrOfLikes() == 1 && likes.userList.contains(user2));
+        likes.addLike(name);
+        likes.addLike(name2);
+        likes.removeLike(name);
+        assertTrue(likes.nrOfLikes() == 1 && 
+                likes.userList.contains(name2) &&
+                !likes.userList.contains(name));
     }
     
 }
