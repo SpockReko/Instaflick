@@ -67,7 +67,7 @@ public class TestUser extends AbstractTest {
     public void test_Update_User() throws Exception {
         InstaFlickUser newUser = createUser("james.email@domain.se");
         instaFlick.getUserRegistry().create(newUser);
-        newUser.setUsername("the jamester");
+        newUser.setEmail("the jamester");
         instaFlick.getUserRegistry().update(newUser);
         InstaFlickUser givenUser = instaFlick.getUserRegistry().find("james.email@domain.se");
         assertTrue(givenUser.getUsername().equals(newUser.getUsername()));

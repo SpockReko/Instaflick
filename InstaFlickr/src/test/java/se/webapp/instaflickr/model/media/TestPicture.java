@@ -68,7 +68,7 @@ public class TestPicture extends AbstractTest {
         for (int i = 0; i < pic.getComments().size(); i++) {
             Comment index = pic.getComments().get(i);
             if(index.getCommentText().equals(text) 
-                    && index.getUser().getEmail().equals(email)){
+                    && index.getUser().getUsername().equals(email)){
                 test = true;
             }
         }
