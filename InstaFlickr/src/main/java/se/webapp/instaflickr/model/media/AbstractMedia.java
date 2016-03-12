@@ -69,13 +69,14 @@ public abstract class AbstractMedia {
         return false;
     }
 
-    public boolean likeIt(InstaFlickUser user) {
+    public boolean likeIt(String user) {
         likes.addLike(user);
         getEntityManager().merge(likes);
         return true;
     }
 
-    public boolean unLikeIt(InstaFlickUser user) {
+    
+    public boolean unLikeIt(String user) {
         likes.removeLike(user);
         getEntityManager().merge(likes);
         return true;

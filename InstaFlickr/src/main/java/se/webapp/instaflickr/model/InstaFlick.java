@@ -36,7 +36,7 @@ public class InstaFlick {
         
     @EJB
     private LikesHandler likesHandler;
-    
+
     public LikesHandler getLikesHandler() {
         return likesHandler;
     }

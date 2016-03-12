@@ -3,12 +3,14 @@ package se.webapp.instaflickr.model.user;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
+import se.webapp.instaflickr.model.UserResource;
 import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.media.Picture;
 
@@ -56,10 +58,20 @@ public class InstaFlickUser implements Serializable {
     @OneToMany
     private List<Album> albums;    
     
+      private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
+
+    // Används ej.
     public InstaFlickUser() {
         this.username = "User " + (++staticId).toString();
         this.pictures = new LinkedList<Picture>();
-        this.albums = new LinkedList<Album>();
+        this.albums = new LinkedList<>();
+        LOG.warning("*******************************************************");
+        LOG.warning("DO NOT USE THIS CONSTRUCTOR! InstaFlickUser(),");
+        LOG.warning("Use InstaFlickUser(InstaflickUser, Likes) or ");
+        LOG.warning("Use InstaFlickUser(InstaflickUser, Likes, String) or ");
+        LOG.warning("InstaFlickUser(String, String, Picture)");
+        LOG.warning("*******************************************************");
+
     }
     
     public InstaFlickUser(String username){

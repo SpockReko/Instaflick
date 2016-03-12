@@ -43,10 +43,6 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
             }
         };
     }]);
-
-
-
-
 // Feed controller
 instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy', '$stateParams', 'UserRegistryProxy',
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
@@ -80,7 +76,8 @@ instaFlickControllers.controller('LoginCtrl',
                     console.log("User trying to login LoginCtrl: " + $scope.user.username + " " + $scope.user.password);
                     UserRegistryProxy.login($scope.user.username, $scope.user.password)
                             .success(function () {
-                                console.log("Success!");
+
+                                console.log("Success with login!");
                                 $scope.signedIn = true;
                                 $window.location.reload();
                             }).error(function (data, status) {
@@ -104,7 +101,8 @@ instaFlickControllers.controller('RegisterCtrl',
                     console.log("Saving user in RegisterCtrl: " + $scope.user.username + " " + $scope.user.password + " " + $scope.user.repeatPassword);
                     UserRegistryProxy.create($scope.user.username, $scope.user.password, $scope.user.repeatPassword)
                             .success(function () {
-                                console.log("Success!");
+
+                                console.log("Success with create!");
                                 $scope.signedIn = true;
                                 $location.path('/setupProfile');
                             }).error(function (data, status) {
@@ -132,9 +130,10 @@ instaFlickControllers.controller('SetupProfileCtrl',
                     console.log("Setting up user profile in RegisterCtrl: " + $scope.user.email + " " + $scope.user.fname + " " + $scope.user.lname + " " + $scope.user.description);
                     UserRegistryProxy.setupProfle($scope.user.email, $scope.user.fname, $scope.user.lname, $scope.user.description)
                             .success(function () {
-                                console.log("Success!");
+                                console.log("Success with setupProfle!");
                                 $location.path('/');
                                 //$window.location.reload();
+
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);
                     });
@@ -186,28 +185,28 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         }
     }
 ]);
-instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy',
-    function ($scope, $stateParams, MediaProxy) {
+instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy', 'UserRegistryProxy',
+    function ($scope, $stateParams, MediaProxy, UserRegistryProxy) {
 
         MediaProxy.getImage($stateParams.id).success(function (data) {
-            console.log("Success!");
-            console.log(data);
+            console.log("Success with getImage!");
             $scope.image = data;
+            $scope.id = $stateParams.id;
         });
-
-    }]);
-
-
-
-
-var testPictureData = {
-    "_id": 1,
-    "path": "http://lorempixel.com/600/300/fashion/",
-    "likes": 18,
-    "description": "This is a cool fashion image!",
-    "date": "2016-03-09"
-};
-
+        $scope.updateLikes = function () {
+            UserRegistryProxy.getSession().success(function (data) {
+                console.log("Användaren heter: " + data['username']);
+                MediaProxy.updateLike(data['username'], $scope.id)
+                        .success(function (data) {
+                            console.log("Success with updateLikes in MediaProx!");
+                            $scope.image.likes = data['likes'];
+                        }).error(function (data, status) {
+                    console.log("Error in updateLikes in MediaProx");
+                });
+            });
+        };
+    }
+]);
 instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
     function ($scope, PictureProxy) {
         $scope.image = testPictureData;
@@ -221,14 +220,12 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
                         console.log("Could not get comments! " + error);
                     });
         };
-
         $scope.postComment = function () {
             PictureProxy.addComment($scope.image._id, $scope.formData.comment);
         };
-
         updateComments();
-        
     }]);
+
 
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
@@ -243,8 +240,6 @@ instaFlickControllers.controller('UploadCtrl',
                         .error(function (data, error) {
                             console.log("Error in getAlbum in UploadCtrl status: " + status);
                         });
-
-
                 $scope.returnPath = function () {
                     $scope.imagePath = "media/image1.png";
                 };
@@ -281,6 +276,7 @@ instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaP
         $scope.albumName = $stateParams.albumname;
         $scope.owner = $stateParams.username;
         MediaProxy.getAlbumPictures($stateParams.username, $stateParams.albumname).success(function (data) {
+            console.log("Success with getAlbumPictures!");
             $scope.album = data;
         });
     }
@@ -328,7 +324,7 @@ function getProfile(username, UserRegistryProxy, MediaProxy, $scope) {
     MediaProxy.getProfileImages(username)
             .success(function (data) {
                 console.log(data);
-                console.log("Success!");
+                console.log("Success with getProfile!");
                 console.log("Get profile images sorted");
                 sortMedia(data, $scope);
             });
@@ -338,7 +334,7 @@ function getUserProfile(username, UserRegistryProxy, $scope) {
     console.log("Get user profile: " + username);
     UserRegistryProxy.getUserProfile(username).success(function (data) {
         console.log(data);
-        console.log("Success! user profile");
+        console.log("Success with getUserProfile");
         $scope.profileData = data;
     });
 }
@@ -347,7 +343,7 @@ function getProfileImages(userName, MediaProxy, $scope) {
     console.log("Get profile images: " + userName);
     MediaProxy.getProfileImages(userName).success(function (data) {
         console.log(data);
-        console.log("Success!");
+        console.log("Success with getProfileImage");
         $scope.data = data;
     });
 }
@@ -355,7 +351,7 @@ function getProfilePicture(userName, MediaProxy, $scope) {
     console.log("Get profile picture: " + userName);
     MediaProxy.getProfilePicture(userName).success(function (data) {
         console.log(data);
-        console.log("Success!");
+        console.log("Success with getProfilePicture");
         $scope.profilePicture = data['image'];
     });
 }
@@ -373,4 +369,4 @@ function sortMedia(media, $scope) {
     };
     $scope.data = $scope.getOrderedData();
 }
-    
+

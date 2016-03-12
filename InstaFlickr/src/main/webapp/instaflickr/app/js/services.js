@@ -16,7 +16,6 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("create in UserRegistryProxy: " + username
                         + " " + password + " " + repeatPassword);
 
-
                 var data = $.param({
                     username: username,
                     password: password,
@@ -28,7 +27,6 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                 console.log("Setting up profile in UserRegistryProxy: "
                         + email + " " + fname + " " + lname + " " + description);
                 return $http.get(url + "/setup?" + "email=" + email
-
 
                         + "&fname=" + fname
                         + "&lname=" + lname
@@ -45,7 +43,6 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
             },
             getSession: function () {
                 console.log("Getting session in UserRegistryProxy");
-
 
                 return $http.get(url + "/session");
             },
@@ -100,10 +97,18 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName);
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
             },
+
+            updateLike: function (username, pictureId) {
+                console.log("Update picture in MediaProxy from User: " + username);
+                return $http.get(url + "/updateLike?username=" + username + "&pictureId=" + pictureId);
+            },
             getAllMedia: function () {
                 console.log("Getting all media in MediaProxy")
                 return $http.get(url + "/media");
+
             }
+
+
         };
     }
 ]);
