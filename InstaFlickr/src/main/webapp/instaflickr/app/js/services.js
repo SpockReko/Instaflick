@@ -31,6 +31,13 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                         + "&description=" + description);
 
             },
+            updateProfile: function (email, fname, lname, description) {
+                console.log("Updating profile");
+                return $http.get(url + "/update?" + "email=" + email
+                        + "&fname=" + fname
+                        + "&lname=" + lname
+                        + "&description=" + description);
+            },
             login: function (username, password) {
                 console.log("login UserRegistryProxy: " + username + " " + password);
                 return $http.get(url + "?username=" + username + "&password=" + password);
