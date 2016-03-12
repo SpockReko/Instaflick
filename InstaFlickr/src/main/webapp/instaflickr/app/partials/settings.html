@@ -1,2 +1,54 @@
-Settings
-This is where we show the settings of ones profile.
+<div id="profile-settings">
+    <center>
+        <h2>Change profile settings</h2>
+    </center>
+    <br>
+    <form class="form-horizontal">
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">Email</label>
+            <div class="col-xs-10">
+                <input class="form-control" 
+                       pattern="[^ @]*@[^ @]*" placeholder="{{profileData.email}}" 
+                       autofocus type="email" ng-model="change.email">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">First name</label>
+            <div class="col-xs-10">
+                <input class="form-control" placeholder="{{profileData.fname}}" 
+                       autofocus type="text" ng-model="change.fname">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">Last name</label>
+            <div class="col-xs-10">
+                <input class="form-control" placeholder="{{profileData.lname}}" 
+                       autofocus type="text" ng-model="change.lname">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">Description</label>
+            <div class="col-xs-10">
+                <input class="form-control" placeholder="{{profileData.description}}" 
+                       type="text" ng-model="change.description">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">Profile picture</label>
+            <div class="col-xs-10">
+                <input id="inputPPicture" class="form-control" type="file" ngf-select
+                       ng-model="profilePicture" name="profilePicture" accept="image/*" ngf-max-size="2MB">
+            </div>
+        </div>
+
+        <div class="btn-group col-xs-10 col-xs-push-2" role="group">
+            <button class="btn btn-primary" type="submit" ng-click="updateProfile(profilePicture)">Apply changes</button>
+            <button class="btn btn-default" type="button" ng-click="window.history.back()">Cancel</button> 
+        </div>
+    </form>
+</div>

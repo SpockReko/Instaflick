@@ -43,6 +43,9 @@ public class Picture extends AbstractMedia implements Serializable {
     private String imagePath;
     @Getter
     @Setter
+    private String description;
+    @Getter
+    @Setter
     private List<Comment> comments;
     @Getter
     @Setter
@@ -50,16 +53,11 @@ public class Picture extends AbstractMedia implements Serializable {
     private Calendar uploaded;
     @Getter
     @Setter
-    @OneToOne
-    private InstaFlickUser uploader;
-    @Getter
-    @Setter
     private Likes likes;
-    
+
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     // Används ej.
-
     public Picture() {
         LOG.warning("*******************************************************");
         LOG.warning("DO NOT USE THIS CONSTRUCTOR! Picture(),");
@@ -70,25 +68,29 @@ public class Picture extends AbstractMedia implements Serializable {
 
     public Picture(InstaFlickUser owner, Likes likes) {
         this.owner = owner;
+        this.imagePath = null;
         this.likes = likes;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
-
-
+        this.description = "";
     }
 
-    public Picture(InstaFlickUser owner, Likes likes, String path) {
+    public Picture(InstaFlickUser owner, Likes likes, String path, String description) {
         this.owner = owner;
-        this.likes = likes;
         this.imagePath = path;
+        this.likes = likes;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<Comment>();
 
+        if (description == null) {
+            this.description = "";
+        } else {
+            this.description = description;
+        }
     }
 
-    
     //Skickar LikesID. Kortar koden för den som kallar på denna.
-    public long getLikesId(){
+    public long getLikesId() {
         return likes.getId();
     }
 
@@ -102,6 +104,5 @@ public class Picture extends AbstractMedia implements Serializable {
         Comment newComment = new Comment(user, comment, new Likes());
         comments.add(newComment);
     }
-
 
 }

@@ -33,6 +33,13 @@ userRegistryService.factory('UserRegistryProxy', ['$http',
                         + "&description=" + description);
 
             },
+            updateProfile: function (email, fname, lname, description) {
+                console.log("Updating profile");
+                return $http.get(url + "/update?" + "email=" + email
+                        + "&fname=" + fname
+                        + "&lname=" + lname
+                        + "&description=" + description);
+            },
             login: function (username, password) {
                 console.log("login UserRegistryProxy: " + username + " " + password);
                 return $http.get(url + "?username=" + username + "&password=" + password);
@@ -74,8 +81,6 @@ mediaService.factory('MediaProxy', ['$http',
             },
             getProfileImages: function (username) {
                 console.log("getProfileImages in MediaProxy");
-
-
                 return $http.get(url + "?username=" + username);
             },
             getAlbums: function () {
@@ -97,7 +102,6 @@ mediaService.factory('MediaProxy', ['$http',
                 console.log("Adding picture to album in MediaProxy: " + pictureID + " " + albumName);
                 return $http.get(url + "?albumName=" + albumName + "&pictureID=" + pictureID);
             },
-
             updateLike: function (username, pictureId) {
                 console.log("Update picture in MediaProxy from User: " + username);
                 return $http.get(url + "/updateLike?username=" + username + "&pictureId=" + pictureId);
@@ -105,10 +109,11 @@ mediaService.factory('MediaProxy', ['$http',
             getAllMedia: function () {
                 console.log("Getting all media in MediaProxy")
                 return $http.get(url + "/media");
-
+            },
+            getFeed: function (username) {
+                console.log("Getting feed for " + username)
+                return $http.get(url + "/feed?username=" + username);
             }
-
-
         };
     }
 ]);
@@ -129,8 +134,8 @@ mediaService.factory('PictureProxy', ['$http',
                 console.log("getComments in Pictureproxy");
                 var data = $.param({picture: picture});
                 return $http.get(url + "/comments?" + data);
-
             }
+
         };
     }
 ]);

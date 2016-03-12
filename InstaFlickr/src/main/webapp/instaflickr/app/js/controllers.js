@@ -48,10 +48,11 @@ instaFlickControllers.controller('FeedCtrl', ['$scope', '$location', 'MediaProxy
     function ($scope, $location, MediaProxy, $stateParams, UserRegistryProxy) {
 
         UserRegistryProxy.getSession()
-                .success(function () {
-                    MediaProxy.getAllMedia()
+                .success(function (json) {
+                    MediaProxy.getFeed(json['username'])
                             .success(function (data) {
                                 console.log("Got all media " + data);
+                                console.log(data);
                                 sortMedia(data, $scope);
                             })
                             .error(function (data, status) {
@@ -186,6 +187,70 @@ instaFlickControllers.controller('ProfileCtrl', ['$scope', '$location', 'MediaPr
         }
     }
 ]);
+
+instaFlickControllers.controller('SettingsCtrl', ['$scope', '$location', '$timeout', 'UserRegistryProxy', 'Upload',
+    function ($scope, $location, $timeout, UserRegistryProxy, Upload) {
+
+        UserRegistryProxy.getSession()
+                .success(function (json) {
+                    console.log("Session retrieved in ProfileCtrl: " + json['username']);
+                    getUserProfile(json['username'], UserRegistryProxy, $scope);
+                })
+                .error(function (data, status) {
+                    if (status === 406) {
+                        $location.path('/login');
+                    } else {
+                        console.log("Error in checking session in ProfileCtrl: " + status);
+                    }
+                });
+
+        $scope.updateProfile = function (image) {
+            console.log("Updating profile");
+
+            if (!$scope.change) {
+                console.log("No user info changes");
+            } else {
+                if (!$scope.change.email) {
+                    $scope.change.email = $scope.profileData.email;
+                }
+                if (!$scope.change.fname) {
+                    $scope.change.fname = $scope.profileData.fname;
+                }
+                if (!$scope.change.lname) {
+                    $scope.change.lname = $scope.profileData.lname;
+                }
+                if (!$scope.change.description) {
+                    $scope.change.description = $scope.profileData.description;
+                }
+
+                UserRegistryProxy.updateProfile($scope.change.email, $scope.change.fname,
+                        $scope.change.lname, $scope.change.description);
+            }
+
+            if (!image) {
+                console.log("No profile picture changes");
+            } else {
+                image.upload = Upload.upload({
+                    url: 'http://localhost:8080/InstaFlickr/webresources/media/profile-image',
+                    data: {file: image}
+                });
+                image.upload.then(function (response) {
+                    $timeout(function () {
+                        image.result = response.data;
+                        console.log(response.data);
+                        //$scope.upImg = response.data;
+                    });
+                }, function (response) {
+                    if (response.status > 0)
+                        $scope.errorMsg = "Server Error! (" + response.data + ")";
+                }, function (evt) {
+                    // Math.min is to fix IE which reports 200% sometimes
+                    image.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                });
+            }
+        }
+    }]);
+
 instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProxy', 'UserRegistryProxy',
     function ($scope, $stateParams, MediaProxy, UserRegistryProxy) {
 
@@ -225,9 +290,7 @@ instaFlickControllers.controller('UploadCtrl',
                         .error(function (data, error) {
                             console.log("Error in getAlbum in UploadCtrl status: " + status);
                         });
-                $scope.returnPath = function () {
-                    $scope.imagePath = "media/image1.png";
-                };
+
                 $scope.createAlbum = function () {
                     $scope.msg = "";
                     console.log("Creating album: " + $scope.album.name);
@@ -244,6 +307,7 @@ instaFlickControllers.controller('UploadCtrl',
                                 }
                             });
                 };
+
                 $scope.uploadPic = function (file) {
                     console.log("uploadPic() called");
                     console.log(file);
@@ -251,10 +315,11 @@ instaFlickControllers.controller('UploadCtrl',
                     if ($scope.selectedAlbum !== undefined) {
                         albumName = $scope.selectedAlbum;
                     }
-                    uploadPicture($scope, $timeout, Upload, file, albumName);
+                    uploadPicture($scope, $timeout, Upload, file, albumName, $scope.inputDescription);
                 };
             }
         ]);
+
 instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaProxy',
     function ($scope, $stateParams, MediaProxy) {
         console.log("AlbumCtrl");
@@ -282,10 +347,10 @@ function getSession($location, UserRegistryProxy) {
             });
 }
 
-function uploadPicture($scope, $timeout, Upload, image, albumName) {
+function uploadPicture($scope, $timeout, Upload, image, albumName, description) {
     image.upload = Upload.upload({
         url: 'http://localhost:8080/InstaFlickr/webresources/media',
-        data: {file: image, albumName: albumName}
+        data: {file: image, albumName: albumName, description: description}
     });
     image.upload.then(function (response) {
         $timeout(function () {
@@ -301,6 +366,7 @@ function uploadPicture($scope, $timeout, Upload, image, albumName) {
         image.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
     });
 }
+
 
 function getProfile(username, UserRegistryProxy, MediaProxy, $scope) {
     console.log("Getting profile: " + username);
@@ -354,5 +420,3 @@ function sortMedia(media, $scope) {
     };
     $scope.data = $scope.getOrderedData();
 }
-
-
