@@ -11,6 +11,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import org.jboss.arquillian.junit.Arquillian;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -91,7 +92,7 @@ public class TestPicture extends AbstractTest {
     public void test_Get_Uploader_Of_Picture() throws Exception{
         user = new InstaFlickUser("James", "1");
         pic = new Picture(user, new Likes());
-        InstaFlickUser givenUser = pic.getOwner();
+        InstaFlickUser givenUser = pic.getUploader();
         assertTrue(givenUser.equals(user));
     }
    

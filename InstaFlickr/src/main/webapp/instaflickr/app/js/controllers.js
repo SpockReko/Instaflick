@@ -198,36 +198,6 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
     }]);
 
 
-
-
-var testPictureData = {
-    "_id": 1,
-    "path": "http://lorempixel.com/600/300/fashion/",
-    "likes": 18,
-    "description": "This is a cool fashion image!",
-    "date": "2016-03-09"
-};
-
-instaFlickControllers.controller('PictureCtrl', ['$scope', 'PictureProxy',
-    function ($scope, PictureProxy) {
-        $scope.image = testPictureData;
-
-        $scope.updateComments = function () {
-            PictureProxy.getComments($scope.image._id)
-                    .success(function (data) {
-                        console.log("Got comments! " + data);
-                        $scope.comments = data;
-                    }).
-                    error(function (error) {
-                        console.log("Could not get comments! " + error);
-                    });
-        };
-
-        $scope.postComment = function () {
-            PictureProxy.addComment($scope.image._id, $scope.formData.comment);
-        };
-    }]);
-
 instaFlickControllers.controller('UploadCtrl',
         ['$scope', '$location', '$timeout', 'Upload', 'MediaProxy', 'UserRegistryProxy', '$state',
             function ($scope, $location, $timeout, Upload, MediaProxy, UserRegistryProxy, $state) {

@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-
+    
     <hr>
 
     <div class="row comment-row-input">
@@ -34,8 +34,12 @@
             </div>
             <div class="col-xs-3">
                 <button type="submit" class="btn btn-primary" ng-click="postComment()">Comment</button>
+
             </div>
-        </form>
+        </div>
+        <div class="col-xs-3">
+            <button type="submit" class="btn btn-primary">Comment</button>
+        </div>
     </div>
 
     <div id="comment-list" class="row comment-row" ng-repeat="comment in comments">
@@ -47,5 +51,3 @@
             <p><small><em>{{comment.date}}</em> <span class="glyphicon glyphicon-heart"></span> {{comment.likes}} likes</small></p>
         </div>
     </div>
-
-</div>

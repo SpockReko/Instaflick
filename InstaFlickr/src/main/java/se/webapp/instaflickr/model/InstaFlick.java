@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
+import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
  *
@@ -46,12 +47,5 @@ public class InstaFlick {
     
     public AlbumCatalogue getAlbumCatalogue() {
         return albumCatalogue;
-    }
-    
-    @EJB
-    private MediaHandler mediaHandler;
-    
-    public MediaHandler getMediaHandler(){
-        return mediaHandler;
     }
 }

@@ -1,17 +1,17 @@
 <form name="ProfileSetup" class="form-signin col-xs-offset-3 col-xs-6">
     <div class="form-group">
         <h2 class="form-signin-heading">Set up your<br> InstaFlickr profile</h2>
-             
+
         <br>
 
         <div>{{user.msg}}</div><input hidden type="text" ng-model="user.msg">
-        
+
         <label for="inputEmail" class="sr-only">Email</label>
         <input id="inputEmail" class="form-control input-lg" 
                pattern="[^ @]*@[^ @]*" placeholder="Email" 
                required autofocus type="email" ng-model="user.email">
-        
-        
+
+
         <label for="inputFname" class="sr-only">First name</label>
         <input id="inputFname" class="form-control" placeholder="First name" 
                required autofocus type="text" ng-model="user.fname">
@@ -19,13 +19,13 @@
         <label for="inputLname" class="sr-only">Last name</label>
         <input id="inputLname" class="form-control" placeholder="Last name" 
                required type="text" ng-model="user.lname">
-        
+
         <br>
-        
+
         <label for="inputDescription" class="sr-only">Description</label>
         <input id="inputDescription" class="form-control" placeholder="Description" 
                type="text" ng-model="user.description">
-        
+
         <br>
 
         <div class="form-group">
@@ -34,10 +34,10 @@
         </div>
 
     </div>
+
     <div class="btn-group" role="group">
         <button class="btn btn-primary" type="submit" ng-disabled="!ProfileSetup.$valid" ng-click="setupProfile(profilePicture)">Register</button>
         <button class="btn btn-default" type="button" ng-click="goBack()">Cancel</button> 
-
 
     </div>
 </form>
