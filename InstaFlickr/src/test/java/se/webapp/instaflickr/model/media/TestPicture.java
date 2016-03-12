@@ -16,10 +16,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlick;
+import se.webapp.instaflickr.model.persistence.InstaFlick;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
-import se.webapp.instaflickr.model.reaction.Comment;
-import se.webapp.instaflickr.model.reaction.Likes;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -28,10 +26,10 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  */
 @RunWith(Arquillian.class)
 public class TestPicture extends AbstractTest {
-    
+
     @Inject
     InstaFlick instaFlick;
-    
+
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
@@ -42,33 +40,31 @@ public class TestPicture extends AbstractTest {
         clearAll();
     }
 
-        
     @Inject
     InstaFlickUser user;
-    
-    
+
     @Test
-    public void test_SetandGet_ImagePath_Of_Picture() throws Exception{
+    public void test_SetandGet_ImagePath_Of_Picture() throws Exception {
         String ImagePath = "some Path";
         user = createUser("James");
-        Picture pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user);
         pic.setImagePath(ImagePath);
         String givenPath = pic.getImagePath();
         assertTrue(givenPath.equals(ImagePath));
     }
-    
+
     @Test
-    public void test_Post_Comments_On_Picture() throws Exception{
+    public void test_Post_Comments_On_Picture() throws Exception {
         String email = "James";
         user = createUser(email);
-        Picture pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user);
         String text = "added comment";
-        pic.postComment(user, text);
+        pic.comment(user, text);
         boolean test = false;
         for (int i = 0; i < pic.getComments().size(); i++) {
             Comment index = pic.getComments().get(i);
-            if(index.getCommentText().equals(text) 
-                    && index.getUser().getUsername().equals(email)){
+            if (index.getCommentText().equals(text)
+                    && index.getUser().getUsername().equals(email)) {
                 test = true;
             }
         }
@@ -76,21 +72,21 @@ public class TestPicture extends AbstractTest {
     }
 
     @Test
-    public void test_SetandGet_Uploaded_Picture() throws Exception{
+    public void test_SetandGet_Uploaded_Picture() throws Exception {
         user = new InstaFlickUser("James");
-        Picture pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user);
         Calendar nowCal = Calendar.getInstance();
-        nowCal.set(Calendar.YEAR,Calendar.MONTH,Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
+        nowCal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         Calendar cal = pic.getUploaded();
         assertTrue(cal.compareTo(nowCal) <= 0);
     }
 
     @Test
-    public void test_Get_Uploader_Of_Picture() throws Exception{
+    public void test_Get_Uploader_Of_Picture() throws Exception {
         user = new InstaFlickUser("James", "1");
-        Picture pic = new Picture(user, new Likes());
+        Picture pic = new Picture(user);
         InstaFlickUser givenUser = pic.getOwner();
         assertTrue(givenUser.equals(user));
     }
-   
+
 }

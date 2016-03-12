@@ -1,7 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties. To change this
- * template file, choose Tools | Templates and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import com.sun.messaging.jmq.io.Status;
@@ -10,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -41,20 +36,14 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import se.webapp.instaflickr.model.AlbumCatalogue;
-import se.webapp.instaflickr.model.InstaFlick;
-import se.webapp.instaflickr.model.LikesHandler;
-import se.webapp.instaflickr.model.PictureCatalogue;
-import se.webapp.instaflickr.model.SessionHandler;
-import se.webapp.instaflickr.model.UserRegistry;
-import se.webapp.instaflickr.model.UserResource;
-import se.webapp.instaflickr.model.reaction.Likes;
+import se.webapp.instaflickr.model.persistence.AlbumCatalogue;
+import se.webapp.instaflickr.model.persistence.InstaFlick;
+import se.webapp.instaflickr.model.persistence.PictureCatalogue;
+import se.webapp.instaflickr.model.persistence.SessionHandler;
+import se.webapp.instaflickr.model.persistence.UserRegistry;
+import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Henry
- */
 @Path("media")
 public class MediaResource {
 
@@ -79,7 +68,6 @@ public class MediaResource {
 
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture picture = pc.find(pictureId);
-        Long likeId = picture.getLikesId();
 
         Calendar calendar = picture.getUploaded();
 
@@ -96,13 +84,9 @@ public class MediaResource {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String date = year + "-" + TextMonth + "-" + day;
 
-        int nrOfLikes = instaFlick.getLikesHandler().nrOfLike(likeId);
-        String nr = "" + nrOfLikes;
-
         JsonObject pictureData = Json.createObjectBuilder()
                 .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
                 .add("date", date)
-                .add("likes", nr)
                 .add("description", picture.getDescription())
                 .build();
 
@@ -304,7 +288,7 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(user, createLikes(), relativePath.toString(), description);
+        Picture picture = new Picture(user, relativePath.toString(), description);
         pc.create(picture);
         user.addPicture(picture);
         ur.update(user);
@@ -384,7 +368,7 @@ public class MediaResource {
         InstaFlickUser user = ur.find(username);
         LOG.warning("Got user: " + user.getUsername());
         // Add new picture to the database
-        Picture picture = new Picture(null, createLikes(), relativePath.toString(), null);
+        Picture picture = new Picture(null, relativePath.toString(), null);
         pc.create(picture);
         user.setProfilePicture(picture);
         ur.update(user);
@@ -512,7 +496,7 @@ public class MediaResource {
                     .add("type", "image")
                     .add("time", p.getUploaded().getTimeInMillis())
                     .add("uploader", p.getOwner().getUsername()));
-            
+
             p.getOwner();
         }
 
@@ -545,16 +529,26 @@ public class MediaResource {
     @Path("comment")
     public Response postComment(@QueryParam("picture") long pictureId,
             @QueryParam("comment") String comment) {
+        LOG.log(Level.INFO, "postComment");
         InstaFlickUser usr = instaFlick.getUserRegistry().find(sessionHandler.getSessionID());
         if (usr == null) {
+            LOG.log(Level.SEVERE, "Could not find user " + sessionHandler.getSessionID());
             return Response.notModified("Could not find user!").build();
         }
-        Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
+        LOG.log(Level.INFO, "Found user " + usr.getUsername());
+        PictureCatalogue pc = instaFlick.getPictureCatalogue();
+        Picture pic = pc.findPictureById(pictureId);
+        LOG.log(Level.INFO, "Found user " + usr.getUsername());
         if (pic == null) {
+            LOG.log(Level.SEVERE, "Could not find picture " + pictureId);
             return Response.notModified("Could not find picture!").build();
         }
+        LOG.log(Level.INFO, "Found picture " + pic.getImagePath());
 
-        pic.postComment(usr, comment);
+        pic = pic.comment(usr, comment);
+        pc.update(pic);
+        LOG.log(Level.INFO, "Added comment \"" + comment + "\" by user " + usr.getUsername());
+
         return Response.accepted().build();
 
     }
@@ -570,60 +564,6 @@ public class MediaResource {
             return Response.ok(pic.getComments()).build();
         }
 
-    }
-
-    @GET
-    @Path("updateLike")
-    public Response updateLikes(@QueryParam(value = "username") String username,
-            @QueryParam(value = "pictureId") Long pictureId) {
-
-        PictureCatalogue pc = instaFlick.getPictureCatalogue();
-        Picture picture = pc.find(pictureId);
-        Long likesId = picture.getLikesId();
-        LikesHandler likesHandler = instaFlick.getLikesHandler();
-        Likes likesObject = likesHandler.find(likesId);
-        List<String> list = likesObject.getUserList();
-
-        Boolean userIsThere = updateLikes(list, username, likesObject);
-
-        if (userIsThere) {
-            boolean test = likesObject.removeLike(username);
-
-        } else {
-            boolean test = likesObject.addLike(username);
-
-        }
-
-        likesHandler.update(likesObject);
-
-        String nr = "" + likesObject.nrOfLikes();
-
-        JsonObject updatedLikes = Json.createObjectBuilder()
-                .add("likes", nr)
-                .build();
-
-        return Response.ok(updatedLikes).build();
-    }
-
-    // Help Methods
-    private boolean updateLikes(List<String> list, String username, Likes likesObject) {
-
-        boolean userIsThere = false;
-        int index;
-        for (index = 0; index < list.size(); index++) {
-            String newUser = list.get(index);
-            if (newUser.equals(username)) {
-                userIsThere = true;
-            }
-        }
-
-        return userIsThere;
-    }
-
-    private Likes createLikes() {
-        Likes likes = new Likes();
-        instaFlick.getLikesHandler().create(likes);
-        return likes;
     }
 
 }

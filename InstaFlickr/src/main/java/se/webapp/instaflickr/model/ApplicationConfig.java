@@ -1,15 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model;
 
-// TODO Add FormContentDisposition 
-/**
- *
- * @author Pontus
- */
 import java.util.Set;
 import javax.ws.rs.core.Application;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -32,8 +22,8 @@ public class ApplicationConfig extends Application {
      * out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(se.webapp.instaflickr.model.UserResource.class);
         resources.add(se.webapp.instaflickr.model.media.MediaResource.class);
+        resources.add(se.webapp.instaflickr.model.user.UserResource.class);
     }
 
 }

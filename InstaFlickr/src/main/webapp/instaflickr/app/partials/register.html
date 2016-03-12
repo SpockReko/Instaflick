@@ -1,27 +1,27 @@
 <form name="register" class="form-signin col-xs-offset-3 col-xs-6">
     <div class="form-group">
         <h2 class="form-signin-heading">Registration</h2>
-        
+
         <div>{{msg}}</div>
-        
+
         <label for="inputUsername" class="sr-only">Username</label>
-        <input id="inputUsername" class="form-control" placeholder="Username" 
+        <input id="inputUsername" class="form-control round-bottom" placeholder="Username" 
                required autofocus type="text" ng-model="user.username">
 
         <label for="inputPassword" class="sr-only">Password</label>
-        <input id="inputPassword" class="form-control" placeholder="Password" 
+        <input id="inputPassword" class="form-control round-bottom round-top" placeholder="Password" 
                required type="password" ng-model="user.password">
 
         <label for="repeatPassword" class="sr-only">Repeat Password</label>
-        <input id="repeatPassword" class="form-control" placeholder="Repeat Password" 
+        <input id="repeatPassword" class="form-control round-top" placeholder="Repeat Password" 
                required type="password" ng-model="user.repeatPassword">
 
     </div>
-       
+
     <div class="btn-group" role="group">
-        
+
         <button class="btn btn-primary" ng-disabled="!register.$valid" type="submit" ng-click="save()">Register</button>
-        <button class="btn btn-default" ng-click="goBack()">Cancel</button> 
-        
+        <button class="btn btn-default btn-warning" ng-click="goBack()">Cancel</button> 
+
     </div>
 </form>

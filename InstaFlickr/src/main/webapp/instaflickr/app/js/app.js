@@ -48,10 +48,6 @@ instaflickr.config(function ($stateProvider, $urlRouterProvider) {
                 templateUrl: 'partials/settings.html',
                 controller: 'SettingsCtrl'
             })
-            .state('about', {
-                url: '/about',
-                templateUrl: 'partials/about.html'
-            })
             .state('upload', {
                 url: '/upload',
                 templateUrl: 'partials/upload.html',

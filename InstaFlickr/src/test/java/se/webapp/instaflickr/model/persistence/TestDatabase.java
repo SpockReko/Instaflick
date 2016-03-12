@@ -4,7 +4,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package se.webapp.instaflickr.model.persistence;
 
 import java.util.List;
@@ -26,18 +25,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
-import se.webapp.instaflickr.model.UserRegistry;
 
 /**
  * Testing the persistence layer
  *
  * @author Pontus
  */
-
 @RunWith(Arquillian.class)
-public class TestDatabase extends AbstractTest{
+public class TestDatabase extends AbstractTest {
 
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
@@ -54,12 +50,11 @@ public class TestDatabase extends AbstractTest{
     public void alwaysTrue() {
         assertTrue(true);
     }
-    
+
     @Inject
     InstaFlick instaFlick;
-  
-    // ######## AbstractADO method tests InstaFlickUser #################################
 
+    // ######## AbstractADO method tests InstaFlickUser #################################
     @Test
     public void test_Persist_A_User() throws Exception {
         InstaFlickUser u = createUser("James");
@@ -67,7 +62,7 @@ public class TestDatabase extends AbstractTest{
         List<InstaFlickUser> users = instaFlick.getUserRegistry().findAll();
         assertTrue(users.size() > 0);
     }
-    
+
     @Test
     public void testDeleteUser() throws Exception {
         InstaFlickUser newUser = createUser("James");
@@ -77,7 +72,7 @@ public class TestDatabase extends AbstractTest{
         assertTrue(givenUser == null);
     }
 
-    @Test 
+    @Test
     public void testUpdate_User() throws Exception {
         InstaFlickUser newUser = createUser("James");
         UserRegistry reg = instaFlick.getUserRegistry();
@@ -86,11 +81,10 @@ public class TestDatabase extends AbstractTest{
         newUser.setPassword("weak_password");
         reg.update(newUser);
         InstaFlickUser givenUser = reg.find("James");
-        assertTrue( givenUser.getPassword().equals(newUser.getPassword() ) );
+        assertTrue(givenUser.getPassword().equals(newUser.getPassword()));
     }
 
-    
-    @Test 
+    @Test
     public void test_Find_Range_Of_Users() throws Exception {
         InstaFlickUser newUser = createUser("James");
         InstaFlickUser newUser2 = createUser("John");
@@ -104,9 +98,8 @@ public class TestDatabase extends AbstractTest{
         List<InstaFlickUser> range = reg.findRange(1, 2);
         System.out.println("range: " + range.toString());
     }
-    
-    
-    @Test 
+
+    @Test
     public void test_Count_Users() throws Exception {
         InstaFlickUser newUser = createUser("James");
         InstaFlickUser newUser2 = createUser("John");

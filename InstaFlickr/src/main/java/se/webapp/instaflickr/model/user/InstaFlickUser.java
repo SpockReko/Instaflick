@@ -10,22 +10,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.UserResource;
 import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.media.Picture;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 @Entity
 public class InstaFlickUser implements Serializable {
-    
+
     static Long staticId = 0L;
-    
+
     @Id
     @Getter
     @Setter
@@ -38,13 +30,13 @@ public class InstaFlickUser implements Serializable {
     private String email = "";
     @Getter
     @Setter
-    private String fname;
+    private String fname = "";
     @Getter
     @Setter
-    private String lname;
+    private String lname = "";
     @Getter
     @Setter
-    private String description;
+    private String description = "";
     @Getter
     @Setter
     @OneToOne
@@ -56,9 +48,9 @@ public class InstaFlickUser implements Serializable {
     @Getter
     @Setter
     @OneToMany
-    private List<Album> albums;    
-    
-      private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
+    private List<Album> albums;
+
+    private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     // Används ej.
     public InstaFlickUser() {
@@ -73,33 +65,33 @@ public class InstaFlickUser implements Serializable {
         LOG.warning("*******************************************************");
 
     }
-    
-    public InstaFlickUser(String username){
+
+    public InstaFlickUser(String username) {
         this.username = username;
         this.pictures = new LinkedList<Picture>();
         this.albums = new LinkedList<Album>();
     }
-    
-    public InstaFlickUser(String username, String password){
+
+    public InstaFlickUser(String username, String password) {
         this.username = username;
         this.password = password;
         this.pictures = new LinkedList<Picture>();
         this.albums = new LinkedList<Album>();
-   }
-    
-    public InstaFlickUser(String username, String password, Picture picture){
+    }
+
+    public InstaFlickUser(String username, String password, Picture picture) {
         this.username = username;
         this.password = password;
         this.profilePicture = picture;
         this.pictures = new LinkedList<Picture>();
         this.albums = new LinkedList<Album>();
     }
-    
-    public void addPicture(Picture pic){
+
+    public void addPicture(Picture pic) {
         pictures.add(pic);
     }
-    
-    public void addAlbum(Album album){
+
+    public void addAlbum(Album album) {
         albums.add(album);
     }
 }

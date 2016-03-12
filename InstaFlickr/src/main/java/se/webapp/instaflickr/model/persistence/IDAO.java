@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.persistence;
 
 import java.util.List;
 
 /**
- * Basic CRUD interface implemented by all DAO (Facade)
- * classes 
+ * Basic CRUD interface implemented by all DAO (Facade) classes
  *
  * @author Pontus
  * @param <T> Type
@@ -27,7 +21,7 @@ public interface IDAO<T, K> {
 
     public List<T> findAll();
 
-    public List<T> findRange(int first, int n );
+    public List<T> findRange(int first, int n);
 
     public int count();
 }

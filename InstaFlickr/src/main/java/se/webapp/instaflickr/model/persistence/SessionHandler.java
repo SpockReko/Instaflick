@@ -1,20 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package se.webapp.instaflickr.model;
+package se.webapp.instaflickr.model.persistence;
 
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 
-/**
- *
- * @author Pontus
- */
 @SessionScoped
 public class SessionHandler implements Serializable {
-    
+
     private Boolean session = false;
     private String sessionID;
 

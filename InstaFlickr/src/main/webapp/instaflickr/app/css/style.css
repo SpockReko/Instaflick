@@ -101,11 +101,20 @@ body {
     z-index: 2;
 }
 .form-email input[type="email"] {
-    margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
 .form-signin input[type="password"] {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.round-bottom{
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}.round-top{
+    margin-top: -1px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
 }

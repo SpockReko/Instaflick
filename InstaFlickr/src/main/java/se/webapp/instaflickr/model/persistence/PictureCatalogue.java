@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package se.webapp.instaflickr.model;
+package se.webapp.instaflickr.model.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import se.webapp.instaflickr.model.media.Picture;
-import se.webapp.instaflickr.model.persistence.AbstractDAO;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Pontus
- */
 @Stateless
 public class PictureCatalogue extends AbstractDAO<Picture, Long> {
 

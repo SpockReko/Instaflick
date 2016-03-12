@@ -16,7 +16,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import se.webapp.instaflickr.model.InstaFlick;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
 /**
@@ -24,8 +23,7 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  * @author Spock
  */
 public class AbstractTest {
-   
-   
+
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
@@ -38,7 +36,7 @@ public class AbstractTest {
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
-    
+
     @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
     @Produces
     @Default
@@ -46,12 +44,11 @@ public class AbstractTest {
 
     @Inject
     UserTransaction utx;
-    
+
     // ######## Private help functions ##########################
-    
     // Order matters
-    public void clearAll() throws Exception {  
-        utx.begin();  
+    public void clearAll() throws Exception {
+        utx.begin();
         em.joinTransaction();
         em.createQuery("delete from Likes").executeUpdate();
         em.createQuery("delete from Comment").executeUpdate();
@@ -59,8 +56,8 @@ public class AbstractTest {
         em.createQuery("delete from InstaFlickUser").executeUpdate();
         utx.commit();
     }
-    
-    public InstaFlickUser createUser(String name){
+
+    public InstaFlickUser createUser(String name) {
         return new InstaFlickUser(name);
     }
 }

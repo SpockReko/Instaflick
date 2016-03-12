@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
@@ -10,34 +5,31 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.Getter;
 import lombok.Setter;
-import se.webapp.instaflickr.model.UserResource;
-import se.webapp.instaflickr.model.reaction.Comment;
-import se.webapp.instaflickr.model.reaction.Likes;
+import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
-/**
- *
- * @author Pontus
- */
 @Entity
-public class Picture extends AbstractMedia implements Serializable {
+public class Picture implements Serializable {
 
     @PersistenceContext
     static EntityManager em;
 
+    @Id
+    @Getter
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Getter
     @Setter
     private String imagePath;
@@ -46,6 +38,7 @@ public class Picture extends AbstractMedia implements Serializable {
     private String description;
     @Getter
     @Setter
+    @OneToMany
     private List<Comment> comments;
     @Getter
     @Setter
@@ -53,7 +46,8 @@ public class Picture extends AbstractMedia implements Serializable {
     private Calendar uploaded;
     @Getter
     @Setter
-    private Likes likes;
+    @OneToOne
+    InstaFlickUser owner;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
@@ -66,21 +60,19 @@ public class Picture extends AbstractMedia implements Serializable {
         LOG.warning("*******************************************************");
     } // Används ej.
 
-    public Picture(InstaFlickUser owner, Likes likes) {
+    public Picture(InstaFlickUser owner) {
         this.owner = owner;
         this.imagePath = null;
-        this.likes = likes;
         this.uploaded = Calendar.getInstance();
-        this.comments = new LinkedList<Comment>();
+        this.comments = new LinkedList<>();
         this.description = "";
     }
 
-    public Picture(InstaFlickUser owner, Likes likes, String path, String description) {
+    public Picture(InstaFlickUser owner, String path, String description) {
         this.owner = owner;
         this.imagePath = path;
-        this.likes = likes;
         this.uploaded = Calendar.getInstance();
-        this.comments = new LinkedList<Comment>();
+        this.comments = new LinkedList<>();
 
         if (description == null) {
             this.description = "";
@@ -89,20 +81,9 @@ public class Picture extends AbstractMedia implements Serializable {
         }
     }
 
-    //Skickar LikesID. Kortar koden för den som kallar på denna.
-    public long getLikesId() {
-        return likes.getId();
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-    }
-
-    public void postComment(InstaFlickUser user, String comment) {
-        Comment newComment = new Comment(user, comment, new Likes());
-        comments.add(newComment);
+    public Picture comment(InstaFlickUser usr, String comment) {
+        this.comments.add(new Comment(usr, comment));
+        return this;
     }
 
 }
