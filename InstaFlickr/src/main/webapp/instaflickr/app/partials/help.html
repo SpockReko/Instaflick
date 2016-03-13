@@ -2,10 +2,11 @@
     <h1>Help</h1>
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <button id="regbtn" ng-click="reg()" class="btn btn-default col-xs-3 round-right">How do I register?</button>
-            <button id="logbtn" ng-click="log()" class="btn btn-default col-xs-3 round-right round-left">How do I log in/out?</button>
+            <button id="regbtn" ng-click="reg()" class="btn btn-default col-xs-2 round-right">How do I register?</button>
+            <button id="regbtn" ng-click="set()" class="btn btn-default col-xs-3 round-right round-left">How do I change profile settings?</button>
+            <button id="logbtn" ng-click="log()" class="btn btn-default col-xs-2 round-right round-left">How do I log in/out?</button>
             <button id="picbtn" ng-click="pic()" class="btn btn-default col-xs-3 round-left round-right">How do I upload pictures?</button>
-            <button id="albbtn" ng-click="alb()" class="btn btn-default col-xs-3 round-left">How do I make albums?</button>
+            <button id="albbtn" ng-click="alb()" class="btn btn-default col-xs-2 round-left">How do I make albums?</button>
         </div>
         <div class="panel-body">
             <div class="col-xs-12 hideme" id="help-reg" >
@@ -17,7 +18,16 @@
                 </ol>    
                 Congratulations, you now have a profile!
             </div>
-
+            <div class="col-xs-12 hideme" id="help-set" >
+                <h3>Edit profile</h3>
+                <ol>
+                    <li>First, you need to be signed in</li>
+                    <li>Press "More" at the top right of the page to open a drop down menu</li> 
+                    <li>Press "Settings" to enter a profile settings page</li>
+                    <li>Edit the info you want changed and press "Apply changes"</li>
+                </ol>    
+                Congratulations, you have changed your profile settings!
+            </div>
             <div class="col-xs-12 hideme" id="help-log" >
                 <h3>Logging in</h3>
                 <ol>

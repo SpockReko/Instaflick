@@ -369,6 +369,9 @@ instaFlickControllers.controller('HelpCtrl', ['$scope',
         $scope.reg = function () {
             showme("help-reg");
         };
+        $scope.set = function () {
+            showme("help-set");
+        };
         $scope.log = function () {
             showme("help-log");
         };
