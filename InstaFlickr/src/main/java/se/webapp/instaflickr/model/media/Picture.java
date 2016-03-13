@@ -36,7 +36,6 @@ public class Picture implements Serializable {
     @Getter
     @Setter
     private String description;
-    @Getter
     @Setter
     @OneToMany
     private List<Comment> comments;
@@ -48,6 +47,9 @@ public class Picture implements Serializable {
     @Setter
     @OneToOne
     InstaFlickUser owner;
+    @Getter
+    @Setter
+    Likes likes;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
@@ -60,16 +62,18 @@ public class Picture implements Serializable {
         LOG.warning("*******************************************************");
     } // Används ej.
 
-    public Picture(InstaFlickUser owner) {
+    public Picture(InstaFlickUser owner, Likes likes) {
         this.owner = owner;
         this.imagePath = null;
+        this.likes = likes;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<>();
         this.description = "";
     }
 
-    public Picture(InstaFlickUser owner, String path, String description) {
+    public Picture(InstaFlickUser owner, Likes likes,String path, String description) {
         this.owner = owner;
+        this.likes = likes;
         this.imagePath = path;
         this.uploaded = Calendar.getInstance();
         this.comments = new LinkedList<>();
@@ -86,4 +90,11 @@ public class Picture implements Serializable {
         return this;
     }
 
+    public List<Comment> getComment(){
+        return comments;
+    }
+    //Skickar LikesID. Kortar koden för den som kallar på denna.
+    public long getLikesId() {
+        return likes.getId();
+    }
 }

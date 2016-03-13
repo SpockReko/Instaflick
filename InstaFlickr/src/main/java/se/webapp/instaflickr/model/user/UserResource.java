@@ -7,6 +7,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
@@ -102,7 +103,14 @@ public class UserResource {
             @QueryParam(value = "repeatPassword") String repeatPassword) {
         LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password, repeatPassword});
         LOG.warning("Creating new user " + username + " " + password + " " + repeatPassword);
-        InstaFlickUser exists = instaFlick.getUserRegistry().find(username);
+        InstaFlickUser exists;
+        try{
+            exists = instaFlick.getUserRegistry().find(username);
+        }catch(EJBException e){
+            LOG.warning("EJBException: " + e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        
         if (exists != null) {
             return Response.status(Response.Status.CONFLICT).build();
         }

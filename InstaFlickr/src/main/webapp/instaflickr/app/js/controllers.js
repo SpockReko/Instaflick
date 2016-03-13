@@ -260,7 +260,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             console.log(data);
             $scope.image = data;
             $scope.id = $stateParams.id;
-            console.log($scope);
+            $scope.updateComments();
         });
 
         UserRegistryProxy.getSession()
