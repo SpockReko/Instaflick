@@ -20,31 +20,33 @@
     <hr>
 
     <div class="row comment-row-input">
-        <div class="col-xs-3">
-            <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
+        <div class="col-xs-2">
+            <img class="img-responsive img-circle center-block" id="comment-user-avatar" src="{{profilePicture}}">
         </div>
-        <form>
-            <div class="form-group">
-                <div class="col-xs-6">
-                    <textarea class="form-control picture-comment-input" rows="2" placeholder="Say something nice!" ng-model="formData.comment"></textarea>
+            <form>
+                <div class="form-group">
+                    <div class="col-xs-7">
+                        <textarea class="form-control picture-comment-input" rows="3" placeholder="Say something nice!" ng-model="formData.comment"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xs-3">
-                <button type="submit" class="btn btn-primary" ng-click="postComment()">Comment</button>
+                <div class="col-xs-3">
+                    <button type="submit" class="btn btn-primary" ng-click="postComment()">Comment</button>
 
-            </div>
+                </div>
+            </form>
     </div>
-    <div class="col-xs-3">
+<!--    <div class="col-xs-3">
         <button type="submit" class="btn btn-primary">Comment</button>
     </div>
+-->
 </div>
 
 <div id="comment-list" class="row comment-row" ng-repeat="comment in comments">
     <div class="col-xs-3">
-        <img class="img-responsive img-circle center-block" id="comment-avatar" src="http://lorempixel.com/200/200/people/">
+        <img class="img-responsive img-circle center-block" id="comment-avatar" src="{{comment.userProfilePicture}}">
     </div>
     <div class="col-xs-6 comment">
-        <p class="comment-text">{{comment.text}}</p>
-        <p><small><em>{{comment.date}}</em> <span class="glyphicon glyphicon-heart"></span> {{comment.likes}} likes</small></p>
+        <p class="comment-text">{{comment.comment}}</p>
+        <p><small><em>{{comment.user}} {{comment.date}}</em></small></p>
     </div>
 </div>

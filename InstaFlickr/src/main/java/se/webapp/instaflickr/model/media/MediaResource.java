@@ -71,18 +71,7 @@ public class MediaResource {
 
         Calendar calendar = picture.getUploaded();
 
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        String TextMonth;
-
-        if (month < 10) {
-            TextMonth = "0" + month;
-        } else {
-            TextMonth = "" + month;
-        }
-
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String date = year + "-" + TextMonth + "-" + day;
+        String date = formatDate(calendar);
 
         JsonObject pictureData = Json.createObjectBuilder()
                 .add("path", picture.getImagePath() + "/" + picture.getId() + "/big.jpg")
@@ -146,7 +135,6 @@ public class MediaResource {
         for (Picture p : album.getPictures()) {
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg").add("id", p.getId()));
-
         }
 
         return Response.ok(builder.build()).build();
@@ -538,7 +526,6 @@ public class MediaResource {
         LOG.log(Level.INFO, "Found user " + usr.getUsername());
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture pic = pc.findPictureById(pictureId);
-        LOG.log(Level.INFO, "Found user " + usr.getUsername());
         if (pic == null) {
             LOG.log(Level.SEVERE, "Could not find picture " + pictureId);
             return Response.notModified("Could not find picture!").build();
@@ -550,20 +537,46 @@ public class MediaResource {
         LOG.log(Level.INFO, "Added comment \"" + comment + "\" by user " + usr.getUsername());
 
         return Response.accepted().build();
-
     }
 
     @GET
     @Path("comments")
     public Response getComments(@QueryParam("picture") long pictureId) {
+        LOG.log(Level.INFO, "Getting comments for picture " + pictureId);
 
         Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
+        LOG.log(Level.INFO, "Found picture " + pic.getImagePath());
         if (pic == null) {
             return Response.status(Status.UNAVAILABLE).build();
-        } else {
-            return Response.ok(pic.getComments()).build();
         }
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Comment c : pic.getComments()) {
+            String date = formatDate(c.getCreated());
+
+            builder.add(Json.createObjectBuilder()
+                    .add("comment", c.commentText)
+                    .add("user", c.getUser().getUsername())
+                    .add("date", date)
+                    .add("userProfilePicture", c.getUser().getProfilePicture().getImagePath() + "/profile.jpg"));
+        }
+
+        return Response.ok(builder.build()).build();
 
     }
 
+    public String formatDate(Calendar calendar) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        String TextMonth;
+
+        if (month < 10) {
+            TextMonth = "0" + month;
+        } else {
+            TextMonth = "" + month;
+        }
+
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return year + "-" + TextMonth + "-" + day;
+    }
 }

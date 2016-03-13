@@ -115,12 +115,12 @@ mediaService.factory('MediaProxy', ['$http',
                 return $http.get(url + "/feed?username=" + username);
             },
             addComment: function (picture, acomment) {
-                console.log("addComment in PictureProxy");
+                console.log("addComment in PictureProxy: " + picture + " " + acomment);
                 var data = $.param({comment: acomment, picture: picture});
                 return $http.post(url + "/comment?" + data);
             },
             getComments: function (picture) {
-                console.log("getComments in Pictureproxy");
+                console.log("getComments in Pictureproxy for picture: " + picture);
                 var data = $.param({picture: picture});
                 return $http.get(url + "/comments?" + data);
             }

@@ -23,6 +23,7 @@ instaFlickControllers.controller('IndexCtrl', ['$scope', '$location', 'UserRegis
                 .error(function (data, status) {
                     console.log("Error in isLoggedIn IndexCtrl status: " + status);
                 });
+
         $scope.signInOut = function () {
             if ($scope.signedIn === " Sign In") {
                 console.log("Sign in");
@@ -261,6 +262,14 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             $scope.id = $stateParams.id;
             console.log($scope);
         });
+
+        UserRegistryProxy.getSession()
+                .success(function (json) {
+                    getProfilePicture(json['username'], MediaProxy, $scope)
+                });
+
+        getPictureComments($stateParams.id, MediaProxy, $scope);
+
         $scope.updateLikes = function () {
             UserRegistryProxy.getSession().success(function (data) {
                 console.log("Användaren heter: " + data['username']);
@@ -274,21 +283,15 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             });
         };
 
-        $scope.updateComments = function () {
-            MediaProxy.getComments($stateParams.id)
-                    .success(function (data) {
-                        console.log("Got comments! " + data);
-                        $scope.comments = data;
-                    }).
-                    error(function (error) {
-                        console.log("Could not get comments! " + error);
+        $scope.postComment = function () {
+            console.log("Posting a comment in PictureCtrl, picID: " + $stateParams.id + " comment: " + $scope.formData.comment);
+            MediaProxy.addComment($stateParams.id, $scope.formData.comment)
+                    .success(function () {
+                        console.log("Comment is successfully posted!");
+                        getPictureComments($stateParams.id, MediaProxy, $scope);
                     });
         };
-        
-        $scope.postComment = function () {
-            MediaProxy.addComment($stateParams.id, $scope.formData.comment);
-        };
-        
+
     }
 ]);
 
@@ -387,7 +390,7 @@ function getProfile(username, UserRegistryProxy, MediaProxy, $scope) {
     console.log("Getting profile: " + username);
     getUserProfile(username, UserRegistryProxy, $scope);
     getProfilePicture(username, MediaProxy, $scope);
-    MediaProxy.getProfileImages(username)
+    MediaProxy.getProfileImages(username, MediaProxy, $scope)
             .success(function (data) {
                 console.log(data);
                 console.log("Success with getProfile!");
@@ -434,4 +437,17 @@ function sortMedia(media, $scope) {
         return 0;
     };
     $scope.data = $scope.getOrderedData();
+}
+
+function getPictureComments(id, MediaProxy, $scope) {
+    console.log("Getting comments in PictureCtrl for picture! " + id);
+    MediaProxy.getComments(id)
+            .success(function (data) {
+                console.log("Got comments!");
+                console.log(data);
+                $scope.comments = data;
+            }).
+            error(function (error) {
+                console.log("Could not get comments! " + error);
+            });
 }
