@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 import se.webapp.instaflickr.model.user.UserResource;
@@ -32,8 +33,8 @@ public class Comment implements Serializable {
     String commentText;
 
     @Getter
-    @Temporal(javax.persistence.TemporalType.DATE)
-    Calendar created;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar created;
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
@@ -47,13 +48,14 @@ public class Comment implements Serializable {
 
     public Comment(String commentText) {
         this.commentText = commentText;
+        this.created = Calendar.getInstance();
     }
 
     public Comment(InstaFlickUser user, String commentText) {
 
         this.user = user;
         this.commentText = commentText;
-        this.created = getNow();
+        this.created = Calendar.getInstance();
     }
 
     // Denna metoden känns som setComment() metoden.
