@@ -3,7 +3,8 @@
 var instaflickr = angular.module('InstaFlickr', [
     'ui.router',
     'ngFileUpload',
-    'InstaFlickControllers',
+    'UserAndSettingsControllers',
+    'MediaControllers',
     'UserRegistryService',
     'MediaService'
 ]);
