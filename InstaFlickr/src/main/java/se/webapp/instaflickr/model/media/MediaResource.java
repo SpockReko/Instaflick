@@ -140,7 +140,11 @@ public class MediaResource {
 
         for (Picture p : album.getPictures()) {
             builder.add(Json.createObjectBuilder()
-                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg").add("id", p.getId()));
+                    .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
+                    .add("date", formatDate(p.getUploaded()))
+                    .add("likes", p.getLikes().nrOfLikes())
+                    .add("comments", p.getComment().size())
+                    .add("id", p.getId()));
         }
 
         return Response.ok(builder.build()).build();
@@ -494,6 +498,7 @@ public class MediaResource {
                     .add("type", "image")
                     .add("likes", nrOfLikes)
                     .add("comments", nrOfComments)
+                    .add("date", formatDate(p.getUploaded()))
                     .add("time", p.getUploaded().getTimeInMillis())
                     .add("uploader", p.getOwner().getUsername()));
 

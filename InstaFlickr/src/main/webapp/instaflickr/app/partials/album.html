@@ -9,6 +9,17 @@
             <a class="thumbnail" href="#/picture/{{picture.id}}">
                 <img class="img-responsive" src="{{picture.path}}">
             </a>
+            <div class="row picture-info">
+                <div class="col-xs-6">
+                    <p><small><em>{{picture.date}}</em></small></p>
+                </div>
+                <div class="col-xs-3">
+                    <p class="nr-of-likes"><span class="glyphicon glyphicon-comment"></span> {{picture.comments}}</p>
+                </div>
+                <div class="col-xs-3">
+                    <p class="nr-of-likes"><span class="glyphicon glyphicon-heart"></span> {{picture.likes}}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
