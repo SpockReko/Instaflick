@@ -268,18 +268,19 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
                         .success(function (data) {
                             console.log("Success with updateLikes in MediaProx!");
                             $scope.image.likes = data['likes'];
-                            updateComments();
+                            $scope.updateComments();
                         }).error(function (data, status) {
                     console.log("Error in updateLikes in MediaProx");
                 });
             });
         };
 
-        updateComments = function () {
+        $scope.updateComments = function () {
             MediaProxy.getComments($stateParams.id)
                     .success(function (data) {
                         console.log("Got comments! " + data);
                         $scope.comments = data;
+                        console.log($scope.comments)
                     }).
                     error(function (error) {
                         console.log("Could not get comments! " + error);
@@ -290,8 +291,12 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             MediaProxy.addComment($stateParams.id, $scope.formData.comment)
                     .success(function () {
                         console.log("Comment added");
-                        updateComments();
+                       $scope.updateComments();
+                    })
+                    .error(function () {
+                        console.log("Post Comment failed!");
                     });
+                    
         };
 
     }
