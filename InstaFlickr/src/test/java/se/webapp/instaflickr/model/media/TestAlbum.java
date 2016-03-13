@@ -23,28 +23,15 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  * @author Spock
  */
 @RunWith(Arquillian.class)
-public class TestAlbum extends AbstractTest {
-
-    @Inject
-    Album album;
+public class TestAlbum{
 
     final int ONE = 1;
-
-    @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
-    @Produces
-    @Default
-    EntityManager em;
-
-    @Before
-    public void preparePersistenceTest() throws Exception {
-        clearAll();
-    }
 
     @Test
     public void test_Methods_For_followers() {
         InstaFlickUser user = new InstaFlickUser("Frank");
         InstaFlickUser user2 = new InstaFlickUser("James");
-        album = new Album("Photo On Cats <3", user);
+        Album album = new Album("Photo On Cats <3", user);
         album.addFollower(user);
         album.addFollower(user2);
         assertTrue(album.removeFollower(user));
@@ -55,7 +42,7 @@ public class TestAlbum extends AbstractTest {
     public void test_Metods_For_Pictures() {
         InstaFlickUser user = new InstaFlickUser("James");
         InstaFlickUser user2 = new InstaFlickUser("Frank");
-        album = new Album("Photo On Dogs <3", user);
+        Album album = new Album("Photo On Dogs <3", user);
         Picture pic = new Picture(user, new Likes());
         Picture pic2 = new Picture(user2, new Likes());
         album.addPicture(pic);

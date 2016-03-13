@@ -26,22 +26,8 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  * @author Spock
  */
 @RunWith(Arquillian.class)
-public class TestComment extends AbstractTest {
+public class TestComment {
 
-    @Inject
-    InstaFlick instaFlick;
-
-    // Need a standalone em to remove testdata between tests
-    // No em accessible from interfaces
-    @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
-    @Produces
-    @Default
-    EntityManager em;
-
-    @Before
-    public void preparePersistenceTest() throws Exception {
-        clearAll();
-    }
 
     // Create comment instans
     @Test
@@ -68,7 +54,6 @@ public class TestComment extends AbstractTest {
         String text = "Hello World";
         Comment comment = new Comment(user, text);
         Calendar nowCal = Calendar.getInstance();
-        nowCal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         Calendar cal = comment.getCreated();
         System.out.println("CompareTo: " + cal.compareTo(nowCal));
         assertTrue(cal.compareTo(nowCal) <= 0);
@@ -76,7 +61,7 @@ public class TestComment extends AbstractTest {
 
     @Test
     public void test_EditComment() throws Exception {
-        Comment comment = new Comment(createUser("James"), "First text");
+        Comment comment = new Comment(new InstaFlickUser("James"), "First text");
         String editText = "editText";
         comment.editComment(editText);
         assertTrue(editText.equals(comment.getCommentText()));

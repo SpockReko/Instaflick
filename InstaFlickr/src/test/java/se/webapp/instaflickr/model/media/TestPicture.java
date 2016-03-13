@@ -25,28 +25,12 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
  * @author Spock
  */
 @RunWith(Arquillian.class)
-public class TestPicture extends AbstractTest {
-
-    @Inject
-    InstaFlick instaFlick;
-
-    @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
-    @Produces
-    @Default
-    EntityManager em;
-
-    @Before
-    public void preparePersistenceTest() throws Exception {
-        clearAll();
-    }
-
-    @Inject
-    InstaFlickUser user;
+public class TestPicture {
 
     @Test
     public void test_SetandGet_ImagePath_Of_Picture() throws Exception {
         String ImagePath = "some Path";
-        user = createUser("James");
+        InstaFlickUser user = new InstaFlickUser("James");
         Picture pic = new Picture(user, new Likes());
         pic.setImagePath(ImagePath);
         String givenPath = pic.getImagePath();
@@ -56,7 +40,7 @@ public class TestPicture extends AbstractTest {
     @Test
     public void test_Post_Comments_On_Picture() throws Exception {
         String email = "James";
-        user = createUser(email);
+        InstaFlickUser user = new InstaFlickUser(email);
         Picture pic = new Picture(user, new Likes());
         String text = "added comment";
         pic.comment(user, text);
@@ -73,17 +57,16 @@ public class TestPicture extends AbstractTest {
 
     @Test
     public void test_SetandGet_Uploaded_Picture() throws Exception {
-        user = new InstaFlickUser("James");
+        InstaFlickUser user = new InstaFlickUser("James");
         Picture pic = new Picture(user, new Likes());
         Calendar nowCal = Calendar.getInstance();
-        nowCal.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
         Calendar cal = pic.getUploaded();
         assertTrue(cal.compareTo(nowCal) <= 0);
     }
 
     @Test
     public void test_Get_Uploader_Of_Picture() throws Exception {
-        user = new InstaFlickUser("James", "1");
+        InstaFlickUser user = new InstaFlickUser("James", "1");
         Picture pic = new Picture(user, new Likes());
         InstaFlickUser givenUser = pic.getOwner();
         assertTrue(givenUser.equals(user));

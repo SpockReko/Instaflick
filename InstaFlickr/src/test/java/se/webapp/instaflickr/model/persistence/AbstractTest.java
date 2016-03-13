@@ -30,14 +30,12 @@ public class AbstractTest {
                 .addPackage("se.webapp.instaflickr.model")
                 .addPackage("se.webapp.instaflickr.model.media")
                 .addPackage("se.webapp.instaflickr.model.persistence")
-                .addPackage("se.webapp.instaflickr.model.reaction")
                 .addPackage("se.webapp.instaflickr.model.user")
-                .addPackage("se.webapp.instaflickr.model.view")
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
+    @PersistenceContext(unitName = "jpa_InstaBase_PU")
     @Produces
     @Default
     EntityManager em;

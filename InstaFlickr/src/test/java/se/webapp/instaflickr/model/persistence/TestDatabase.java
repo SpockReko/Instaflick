@@ -35,7 +35,7 @@ import se.webapp.instaflickr.model.user.InstaFlickUser;
 @RunWith(Arquillian.class)
 public class TestDatabase extends AbstractTest {
 
-    @PersistenceContext(unitName = "jpa_InstaBase_test_PU")
+    @PersistenceContext(unitName = "jpa_InstaBase_PU")
     @Produces
     @Default
     EntityManager em;
