@@ -3,6 +3,10 @@ package se.webapp.instaflickr.model.persistence;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 
+/**
+ * This is representing the current session the logged in used is in. For
+ * identifying the user while commenting for example.
+ */
 @SessionScoped
 public class SessionHandler implements Serializable {
 

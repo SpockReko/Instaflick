@@ -13,6 +13,13 @@ import lombok.Setter;
 import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.media.Picture;
 
+/**
+ * This is the representation of a user. The unique identifier is the username.
+ * Is has some attributes such as password, name, email, description and profile
+ * picture.
+ *
+ * It also has a list of albums and pictures.
+ */
 @Entity
 public class InstaFlickUser implements Serializable {
 

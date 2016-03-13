@@ -9,6 +9,9 @@ import javax.persistence.Query;
 import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This is what handles the pictures connection to the database.
+ */
 @Stateless
 public class PictureCatalogue extends AbstractDAO<Picture, Long> {
 

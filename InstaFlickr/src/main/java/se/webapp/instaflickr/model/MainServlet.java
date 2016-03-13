@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This is mainly just for spawning the web application and the connection to
+ * the database.
+ */
 public class MainServlet extends HttpServlet {
 
     @PersistenceContext(unitName = "jpa_InstaBase_PU")

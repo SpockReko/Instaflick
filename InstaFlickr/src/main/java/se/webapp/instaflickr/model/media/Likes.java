@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.media;
 
 import java.io.Serializable;
@@ -14,6 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+
+/**
+ * This is an encapsulation of a collection of likes. It holds the users who has
+ * liked.
+ */
 @Entity
 public class Likes implements Serializable {
 
@@ -47,7 +47,6 @@ public class Likes implements Serializable {
      * @param user the user to be added to the list
      * @return true if user is added to list, false if not
      */
-    
     // Lägger till användare till listan med hjälp av användrnamnet
     public boolean addLike(String user) {
         return userList.add(user);
@@ -59,11 +58,10 @@ public class Likes implements Serializable {
      * @param user the user to be removed
      * @return true if user was removed, false if user was not in the list
      */
-    
     // Tar bort till användare till listan med hjälp av användrnamnet
     public boolean removeLike(String user) {
         return userList.remove(user);
-        
+
     }
 
     public void setUserList(List<String> userList) {

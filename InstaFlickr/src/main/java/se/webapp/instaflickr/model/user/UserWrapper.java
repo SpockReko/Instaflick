@@ -12,6 +12,11 @@ import javax.xml.bind.annotation.XmlType;
     "email",
     "password"
 })
+
+/**
+ * Supposed to be a wrapper to send users easily via different kinds of
+ * datatypes (xml/json) Not used right now.
+ */
 public class UserWrapper {
 
     private InstaFlickUser user;

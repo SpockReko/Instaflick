@@ -5,6 +5,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This is what handles the putting of users into the database.
+ */
 @Stateless
 public class UserRegistry extends AbstractDAO<InstaFlickUser, String> {
 

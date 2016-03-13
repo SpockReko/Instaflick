@@ -9,6 +9,10 @@ import javax.persistence.Query;
 import se.webapp.instaflickr.model.media.Album;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This is the interface for albums to the database. It handles queries going to
+ * the DB.
+ */
 @Stateless
 public class AlbumCatalogue extends AbstractDAO<Album, String> {
 

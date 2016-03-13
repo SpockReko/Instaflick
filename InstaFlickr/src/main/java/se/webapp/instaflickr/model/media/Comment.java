@@ -15,6 +15,10 @@ import lombok.Setter;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This represents a Comment. The comment has a commenter/user. It has the
+ * comment text, a unique id and the time it was created.
+ */
 @Entity
 public class Comment implements Serializable {
 

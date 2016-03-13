@@ -20,6 +20,12 @@ import lombok.Setter;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This represents the Pictures uploaded to the server. A unique id for each
+ * picture for it to be easily identified. It has an owner/uploader,
+ * description, time of upload and a path where it's stored. It also has Likes
+ * and Comments.
+ */
 @Entity
 public class Picture implements Serializable {
 
@@ -71,7 +77,7 @@ public class Picture implements Serializable {
         this.description = "";
     }
 
-    public Picture(InstaFlickUser owner, Likes likes,String path, String description) {
+    public Picture(InstaFlickUser owner, Likes likes, String path, String description) {
         this.owner = owner;
         this.likes = likes;
         this.imagePath = path;
@@ -90,9 +96,10 @@ public class Picture implements Serializable {
         return this;
     }
 
-    public List<Comment> getComment(){
+    public List<Comment> getComment() {
         return comments;
     }
+
     //Skickar LikesID. Kortar koden för den som kallar på denna.
     public long getLikesId() {
         return likes.getId();

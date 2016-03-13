@@ -18,6 +18,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+/**
+ * This is the point where we handle http connections regarding the users.
+ * Logging in, logging out, registering new users etc.
+ */
 @Path("reg")
 public class UserResource {
 
@@ -104,13 +108,13 @@ public class UserResource {
         LOG.log(Level.INFO, "Insert {0} {1}", new Object[]{username, password, repeatPassword});
         LOG.warning("Creating new user " + username + " " + password + " " + repeatPassword);
         InstaFlickUser exists;
-        try{
+        try {
             exists = instaFlick.getUserRegistry().find(username);
-        }catch(EJBException e){
+        } catch (EJBException e) {
             LOG.warning("EJBException: " + e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        
+
         if (exists != null) {
             return Response.status(Response.Status.CONFLICT).build();
         }

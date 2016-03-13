@@ -11,7 +11,7 @@ public class InstaFlick {
     public InstaFlick() {
         Logger.getAnonymousLogger().log(Level.INFO, "InstaFlick is alive");
     }
-    
+
     @EJB
     private UserRegistry userRegistry;
 
@@ -25,7 +25,7 @@ public class InstaFlick {
     public LikesHandler getLikesHandler() {
         return likesHandler;
     }
-    
+
     @EJB
     private PictureCatalogue pictureCatalogue;
 

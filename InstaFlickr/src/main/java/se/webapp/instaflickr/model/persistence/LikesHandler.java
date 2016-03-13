@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.webapp.instaflickr.model.persistence;
 
 import java.util.List;
@@ -14,8 +9,7 @@ import se.webapp.instaflickr.model.media.Likes;
 import se.webapp.instaflickr.model.user.UserResource;
 
 /**
- *
- * @author Pontus
+ * This is what handles the adding of likes to the database.
  */
 @Stateless
 public class LikesHandler extends AbstractDAO<Likes, Long> {
@@ -63,4 +57,3 @@ public class LikesHandler extends AbstractDAO<Likes, Long> {
         return likes;
     }
 }
-    

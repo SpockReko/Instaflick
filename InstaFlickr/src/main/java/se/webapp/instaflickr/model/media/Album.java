@@ -13,6 +13,10 @@ import lombok.Setter;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This represents an album and its components. Name of album and the owner of
+ * it makes it unique. It can have multiple followers and pictures.
+ */
 @Entity
 public class Album implements Serializable {
 

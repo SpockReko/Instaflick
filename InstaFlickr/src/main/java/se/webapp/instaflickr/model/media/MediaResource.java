@@ -45,6 +45,10 @@ import se.webapp.instaflickr.model.persistence.UserRegistry;
 import se.webapp.instaflickr.model.user.UserResource;
 import se.webapp.instaflickr.model.user.InstaFlickUser;
 
+/**
+ * This is where we receive the http connections from the user, regarding media.
+ * It handles pictures, albums, comments and likes.
+ */
 @Path("media")
 public class MediaResource {
 
@@ -491,7 +495,7 @@ public class MediaResource {
 
             int nrOfLikes = instaFlick.getLikesHandler().nrOfLike(p.getLikesId());
             int nrOfComments = p.getComment().size();
-            
+
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
                     .add("id", p.getId())
@@ -509,12 +513,12 @@ public class MediaResource {
         for (List<Picture> pList : albumPictures) {
             int likes = 0;
             int comments = 0;
-            
-            for (Picture p: pList) {
+
+            for (Picture p : pList) {
                 likes += p.getLikes().nrOfLikes();
                 comments += p.getComment().size();
             }
-            
+
             JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
             albumBuilder.add("albumName", albums.get(index).getName());
             albumBuilder.add("uploader", albums.get(index).getOwner().getUsername());
