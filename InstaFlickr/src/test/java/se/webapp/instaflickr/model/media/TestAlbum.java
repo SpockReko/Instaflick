@@ -56,8 +56,8 @@ public class TestAlbum extends AbstractTest {
         InstaFlickUser user = new InstaFlickUser("James");
         InstaFlickUser user2 = new InstaFlickUser("Frank");
         album = new Album("Photo On Dogs <3", user);
-        Picture pic = new Picture(user);
-        Picture pic2 = new Picture(user2);
+        Picture pic = new Picture(user, new Likes());
+        Picture pic2 = new Picture(user2, new Likes());
         album.addPicture(pic);
         album.addPicture(pic2);
         assertTrue(album.removePicture(pic));

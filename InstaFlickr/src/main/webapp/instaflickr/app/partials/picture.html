@@ -13,6 +13,9 @@
             </div>
             <div class="col-xs-2 col-xs-offset-1">
                 <p><small><em>{{image.date}}</em></small></p>
+                <p>
+                    <a ng-click="updateLikes()"><span  class="glyphicon glyphicon-heart"></span></a> {{image.likes}} likes
+                </p>               
             </div>
         </div>
     </div>
@@ -33,9 +36,6 @@
                 <button type="submit" class="btn btn-primary" ng-click="postComment()">Comment</button>
 
             </div>
-    </div>
-    <div class="col-xs-3">
-        <button type="submit" class="btn btn-primary">Comment</button>
     </div>
 </div>
 

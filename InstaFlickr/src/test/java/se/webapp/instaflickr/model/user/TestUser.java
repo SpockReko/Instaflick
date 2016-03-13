@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.webapp.instaflickr.model.media.Likes;
 import se.webapp.instaflickr.model.persistence.InstaFlick;
 import se.webapp.instaflickr.model.media.Picture;
 import se.webapp.instaflickr.model.persistence.AbstractTest;
@@ -76,7 +77,7 @@ public class TestUser extends AbstractTest {
     @Test
     public void test_SetAndGet_ProfilePicture() throws Exception {
         InstaFlickUser newUser = createUser("James");
-        Picture pic = new Picture(newUser);
+        Picture pic = new Picture(newUser, new Likes());
         newUser.setProfilePicture(pic);
         Picture givenPic = newUser.getProfilePicture();
         assertTrue(givenPic.equals(pic));
@@ -85,7 +86,7 @@ public class TestUser extends AbstractTest {
     @Test
     public void test_SetAndGet_Picture() throws Exception {
         InstaFlickUser newUser = createUser("James");
-        Picture pic = new Picture(newUser);
+        Picture pic = new Picture(newUser, new Likes());
         newUser.addPicture(pic);
         List<Picture> picList = newUser.getPictures();
         boolean test = false;
