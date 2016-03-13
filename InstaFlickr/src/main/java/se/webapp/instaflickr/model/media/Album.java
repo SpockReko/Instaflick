@@ -40,13 +40,9 @@ public class Album implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
+    // Used internally
     public Album() {
-        LOG.warning("*******************************************************");
-        LOG.warning("DO NOT USE THIS CONSTRUCTOR! Album(),");
-        LOG.warning("Use Album(string,InstaflickUser) Instead,");
-        LOG.warning("*******************************************************");
-
-    } // Används ej
+    }
 
     public Album(String albumName, InstaFlickUser owner) {
         name = albumName;

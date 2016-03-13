@@ -59,18 +59,8 @@ public class InstaFlickUser implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
-    // Används ej.
+    // Used internally
     public InstaFlickUser() {
-        this.username = "User " + (++staticId).toString();
-        this.pictures = new LinkedList<Picture>();
-        this.albums = new LinkedList<>();
-        LOG.warning("*******************************************************");
-        LOG.warning("DO NOT USE THIS CONSTRUCTOR! InstaFlickUser(),");
-        LOG.warning("Use InstaFlickUser(InstaflickUser, Likes) or ");
-        LOG.warning("Use InstaFlickUser(InstaflickUser, Likes, String) or ");
-        LOG.warning("InstaFlickUser(String, String, Picture)");
-        LOG.warning("*******************************************************");
-
     }
 
     public InstaFlickUser(String username) {

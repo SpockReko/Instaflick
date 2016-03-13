@@ -59,14 +59,9 @@ public class Picture implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
-    // Används ej.
+    // Used internally
     public Picture() {
-        LOG.warning("*******************************************************");
-        LOG.warning("DO NOT USE THIS CONSTRUCTOR! Picture(),");
-        LOG.warning("Use Picture(InstaflickUser, Likes) or ");
-        LOG.warning("Use Picture(InstaflickUser, Likes, String) or ");
-        LOG.warning("*******************************************************");
-    } // Används ej.
+    }
 
     public Picture(InstaFlickUser owner, Likes likes) {
         this.owner = owner;
