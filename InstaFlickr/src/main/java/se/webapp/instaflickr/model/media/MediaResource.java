@@ -69,7 +69,7 @@ public class MediaResource {
     @GET
     @Path("picture")
     public Response getPicture(@QueryParam("pictureId") Long pictureId) {
-        LOG.log(Level.INFO, "getPicture() called with parameter pictureId=" + pictureId);
+        LOG.log(Level.INFO, "Getting picture with id: {0}", pictureId.toString());
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture picture = pc.find(pictureId);
         Long likeId = picture.getLikesId();
@@ -94,9 +94,10 @@ public class MediaResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfileImages(@QueryParam(value = "username") String username) {
+        LOG.log(Level.INFO, "Getting images in the profile for {0}", username);
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        LOG.warning(user.getUsername());
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
 
         List<Picture> pictures = user.getPictures();
         List<Album> albums = user.getAlbums();
@@ -114,9 +115,10 @@ public class MediaResource {
     @Path("profile-image")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getProfilePicture(@QueryParam(value = "username") String username) {
+        LOG.log(Level.INFO, "Getting profile picture of {0}", username);
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        LOG.warning(user.getUsername());
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
 
         Picture profilePicture = user.getProfilePicture();
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -124,7 +126,7 @@ public class MediaResource {
         if (profilePicture != null) {
             builder.add("image", profilePicture.getImagePath() + "/profile.jpg");
         } else {
-            LOG.log(Level.INFO, username + " has not set a profile picture");
+            LOG.log(Level.INFO, "{0} has not set a profile picture", username);
             LOG.log(Level.INFO, generateRelativePath().toString());
             builder.add("image", generateRelativePath().toString() + "/default.jpg");
         }
@@ -137,11 +139,11 @@ public class MediaResource {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadProfileImage(@FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-        LOG.warning("Uploading profile picture");
+        LOG.log(Level.INFO, "Uploading image");
 
-        // Get session
+        LOG.log(Level.INFO, "\t Getting session");
         String username = sessionHandler.getSessionID();
-        LOG.warning("Got session: " + username);
+        LOG.log(Level.INFO, "\t Got session for {0}", username);
 
         // Get the picture catalogue
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
@@ -156,7 +158,8 @@ public class MediaResource {
         // Find the user
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        LOG.warning("Got user: " + user.getUsername());
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
+
         // Add new picture to the database
         Picture picture = new Picture(null, createLikes(), relativePath.toString(), null);
         pc.create(picture);
@@ -182,7 +185,7 @@ public class MediaResource {
                     .toFile(new File(file.getParent() + "/" + "profile"));
 
         } catch (IOException e) {
-            throw new WebApplicationException("Error while uploading file. Please try again!!");
+            throw new WebApplicationException("Error while uploading file.");
         }
 
         return Response.ok(relativePath + "/" + "profile.jpg").build();
@@ -191,10 +194,16 @@ public class MediaResource {
     @POST
     @Path("album")
     public Response createAlbum(@QueryParam(value = "albumName") String albumName) {
+        LOG.log(Level.INFO, "Create album called {0}", albumName);
+
+        LOG.log(Level.INFO, "\t Getting session");
         String username = sessionHandler.getSessionID();
+        LOG.log(Level.INFO, "\t Got session for {0}", username);
+
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        LOG.warning("Got user: " + user.getUsername());
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
+
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         Album album = ac.getAlbum(user, albumName);
         if (album != null) {
@@ -211,6 +220,8 @@ public class MediaResource {
     @GET
     @Path("albums")
     public Response getAlbums() {
+        LOG.log(Level.INFO, "Getting albums");
+
         String username = sessionHandler.getSessionID();
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
@@ -229,10 +240,12 @@ public class MediaResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAlbumPictures(@QueryParam(value = "username") String username,
             @QueryParam(value = "albumName") String albumName) {
+        LOG.log(Level.INFO, "Getting album pictures in album {0} by user {1}", new Object[]{albumName, username});
 
         UserRegistry ur = instaFlick.getUserRegistry();
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         InstaFlickUser user = ur.find(username);
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
 
         Album album = ac.getAlbum(user, albumName);
 
@@ -254,7 +267,8 @@ public class MediaResource {
     @Path("media")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllMedia() {
-        LOG.log(Level.INFO, "Getting all media in MediaResource");
+        LOG.log(Level.INFO, "Getting all pictures and albums");
+
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
 
@@ -272,13 +286,14 @@ public class MediaResource {
     @GET
     @Path("feed")
     public Response getFeed(@QueryParam(value = "username") String username) {
-        LOG.log(Level.INFO, "Getting feed for " + username);
+        LOG.log(Level.INFO, "Getting the feed for {0}", username);
 
         UserRegistry ur = instaFlick.getUserRegistry();
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
 
         InstaFlickUser user = ur.find(username);
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
 
         List<Picture> allPictures = pc.findAll();
         List<Album> allAlbums = ac.findAll();
@@ -317,11 +332,12 @@ public class MediaResource {
             @FormDataParam("albumName") String albumName,
             @FormDataParam("description") String description) throws Exception {
 
-        // Get session
-        String username = sessionHandler.getSessionID();
-        LOG.warning("Got session: " + username);
+        LOG.log(Level.INFO, "Uploading image");
 
-        // Get the picture catalogue
+        LOG.log(Level.INFO, "\t Getting session");
+        String username = sessionHandler.getSessionID();
+        LOG.log(Level.INFO, "\t Got session for {0}", username);
+
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
 
         // Generate paths
@@ -334,7 +350,8 @@ public class MediaResource {
         // Find the user
         UserRegistry ur = instaFlick.getUserRegistry();
         InstaFlickUser user = ur.find(username);
-        LOG.warning("Got user: " + user.getUsername());
+        LOG.log(Level.INFO, "\t user {0} found", user.getUsername());
+
         // Add new picture to the database
         Picture picture = new Picture(user, createLikes(), relativePath.toString(), description);
         pc.create(picture);
@@ -380,7 +397,7 @@ public class MediaResource {
             }
 
             if (!albumName.isEmpty()) {
-                LOG.warning("Adding picture to album: " + albumName);
+                LOG.log(Level.WARNING, "Adding picture to album: {0}", albumName);
                 addPictureToAlbum(user, albumName, picture);
             }
         } catch (IOException e) {
@@ -392,14 +409,17 @@ public class MediaResource {
 
     @POST
     @Path("comment")
-    public Response postComment(@QueryParam("picture") long pictureId,
+    public Response postComment(@QueryParam("picture") Long pictureId,
             @QueryParam("comment") String comment) {
-        LOG.log(Level.INFO, "postComment");
+        LOG.log(Level.INFO, "Posting comment to picture with id: {0}", pictureId.toString());
+
         InstaFlickUser usr = instaFlick.getUserRegistry().find(sessionHandler.getSessionID());
+
         if (usr == null) {
             LOG.log(Level.SEVERE, "Could not find user {0}", sessionHandler.getSessionID());
             return Response.notModified("Could not find user!").build();
         }
+
         LOG.log(Level.INFO, "Found user {0}", usr.getUsername());
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture pic = pc.findPictureById(pictureId);
@@ -419,14 +439,16 @@ public class MediaResource {
 
     @GET
     @Path("comments")
-    public Response getComments(@QueryParam("picture") long pictureId) {
-        LOG.log(Level.INFO, "Getting comments for picture " + pictureId);
+    public Response getComments(@QueryParam("picture") Long pictureId) {
+        LOG.log(Level.INFO, "Getting comments for picture with id: {0}", pictureId);
 
         Picture pic = instaFlick.getPictureCatalogue().findPictureById(pictureId);
-        LOG.log(Level.INFO, "Found picture " + pic.getImagePath());
+
         if (pic == null) {
             return Response.status(Status.UNAVAILABLE).build();
         }
+
+        LOG.log(Level.INFO, "Found picture {0}", pic.getImagePath());
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Comment c : pic.getComment()) {
@@ -445,6 +467,8 @@ public class MediaResource {
     @GET
     @Path("updateLike")
     public Response updateLikes(@QueryParam(value = "pictureId") Long pictureId) {
+        LOG.log(Level.INFO, "Updating likes for picture with id: {0}", pictureId);
+
         String username = sessionHandler.getSessionID();
 
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
@@ -455,14 +479,12 @@ public class MediaResource {
         Likes likesObject = likesHandler.find(likesId);
         List<String> list = likesObject.getUserList();
 
-        Boolean userIsThere = updateLikes(list, username, likesObject);
+        boolean userIsThere = updateLikes(list, username, likesObject);
 
         if (userIsThere) {
-            boolean test = likesObject.removeLike(username);
-
+            likesObject.removeLike(username);
         } else {
-            boolean test = likesObject.addLike(username);
-
+            likesObject.addLike(username);
         }
 
         likesHandler.update(likesObject);
@@ -479,7 +501,6 @@ public class MediaResource {
     // *********************
     // HELP METHODS
     // *********************
-    
     private boolean updateLikes(List<String> list, String username, Likes likesObject) {
 
         boolean userIsThere = false;
@@ -547,7 +568,7 @@ public class MediaResource {
     public boolean addPictureToAlbum(InstaFlickUser user, String albumName, Picture picture) {
         AlbumCatalogue ac = instaFlick.getAlbumCatalogue();
         Album album = ac.getAlbum(user, albumName);
-        LOG.warning("Got album: " + album.getName());
+        LOG.log(Level.WARNING, "Got album: {0}", album.getName());
         album.addPicture(picture);
         ac.update(album);
         return true;
@@ -557,8 +578,8 @@ public class MediaResource {
     public List<List<Picture>> listAlbumPictures(List<Album> albums) {
         List<List<Picture>> albumPictures = new ArrayList();
         for (Album a : albums) {
-            LOG.log(Level.INFO, "Album name: " + a.getName());
-            LOG.log(Level.INFO, "Nr of pics in album: " + a.nrOfPictures());
+            LOG.log(Level.INFO, "Album name: {0}", a.getName());
+            LOG.log(Level.INFO, "Nr of pics in album: {0}", a.nrOfPictures());
             albumPictures.add(a.getPictures());
         }
         return albumPictures;
@@ -573,7 +594,6 @@ public class MediaResource {
             for (List<Picture> list : albumPictures) {
                 for (Picture q : list) {
                     if (Objects.equals(q.getId(), p.getId())) {
-                        LOG.log(Level.INFO, "Duplicate found. Id: " + p.getId());
                         duplicate = true;
                     }
                 }
