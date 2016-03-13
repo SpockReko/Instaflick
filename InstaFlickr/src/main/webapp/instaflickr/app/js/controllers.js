@@ -133,8 +133,8 @@ instaFlickControllers.controller('SetupProfileCtrl',
                     UserRegistryProxy.setupProfle($scope.user.email, $scope.user.fname, $scope.user.lname, $scope.user.description)
                             .success(function () {
                                 console.log("Success with setupProfle!");
-                                $location.path('/');
-                                //$window.location.reload();
+                                //$location.path('/');
+                                $window.location.reload();
 
 
                             }).error(function (data, status) {
