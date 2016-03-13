@@ -484,10 +484,16 @@ public class MediaResource {
         JsonArrayBuilder builder = Json.createArrayBuilder();
 
         for (Picture p : pictures) {
+
+            int nrOfLikes = instaFlick.getLikesHandler().nrOfLike(p.getLikesId());
+            int nrOfComments = p.getComment().size();
+            
             builder.add(Json.createObjectBuilder()
                     .add("path", p.getImagePath() + "/" + p.getId() + "/thumbnail.jpg")
                     .add("id", p.getId())
                     .add("type", "image")
+                    .add("likes", nrOfLikes)
+                    .add("comments", nrOfComments)
                     .add("time", p.getUploaded().getTimeInMillis())
                     .add("uploader", p.getOwner().getUsername()));
 
@@ -496,9 +502,19 @@ public class MediaResource {
 
         int index = 0;
         for (List<Picture> pList : albumPictures) {
+            int likes = 0;
+            int comments = 0;
+            
+            for (Picture p: pList) {
+                likes += p.getLikes().nrOfLikes();
+                comments += p.getComment().size();
+            }
+            
             JsonObjectBuilder albumBuilder = Json.createObjectBuilder();
             albumBuilder.add("albumName", albums.get(index).getName());
             albumBuilder.add("uploader", albums.get(index).getOwner().getUsername());
+            albumBuilder.add("likes", likes);
+            albumBuilder.add("comments", comments);
             albumBuilder.add("type", "album");
             albumBuilder.add("time", pList.get(pList.size() - 1).getUploaded().getTimeInMillis());
 
