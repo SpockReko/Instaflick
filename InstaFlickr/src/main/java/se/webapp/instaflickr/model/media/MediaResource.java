@@ -174,7 +174,6 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
-    //********* GETALLMEDIA
     @GET
     @Path("media")
     @Produces({MediaType.APPLICATION_JSON})
@@ -197,8 +196,7 @@ public class MediaResource {
 
         return Response.ok(builder.build()).build();
     }
-
-    // ************ GETFEED                                                          
+                                                     
     @GET
     @Path("feed")
     public Response getFeed(@QueryParam(value = "username") String username) {
@@ -239,7 +237,6 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
-    // GETPROFILEPICTURE
     @GET
     @Path("profile-image")
     @Produces({MediaType.APPLICATION_JSON})
@@ -262,7 +259,6 @@ public class MediaResource {
         return Response.ok(builder.build()).build();
     }
 
-    // UPLOADIMAGE
     @POST
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadImage(
@@ -598,11 +594,12 @@ public class MediaResource {
 
     @GET
     @Path("updateLike")
-    public Response updateLikes(@QueryParam(value = "username") String username,
-            @QueryParam(value = "pictureId") Long pictureId) {
-
+    public Response updateLikes(@QueryParam(value = "pictureId") Long pictureId) {
+        String username = sessionHandler.getSessionID();
+        
         PictureCatalogue pc = instaFlick.getPictureCatalogue();
         Picture picture = pc.find(pictureId);
+        
         Long likesId = picture.getLikesId();
         LikesHandler likesHandler = instaFlick.getLikesHandler();
         Likes likesObject = likesHandler.find(likesId);
