@@ -181,7 +181,10 @@ public class MediaResource {
             out.close();
 
             // Generate thumbnail
-            Thumbnails.of(file).size(200, 200).outputFormat("jpg")
+            Thumbnails.of(file)
+                    .size(200, 200)
+                    .crop(Positions.CENTER)
+                    .outputFormat("jpg")
                     .toFile(new File(file.getParent() + "/" + "profile"));
 
         } catch (IOException e) {
