@@ -259,7 +259,7 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
             console.log(data);
             $scope.image = data;
             $scope.id = $stateParams.id;
-            console.log($scope);
+            $scope.updateComments();
         });
         $scope.updateLikes = function () {
             UserRegistryProxy.getSession().success(function (data) {
@@ -268,7 +268,6 @@ instaFlickControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'Medi
                         .success(function (data) {
                             console.log("Success with updateLikes in MediaProx!");
                             $scope.image.likes = data['likes'];
-                            $scope.updateComments();
                         }).error(function (data, status) {
                     console.log("Error in updateLikes in MediaProx");
                 });

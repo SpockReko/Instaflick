@@ -576,7 +576,7 @@ public class MediaResource {
         for (Comment c : commentList) {
             builder.add(Json.createObjectBuilder()
                     .add("id", c.getId())
-                    .add("comment", c.getCommentText())
+                    .add("text", c.getCommentText())
                     .add("user", c.getUser().getUsername())
                     .add("date", c.getCreated().getTimeInMillis())
                     .add("type", "comment"));
