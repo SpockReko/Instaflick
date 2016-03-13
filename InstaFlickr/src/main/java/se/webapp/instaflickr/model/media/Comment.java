@@ -42,12 +42,8 @@ public class Comment implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
+    // Used internally
     public Comment() {
-        LOG.warning("*******************************************************");
-        LOG.warning("DO NOT USE THIS CONSTRUCTOR! Comment(),");
-        LOG.warning("Use Comment(InstaflickUser, String, Likes)");
-        LOG.warning("*******************************************************");
-
     }
 
     public Comment(String commentText) {
@@ -56,21 +52,12 @@ public class Comment implements Serializable {
     }
 
     public Comment(InstaFlickUser user, String commentText) {
-
         this.user = user;
         this.commentText = commentText;
         this.created = Calendar.getInstance();
     }
 
-    // Denna metoden känns som setComment() metoden.
     public void editComment(String commentText) {
         this.commentText = commentText;
     }
-
-    private Calendar getNow() {
-        Calendar newCalendar = Calendar.getInstance();
-        newCalendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, Calendar.HOUR, Calendar.MINUTE, Calendar.SECOND);
-        return newCalendar;
-    }
-
 }
