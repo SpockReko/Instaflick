@@ -49,6 +49,10 @@ body {
     height: 100%;
 }
 
+.hideme{
+    display: none;
+}
+
 .album-preview-wrapper {
     display: table;
 
@@ -117,4 +121,12 @@ body {
     margin-top: -1px;
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+}.round-left{
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}.round-right{
+    margin-right: -1px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }

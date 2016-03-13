@@ -349,6 +349,39 @@ instaFlickControllers.controller('AlbumCtrl', ['$scope', '$stateParams', 'MediaP
         });
     }
 ]);
+
+instaFlickControllers.controller('HelpCtrl', ['$scope',
+    function ($scope) {
+        var visible;
+
+        var showme = function (elem) {
+            if (visible) {
+                console.log("hiding " + visible);
+                document.getElementById(visible).style.display = "none";
+            }
+            if (elem) {
+                console.log("showing " + elem);
+                document.getElementById(elem).style.display = "block";
+                visible = elem;
+            }
+        };
+
+        $scope.reg = function () {
+            showme("help-reg");
+        };
+        $scope.log = function () {
+            showme("help-log");
+        };
+        $scope.pic = function () {
+            showme("help-pic");
+        };
+        $scope.alb = function () {
+            showme("help-alb");
+        };
+    }
+]);
+
+
 // Helper functions
 function getSession($location, UserRegistryProxy) {
     UserRegistryProxy.getSession()

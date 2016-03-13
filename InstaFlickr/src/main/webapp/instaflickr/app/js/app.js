@@ -64,7 +64,8 @@ instaflickr.config(function ($stateProvider, $urlRouterProvider) {
             })
             .state('help', {
                 url: '/help',
-                templateUrl: 'partials/help.html'
+                templateUrl: 'partials/help.html',
+                controller: 'HelpCtrl'
             })
             .state('home', {
                 url: '/',
