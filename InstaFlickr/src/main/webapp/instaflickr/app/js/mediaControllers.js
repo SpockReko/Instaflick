@@ -93,6 +93,7 @@ mediaControllers.controller('PictureCtrl', ['$scope', '$stateParams', 'MediaProx
                     .success(function () {
                         console.log("Comment is successfully posted!");
                         getPictureComments($stateParams.id, MediaProxy, $scope);
+                        $scope.formData.comment = "";
                     });
         };
 
