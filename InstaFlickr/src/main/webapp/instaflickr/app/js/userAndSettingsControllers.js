@@ -13,7 +13,6 @@ userAndSettingsControllers.controller('IndexCtrl', ['$scope', '$location', 'User
                             if (data['loggedIn']) {
                                 console.log("You are logged in");
                                 $scope.signedIn = " Sign Out";
-                                $location.path('/');
                             } else {
                                 console.log("You are not logged in");
                                 $scope.signedIn = " Sign In";
@@ -57,6 +56,7 @@ userAndSettingsControllers.controller('LoginCtrl',
                             .success(function () {
                                 console.log("Success with login!");
                                 $scope.signedIn = true;
+                                $location.path('/');
                                 $window.location.reload(); // Reload to change the sign in/out button. Goes to feed.
                             }).error(function (data, status) {
                         if (status === 409) {
@@ -112,6 +112,7 @@ userAndSettingsControllers.controller('SetupProfileCtrl',
                     UserRegistryProxy.setupProfle($scope.user.email, $scope.user.fname, $scope.user.lname, $scope.user.description)
                             .success(function () {
                                 console.log("Success with setupProfle!");
+                                $location.path('/');
                                 $window.location.reload(); // Relod to cahnge the sign in/out button. Goes to feed.
                             }).error(function (data, status) {
                         console.log("Error in save RegisterCtrl status: " + status);

@@ -186,7 +186,9 @@ function uploadPicture($scope, $timeout, Upload, image, albumName, description) 
         $timeout(function () {
             image.result = response.data;
             console.log(response.data);
-            //$scope.upImg = response.data;
+            $scope.picFile = null;
+            $scope.inputDescription = "";
+            $scope.errorMsg = null;
         });
     }, function (response) {
         if (response.status > 0)
